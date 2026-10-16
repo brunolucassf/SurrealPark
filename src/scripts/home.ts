@@ -1,12 +1,28 @@
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
-import { CustomEase } from 'gsap/CustomEase';
+import type { gsap as GsapTipos } from 'gsap';
 import { FORMAS_DA_PREVIA } from '@/data/formas';
 import { lerBeatEmSegundos } from './gl/motor';
+import { aguardarLoaderEOciosidade } from './ocioso';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase);
-CustomEase.create('olho', '0.83,0,0.17,1');
+let gsap!: typeof GsapTipos;
+type Tween = ReturnType<typeof GsapTipos.to>;
+type Timeline = ReturnType<typeof GsapTipos.timeline>;
+
+let ScrollTrigger!: typeof import('gsap/ScrollTrigger').ScrollTrigger;
+let SplitText!: typeof import('gsap/SplitText').SplitText;
+
+async function carregarGsap(): Promise<void> {
+  const [nucleo, gatilhos, divisor, easeCustomizado] = await Promise.all([
+    import('gsap'),
+    import('gsap/ScrollTrigger'),
+    import('gsap/SplitText'),
+    import('gsap/CustomEase'),
+  ]);
+  gsap = nucleo.gsap;
+  ScrollTrigger = gatilhos.ScrollTrigger;
+  SplitText = divisor.SplitText;
+  gsap.registerPlugin(ScrollTrigger, SplitText, easeCustomizado.CustomEase);
+  easeCustomizado.CustomEase.create('olho', '0.83,0,0.17,1');
+}
 
 const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isPonteiroFino = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)').matches;
@@ -263,9 +279,9 @@ function animarCartaz(): void {
   const tracosDoAviao = corpoDoAviao ? [...corpoDoAviao.querySelectorAll<SVGPathElement>('path')] : [];
   const brilhoDoAviao = corpoDoAviao?.querySelector<HTMLElement>('[data-aviao-brilho]') ?? null;
   let ativo = '';
-  let morfose: gsap.core.Tween | null = null;
-  let lampadasAcesas: gsap.core.Tween | null = null;
-  let taxiamento: gsap.core.Timeline | null = null;
+  let morfose: Tween | null = null;
+  let lampadasAcesas: Tween | null = null;
+  let taxiamento: Timeline | null = null;
 
   const acenderLampadas = () => {
     lampadasAcesas?.kill();
@@ -398,6 +414,8 @@ function iniciarIsolado(iniciar: () => void): void {
 export async function iniciarHome(): Promise<void> {
   iniciarIsolado(ativarCopiaDeNumero);
   if (prefereMenosMovimento) return;
+  await aguardarLoaderEOciosidade();
+  await carregarGsap();
   iniciarIsolado(revelarAoEntrar);
   iniciarIsolado(seguirComLente);
   iniciarIsolado(animarAuroraDasDatas);
@@ -405,4 +423,5 @@ export async function iniciarHome(): Promise<void> {
   iniciarIsolado(deslizarAmostra);
   if (isPonteiroFino) await carregarMorfose();
   iniciarIsolado(animarCartaz);
+  ScrollTrigger.refresh();
 }

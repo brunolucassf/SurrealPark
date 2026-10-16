@@ -6,13 +6,13 @@ import CartaoDeProduto from '@/components/loja/CartaoDeProduto.astro';
 import Preco from '@/components/loja/Preco.astro';
 import Icone from '@/components/ui/Icone.astro';
 import Simbolo from '@/components/marca/Simbolo.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import { SUFIXO_NOVA_ABA } from '@/data/site';
 import {
   PRODUTOS,
   buscarProdutosRelacionados,
   buscarRotuloDaCategoria,
   criarLinkWhatsAppDoProduto,
-  formatarPreco,
   isLojaAtiva,
   type Produto,
 } from '@/data/loja';
@@ -27,14 +27,13 @@ interface Props { produto: Produto }
 
 const { produto } = Astro.props;
 const [corPrincipal] = produto.cores;
-const preco = formatarPreco(produto.precoEmCentavos);
 const rotuloDaCategoria = buscarRotuloDaCategoria(produto.categoria);
 const relacionados = buscarProdutosRelacionados(produto);
 const linkWhatsApp = criarLinkWhatsAppDoProduto(produto);
 const isGaleriaMultipla = produto.imagens.length > 1;
 const descreverVista = (rotuloDaVista: string, nomeDaCor: string) => `Ilustração de ${produto.nome}, ${rotuloDaVista.toLowerCase()}, cor ${nomeDaCor.toLowerCase()}`;
 
-const produtoEstruturado = produto.isExemplo
+const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
   ? null
   : {
       '@context': 'https://schema.org',
@@ -53,9 +52,8 @@ const produtoEstruturado = produto.isExemplo
 ---
 <Base
   titulo={`${produto.nome} | Surreal Store`}
-  descricao={`${produto.tipo} da Surreal Store, à venda na loja dentro do Surreal Park. ${preco}, compra e retirada no parque.`}
+  descricao={`${produto.tipo} da Surreal Store, a loja do Surreal Park. Compra e retirada apenas na loja, dentro do parque.`}
 >
-  {produto.isExemplo && <meta slot="head" name="robots" content="noindex" />}
   {produtoEstruturado && <script slot="head" type="application/ld+json" set:html={JSON.stringify(produtoEstruturado)} />}
   <DefinicoesDaLoja />
 
@@ -72,7 +70,7 @@ const produtoEstruturado = produto.isExemplo
       <p class="t-mono-xs ficha__tipo">{produto.tipo}</p>
       <h1 class="t-h2 ficha__nome">{produto.nome}</h1>
       <p><Preco precoEmCentavos={produto.precoEmCentavos} class="ficha__preco" /></p>
-      {import.meta.env.DEV && produto.isExemplo && <span class="selo-exemplo t-mono-xs">exemplo: nome e preço fictícios</span>}
+      {IS_DEMONSTRACAO && produto.isExemplo && <span class="selo-exemplo t-mono-xs">exemplo: nome e preço fictícios</span>}
     </div>
 
     <div class="ficha__palco" data-ficha-palco>

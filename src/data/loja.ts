@@ -1,3 +1,4 @@
+import { IS_DEMONSTRACAO } from './demonstracao';
 import { CONTATOS, criarLinkWhatsApp } from '@/data/site';
 
 export type CategoriaDaLoja = 'roupas' | 'acessorios' | 'calcados' | 'copos-e-mimos';
@@ -88,7 +89,7 @@ const TAMANHOS_FEMININOS = ['PP', 'P', 'M', 'G'];
 const TAMANHO_UNICO = ['Único'];
 
 // Catálogo de validação de layout: nomes, preços e estoque são fictícios até os donos enviarem o catálogo real.
-export const PRODUTOS: Produto[] = [
+const CATALOGO: Produto[] = [
   {
     id: 'p01', slug: 'camiseta-olho-eclipse', nome: 'Camiseta Olho Eclipse', tipo: 'Camiseta', categoria: 'roupas', forma: 'camiseta',
     precoEmCentavos: 14900, tamanhos: [...TAMANHOS_ADULTO, 'XGG'], cores: [GRAFITE, OFF_WHITE], imagens: VISTAS_DE_VESTUARIO,
@@ -187,6 +188,8 @@ export const PRODUTOS: Produto[] = [
   },
 ];
 
+export const PRODUTOS: Produto[] = IS_DEMONSTRACAO ? CATALOGO : CATALOGO.filter((produto) => !produto.isExemplo);
+
 export function formatarPreco(precoEmCentavos: number): string {
   return (precoEmCentavos / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
@@ -207,7 +210,7 @@ export function buscarProdutosRelacionados(produto: Produto, quantidade = 4): Pr
 
 export function criarLinkWhatsAppDoProduto(produto: Produto): string {
   const mensagem = [
-    `Olá, vi no site da Surreal Store: ${produto.nome} (${formatarPreco(produto.precoEmCentavos)}).`,
+    `Olá, quero saber sobre ${produto.nome} da Surreal Store.`,
     'Está disponível na loja do parque?',
     'Cor:',
     produto.tamanhos.length > 0 ? 'Tamanho:' : '',

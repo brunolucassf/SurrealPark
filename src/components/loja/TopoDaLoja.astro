@@ -1,6 +1,7 @@
 ---
 import NeonDoOlho from '@/components/loja/NeonDoOlho.astro';
 import Icone from '@/components/ui/Icone.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 
 const COMPROMISSOS = ['Compra e retirada no parque', 'Sem venda on-line', 'Dúvidas pelo WhatsApp'];
 ---
@@ -12,6 +13,7 @@ const COMPROMISSOS = ['Compra e retirada no parque', 'Sem venda on-line', 'Dúvi
     <p class="t-mono-xs loja-topo__rotulo">Dentro do Surreal Park</p>
     <h1 class="t-h1 loja-topo__titulo">Surreal Store</h1>
     <p class="t-lead loja-topo__apoio">Camisetas, bonés, jaquetas e outros produtos com a marca Surreal. Veja aqui o que tem na loja e compre lá, no parque.</p>
+    {IS_DEMONSTRACAO && <p class="selo-exemplo t-mono-xs">Catálogo de demonstração: produtos e preços de exemplo</p>}
     <div class="loja-topo__acoes">
       <a class="btn btn--primario" href="#produtos">
         <span class="btn__texto">Ver produtos</span>

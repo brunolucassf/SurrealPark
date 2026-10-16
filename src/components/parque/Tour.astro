@@ -1,5 +1,6 @@
 ---
 import CenaDoTour from './CenaDoTour.astro';
+import LojaDoParque from './LojaDoParque.astro';
 import { prepararTour } from './preparar-tour';
 import { INDICE_DO_PARQUE } from '@/data/tour';
 
@@ -9,7 +10,7 @@ interface Props {
 
 const { alvosDepoisDoTour } = Astro.props;
 const { cenas, motor } = await prepararTour();
-const alvosExistentes = new Set([...cenas.map(({ cena }) => cena.ancora).filter(Boolean), ...alvosDepoisDoTour]);
+const alvosExistentes = new Set([...cenas.map(({ cena }) => cena.ancora).filter(Boolean), ...alvosDepoisDoTour, 'loja']);
 const itensDoIndice = INDICE_DO_PARQUE.filter((item) => alvosExistentes.has(item.alvo));
 const alvoDoPulo = alvosDepoisDoTour[0];
 ---
@@ -38,6 +39,7 @@ const alvoDoPulo = alvosDepoisDoTour[0];
     </div>
   </div>
   <slot />
+  <LojaDoParque />
 </div>
 <script type="application/json" data-tour-config set:html={JSON.stringify(motor)} />
 

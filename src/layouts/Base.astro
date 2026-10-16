@@ -7,6 +7,7 @@ import Rodape from '@/components/layout/Rodape.astro';
 import FundoVivo from '@/components/layout/FundoVivo.astro';
 import Loader from '@/components/layout/Loader.astro';
 import Formas from '@/components/marca/Formas.astro';
+import { isCaminhoIndexavel, normalizarCaminho } from '@/data/indexacao';
 
 interface Props {
   titulo: string;
@@ -15,6 +16,9 @@ interface Props {
   isBarraMobileVisivel?: boolean;
   imagemDeCompartilhamento?: string;
   descricaoDeCompartilhamento?: string;
+  textoAlternativoDaImagem?: string;
+  isIndexavel?: boolean;
+  isCanonicaVisivel?: boolean;
 }
 
 const {
@@ -24,9 +28,13 @@ const {
   isBarraMobileVisivel = true,
   imagemDeCompartilhamento = '/og/compartilhamento-1200x630.jpg',
   descricaoDeCompartilhamento = descricao,
+  textoAlternativoDaImagem = 'Surreal Park: o olho da marca sobre o parque de música eletrônica em Camboriú',
+  isIndexavel,
+  isCanonicaVisivel = true,
 } = Astro.props;
 
-const caminhoAtual = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const caminhoAtual = normalizarCaminho(Astro.url.pathname);
+const deveIndexar = isIndexavel ?? isCaminhoIndexavel(caminhoAtual);
 const urlCanonica = new URL(caminhoAtual, Astro.site).href;
 const urlDaImagem = new URL(imagemDeCompartilhamento, Astro.site).href;
 ---
@@ -35,10 +43,11 @@ const urlDaImagem = new URL(imagemDeCompartilhamento, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <script is:inline>(function(){try{var r=document.documentElement,m=matchMedia("(prefers-reduced-motion: reduce)").matches,c=navigator.connection;if(m)return;if(innerWidth>=1024)r.classList.add("pin-ok");if(sessionStorage.getItem("surreal:abertura")||(c&&c.saveData))return;r.classList.add("tem-loader")}catch(e){}})();</script>
+    <script is:inline>(function(){try{var r=document.documentElement,m=matchMedia("(prefers-reduced-motion: reduce)").matches,c=navigator.connection;if(m)return;if(innerWidth>=1024)r.classList.add("pin-ok");if(location.pathname!=="/"||sessionStorage.getItem("surreal:abertura")||(c&&c.saveData))return;r.classList.add("tem-loader")}catch(e){}})();</script>
     <title>{titulo}</title>
     <meta name="description" content={descricao} />
-    <link rel="canonical" href={urlCanonica} />
+    <meta name="robots" content={deveIndexar ? 'index,follow' : 'noindex,nofollow'} />
+    {isCanonicaVisivel && <link rel="canonical" href={urlCanonica} />}
     <meta name="theme-color" content={luz === 'amanhecer' ? '#F4EEE3' : '#131215'} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -51,11 +60,16 @@ const urlDaImagem = new URL(imagemDeCompartilhamento, Astro.site).href;
     <meta property="og:site_name" content="Surreal Park" />
     <meta property="og:title" content={titulo} />
     <meta property="og:description" content={descricaoDeCompartilhamento} />
-    <meta property="og:url" content={urlCanonica} />
+    {isCanonicaVisivel && <meta property="og:url" content={urlCanonica} />}
     <meta property="og:image" content={urlDaImagem} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={textoAlternativoDaImagem} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={titulo} />
+    <meta name="twitter:description" content={descricaoDeCompartilhamento} />
+    <meta name="twitter:image" content={urlDaImagem} />
+    <meta name="twitter:image:alt" content={textoAlternativoDaImagem} />
     <slot name="head" />
   </head>
   <body>

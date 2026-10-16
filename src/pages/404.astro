@@ -2,7 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
 ---
-<Base titulo="Página não encontrada | Surreal Park" descricao="O endereço que você abriu não existe ou mudou de lugar.">
+<Base titulo="Página não encontrada | Surreal Park" descricao="O endereço que você abriu não existe ou mudou de lugar." isIndexavel={false} isCanonicaVisivel={false}>
   <TopoDePagina rotulo="fig. 1: um olho" titulo="Isto não é uma página." apoio="O endereço que você abriu não existe ou mudou de lugar. O parque continua aqui.">
     <ul class="links-404" role="list">
       <li><a class="link-texto" href="/programacao">Ver programação</a></li>

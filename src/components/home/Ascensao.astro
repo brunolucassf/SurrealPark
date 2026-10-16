@@ -102,6 +102,9 @@ const ARCO = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101
 
 <style>
   .ascensao { position: relative; padding-block: var(--s-section); }
+  @media (max-width: 1023.98px) {
+    .ascensao { overflow-x: clip; }
+  }
   .ascensao__palco { display: grid; gap: var(--s-block); }
   .ascensao__texto { display: grid; gap: var(--sp-5); align-content: start; }
   .ascensao__rotulo { color: var(--gold-400); }

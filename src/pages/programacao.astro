@@ -1,12 +1,12 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
 import EventoLinha from '@/components/eventos/EventoLinha.astro';
 import PosterDestaque from '@/components/eventos/PosterDestaque.astro';
 import Icone from '@/components/ui/Icone.astro';
 import { CONTATOS, LINK_WHATSAPP_MESAS, REDES } from '@/data/site';
-import { derivarStatus, extrairPartesDaData, formatarDataDoCard, formatarDataPorExtenso, listarProximosEventos } from '@/lib/eventos';
+import { derivarStatus, extrairPartesDaData, formatarDataDoCard, formatarDataPorExtenso, listarEventos, listarProximosEventos } from '@/lib/eventos';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import '@/styles/programacao.css';
 
 const LIMITE_PARA_FILTRO = 6;
@@ -16,7 +16,7 @@ const [destaque, ...demais] = proximos;
 const isFiltroVisivel = proximos.length > LIMITE_PARA_FILTRO;
 const instagram = REDES.find((rede) => rede.nome === 'Instagram');
 
-const passados = (await getCollection('eventos'))
+const passados = (await listarEventos())
   .filter((evento) => derivarStatus(evento) === 'encerrado')
   .sort((a, b) => Date.parse(b.data.data_inicio) - Date.parse(a.data.data_inicio));
 
@@ -64,6 +64,7 @@ const mesesDoFiltro = [...new Map(
     <section class="agenda container" id="agenda" aria-labelledby="titulo-agenda" data-humor="datas">
       <div class="agenda__cabeca">
         <h2 class="t-mono-xs agenda__rotulo" id="titulo-agenda">Depois disso</h2>
+        {IS_DEMONSTRACAO && <span class="selo-exemplo t-mono-xs">Eventos de exemplo</span>}
         {isFiltroVisivel && (
           <div class="filtro" role="group" aria-label="Filtrar por mês" data-filtro>
             <button class="filtro__botao" type="button" data-mes="todas" aria-pressed="true">Todas</button>

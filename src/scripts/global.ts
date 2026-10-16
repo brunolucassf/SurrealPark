@@ -1,5 +1,5 @@
 import { iniciarLoader } from './loader';
-import { iniciarFundoVivo } from './gl/fundo';
+import { aguardarLoaderEOciosidade } from './ocioso';
 
 const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
 const LIMIAR_DE_TOPO = 80;
@@ -151,8 +151,14 @@ async function ativarRolagemSuave(): Promise<void> {
   prefereMenosMovimento.addEventListener('change', () => lenis.destroy(), { once: true });
 }
 
+async function iniciarFundoQuandoOcioso(): Promise<void> {
+  await aguardarLoaderEOciosidade();
+  const { iniciarFundoVivo } = await import('./gl/fundo');
+  iniciarFundoVivo();
+}
+
 iniciarLoader();
-iniciarFundoVivo();
+void iniciarFundoQuandoOcioso();
 controlarCabecalho();
 controlarMenu();
 controlarBarraMobile();

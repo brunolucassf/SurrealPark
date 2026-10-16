@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Icone from '@/components/ui/Icone.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import GradeDoEvento from '@/components/galeria/GradeDoEvento.astro';
 import FechoDaGaleria from '@/components/galeria/FechoDaGaleria.astro';
 import { carregarEventosResolvidos, carregarFotosDoEvento, type EventoResolvido } from '@/components/galeria/acervoDaGaleria';
@@ -44,7 +45,7 @@ const temOutrosEventos = total > 1 && anterior && proximo;
     </a>
     <p class="t-mono-xs evento-topo__rotulo">
       Galeria · {formatarNumero(posicao)} / {formatarNumero(total)}
-      {import.meta.env.DEV && evento.isExemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
+      {IS_DEMONSTRACAO && evento.isExemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
     </p>
     <h1 class="t-h1 evento-topo__titulo">{evento.titulo}</h1>
     <dl class="evento-topo__fatos">

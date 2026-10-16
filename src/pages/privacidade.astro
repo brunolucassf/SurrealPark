@@ -1,0 +1,183 @@
+---
+import Base from '@/layouts/Base.astro';
+import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
+import { CONTATOS, ENDERECO, REDES, SUFIXO_NOVA_ABA } from '@/data/site';
+
+const ATUALIZADO_EM = '16 de outubro de 2026';
+const PENDENTE = '[A CONFIRMAR PELO CLIENTE]';
+const isDev = import.meta.env.DEV;
+
+const razaoSocial: string | null = null;
+const cnpj: string | null = null;
+const encarregado: string | null = null;
+
+const secoes = [
+  { id: 'quem-somos', titulo: 'Quem somos' },
+  { id: 'dados', titulo: 'Quais dados tratamos' },
+  { id: 'finalidades', titulo: 'Para que e com que base' },
+  { id: 'cookies', titulo: 'Cookies e armazenamento' },
+  { id: 'terceiros', titulo: 'Terceiros e links externos' },
+  { id: 'direitos', titulo: 'Seus direitos' },
+  { id: 'retencao', titulo: 'Por quanto tempo guardamos' },
+  { id: 'menores', titulo: 'Crianças e adolescentes' },
+  { id: 'alteracoes', titulo: 'Alterações desta política' },
+  { id: 'contato-titular', titulo: 'Fale com a gente' },
+];
+---
+<Base titulo="Política de Privacidade | Surreal Park" descricao="Como o site do Surreal Park trata dados pessoais, cookies e links para terceiros, e como exercer seus direitos pela LGPD.">
+  <TopoDePagina rotulo="Privacidade" titulo="Política de Privacidade" apoio={`Em linguagem direta: o que este site faz, ou não faz, com os seus dados. Atualizada em ${ATUALIZADO_EM}.`}>
+    {isDev && (
+      <p class="aviso-dev t-mono-xs" role="note">Visível só em desenvolvimento: rascunho técnico, não é parecer jurídico. Revisar com advogado antes de publicar. Itens {PENDENTE} somem do ar quando preenchidos.</p>
+    )}
+  </TopoDePagina>
+
+  <div class="container politica">
+    <nav class="politica__indice" aria-label="Nesta página">
+      <ol role="list">
+        {secoes.map((secao) => <li><a class="link-texto" href={`#${secao.id}`}>{secao.titulo}</a></li>)}
+      </ol>
+    </nav>
+
+    <div class="politica__texto t-body">
+      <section id="quem-somos" aria-labelledby="t-quem-somos">
+        <h2 class="t-h3" id="t-quem-somos">Quem somos</h2>
+        <p>Este site é do <strong>Surreal Park</strong>, club de música eletrônica e arte ao ar livre em {ENDERECO.linha}. Para fins da Lei Geral de Proteção de Dados (LGPD, Lei nº 13.709/2018), o Surreal Park é o responsável (controlador) pelos dados tratados diretamente por este site.</p>
+        <dl class="politica__ficha">
+          {(razaoSocial || isDev) && (<><dt>Razão social</dt><dd>{razaoSocial ?? PENDENTE}</dd></>)}
+          {(cnpj || isDev) && (<><dt>CNPJ</dt><dd>{cnpj ?? PENDENTE}</dd></>)}
+          {(encarregado || isDev) && (<><dt>Encarregado pelo tratamento de dados</dt><dd>{encarregado ?? PENDENTE}</dd></>)}
+          <dt>Contato para assuntos de privacidade</dt>
+          <dd><a class="link-texto" href={`mailto:${CONTATOS.email}`}>{CONTATOS.email}</a></dd>
+        </dl>
+      </section>
+
+      <section id="dados" aria-labelledby="t-dados">
+        <h2 class="t-h3" id="t-dados">Quais dados tratamos</h2>
+        <p>Este site é informativo. Ele <strong>não tem formulário, cadastro, login, comentários nem loja com pagamento</strong>, e não coleta nome, e-mail, telefone ou documento de quem apenas navega.</p>
+        <p>O que existe de fato:</p>
+        <ul>
+          <li><strong>Dados técnicos de acesso.</strong> Como em qualquer site, o servidor que hospeda as páginas pode registrar endereço IP, data e hora, página pedida e tipo de navegador, para segurança e funcionamento. {isDev && PENDENTE}{isDev && ' (informar provedor de hospedagem e prazo de guarda dos logs)'}</li>
+          <li><strong>Cliques que saem do site.</strong> Botões de WhatsApp, e-mail, ingressos, mapas e redes sociais abrem outro serviço. O site não recebe nem guarda o que você faz lá.</li>
+          <li><strong>Mensagens que você decide enviar.</strong> Ao tocar em um link de WhatsApp ou de e-mail, abrimos uma mensagem pré-escrita, que só é enviada se você apertar enviar. Aí passamos a receber o seu número ou e-mail e o que você escrever, para responder.</li>
+        </ul>
+        <p>Não tratamos dados pessoais sensíveis (como saúde, religião ou origem racial) por meio deste site e pedimos que você não os envie nas mensagens.</p>
+      </section>
+
+      <section id="finalidades" aria-labelledby="t-finalidades">
+        <h2 class="t-h3" id="t-finalidades">Para que e com que base</h2>
+        <div class="politica__tabela" role="region" aria-label="Finalidades e bases legais" tabindex="0">
+          <table>
+            <thead>
+              <tr><th scope="col">Finalidade</th><th scope="col">Dados</th><th scope="col">Base legal (LGPD, art. 7º)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Entregar as páginas e manter o site seguro</td><td>Dados técnicos de acesso</td><td>Legítimo interesse (segurança e funcionamento do site)</td></tr>
+              <tr><td>Responder mensagens de reserva de mesa, locação e dúvidas</td><td>Número ou e-mail e o conteúdo da mensagem</td><td>Execução de procedimentos preliminares a um contrato, a pedido do titular</td></tr>
+              <tr><td>Medir o uso do site e anunciar (somente se for ativado no futuro)</td><td>Identificadores de navegador, páginas vistas</td><td>Consentimento, dado antes de qualquer coleta e revogável a qualquer momento</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Compras de ingresso são feitas nas plataformas Ingresse e Blueticket, que tratam os dados da compra por conta própria (veja “Terceiros”).</p>
+      </section>
+
+      <section id="cookies" aria-labelledby="t-cookies">
+        <h2 class="t-h3" id="t-cookies">Cookies e armazenamento</h2>
+        <p>Hoje o site <strong>não define cookies</strong> e não usa ferramentas de análise ou publicidade. As fontes de texto são servidas pelo próprio site, sem pedir nada ao Google Fonts.</p>
+        <p>Usamos um único item de armazenamento do navegador, necessário ao funcionamento:</p>
+        <ul>
+          <li><code>surreal:abertura</code> (sessionStorage): guarda “1” para que a animação de abertura não se repita a cada página dentro da mesma visita. Não contém dado pessoal e apaga sozinho quando você fecha a aba.</li>
+        </ul>
+        <p>Se um dia o site passar a usar ferramentas de medição ou publicidade, elas só serão carregadas <strong>depois da sua escolha</strong>, em um aviso com os botões “Aceitar” e “Recusar” com o mesmo destaque, e você poderá mudar de ideia quando quiser. Esta política será atualizada antes disso.</p>
+      </section>
+
+      <section id="terceiros" aria-labelledby="t-terceiros">
+        <h2 class="t-h3" id="t-terceiros">Terceiros e links externos</h2>
+        <p>O site não incorpora vídeos, mapas nem redes sociais em quadros embutidos. Os serviços abaixo só entram em contato com você quando você clica em um link. A partir dali valem a política e os termos de cada um, e o Surreal Park não controla o que eles coletam.</p>
+        <ul>
+          <li><strong>Ingresse e Blueticket:</strong> venda de ingressos, conforme o evento. Nome, CPF, pagamento e contato da compra ficam com a plataforma.</li>
+          <li><strong>WhatsApp (Meta):</strong> conversa para reserva de mesas, camarotes e locação.</li>
+          <li><strong>Google Maps e Waze:</strong> rota até o parque.</li>
+          <li><strong>Redes sociais:</strong> {REDES.map((rede) => rede.nome).join(', ')}.</li>
+          <li><strong>DJ Mag:</strong> link de fonte do ranking de clubs.</li>
+        </ul>
+        <p>Links externos abrem em nova aba e levam <code>rel="noopener"</code>, o que impede que a página de destino controle esta aba.</p>
+      </section>
+
+      <section id="direitos" aria-labelledby="t-direitos">
+        <h2 class="t-h3" id="t-direitos">Seus direitos</h2>
+        <p>Se tratarmos dados pessoais seus, a LGPD (art. 18) garante, mediante pedido:</p>
+        <ul>
+          <li>confirmação de que existe tratamento;</li>
+          <li>acesso aos dados;</li>
+          <li>correção de dados incompletos, inexatos ou desatualizados;</li>
+          <li>anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desconformidade;</li>
+          <li>portabilidade, nos termos da regulamentação;</li>
+          <li>eliminação dos dados tratados com base no seu consentimento;</li>
+          <li>informação sobre com quem os dados foram compartilhados;</li>
+          <li>informação sobre a possibilidade de não consentir e suas consequências;</li>
+          <li>revogação do consentimento.</li>
+        </ul>
+        <p>Peça pelo e-mail <a class="link-texto" href={`mailto:${CONTATOS.email}`}>{CONTATOS.email}</a>, com o assunto “Privacidade”. Podemos pedir um dado para confirmar que é você. Você também pode reclamar à Autoridade Nacional de Proteção de Dados (ANPD).</p>
+        <p>Pedidos sobre dados que estão com Ingresse, Blueticket, Meta, Google ou TikTok devem ser feitos diretamente a eles.</p>
+      </section>
+
+      <section id="retencao" aria-labelledby="t-retencao">
+        <h2 class="t-h3" id="t-retencao">Por quanto tempo guardamos</h2>
+        <ul>
+          <li><strong>Navegação no site:</strong> o item de sessão some ao fechar a aba. Os logs do servidor seguem o prazo do provedor de hospedagem. {isDev && PENDENTE}</li>
+          <li><strong>Mensagens de WhatsApp e e-mail:</strong> pelo tempo necessário para atender ao seu pedido e cumprir obrigações legais ou contratuais de uma eventual reserva. Depois, eliminamos ou anonimizamos. {isDev && `${PENDENTE} (definir prazo)`}</li>
+        </ul>
+      </section>
+
+      <section id="menores" aria-labelledby="t-menores">
+        <h2 class="t-h3" id="t-menores">Crianças e adolescentes</h2>
+        <p>Os eventos do Surreal Park são <strong>exclusivos para maiores de 18 anos</strong>, com documento oficial com foto, e o site não se dirige a menores. Não coletamos conscientemente dados de menores de 18 anos. Se você é responsável por um menor e acredita que ele nos enviou dados, escreva para o contato abaixo e eliminaremos.</p>
+      </section>
+
+      <section id="alteracoes" aria-labelledby="t-alteracoes">
+        <h2 class="t-h3" id="t-alteracoes">Alterações desta política</h2>
+        <p>Podemos atualizar este texto, por exemplo ao adotar novas ferramentas. A data no topo mostra a última revisão. Mudanças relevantes, como o uso de cookies de medição, serão avisadas no próprio site antes de valerem.</p>
+      </section>
+
+      <section id="contato-titular" aria-labelledby="t-contato-titular">
+        <h2 class="t-h3" id="t-contato-titular">Fale com a gente</h2>
+        <p>Dúvidas ou pedidos sobre privacidade: <a class="link-texto" href={`mailto:${CONTATOS.email}`}>{CONTATOS.email}</a>.</p>
+        <p>Outros assuntos, como mesas e locação, estão em <a class="link-texto" href="/contato">Contato</a>.</p>
+        <p class="politica__nota t-body-s">Redes: {REDES.map((rede, indice) => (<>{indice > 0 && ', '}<a class="link-texto" href={rede.href} target="_blank" rel="noopener">{rede.nome}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a></>))}</p>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .aviso-dev {
+    padding: var(--sp-3) var(--sp-4);
+    border: 1px dashed var(--gold-500);
+    color: var(--gold-300);
+    max-width: 68ch;
+  }
+  .politica {
+    display: grid;
+    gap: var(--sp-7);
+    padding-block-end: var(--s-section);
+  }
+  .politica__indice ol { display: grid; gap: 0; }
+  .politica__indice a { display: inline-flex; min-height: 44px; align-items: center; }
+  .politica__texto { display: grid; gap: var(--sp-7); max-width: 68ch; color: var(--text-2); }
+  .politica__texto section { display: grid; gap: var(--sp-4); scroll-margin-top: calc(var(--header-h) + var(--sp-4)); }
+  .politica__texto h2 { color: var(--text); }
+  .politica__texto strong { color: var(--text); font-weight: 600; }
+  .politica__texto ul { display: grid; gap: var(--sp-3); padding-inline-start: 1.25em; list-style: disc; }
+  .politica__texto code { font-family: var(--font-mono); font-size: .9em; }
+  .politica__ficha { display: grid; gap: var(--sp-1); }
+  .politica__ficha dt { color: var(--text-3); margin-block-start: var(--sp-3); }
+  .politica__ficha dd { margin: 0; color: var(--text); }
+  .politica__tabela { overflow-x: auto; }
+  .politica__tabela table { width: 100%; min-width: 34rem; border-collapse: collapse; font-size: var(--fs-body-s); }
+  .politica__tabela th, .politica__tabela td { padding: var(--sp-3); text-align: left; vertical-align: top; border-bottom: 1px solid var(--divider, rgb(242 236 226 / .16)); }
+  .politica__tabela th { color: var(--text-3); font-weight: 500; }
+  @media (min-width: 1024px) {
+    .politica { grid-template-columns: 1fr 2.4fr; align-items: start; }
+    .politica__indice { position: sticky; top: calc(var(--header-h) + var(--sp-5)); }
+  }
+</style>

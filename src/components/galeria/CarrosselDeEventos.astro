@@ -1,6 +1,7 @@
 ---
 import FotoAcervo from '@/components/ui/FotoAcervo.astro';
 import Icone from '@/components/ui/Icone.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import type { EventoResolvido } from './acervoDaGaleria';
 
 interface Props {
@@ -64,7 +65,7 @@ const primeiro = eventos[0];
                   <span class="painel__meta t-mono-xs">
                     <span class="sr-only">, </span><time datetime={evento.data}>{evento.dataCurta}</time> · {evento.totalDeFotos} fotos
                   </span>
-                  {import.meta.env.DEV && evento.isExemplo && <span class="painel__selo selo-exemplo t-mono-xs">exemplo</span>}
+                  {IS_DEMONSTRACAO && evento.isExemplo && <span class="painel__selo selo-exemplo t-mono-xs">exemplo</span>}
                 </a>
               </li>
             );
@@ -76,7 +77,7 @@ const primeiro = eventos[0];
         <div class="destaque__texto" data-destaque-texto aria-hidden="true">
           <p class="t-mono-xs destaque__posicao">
             <span data-destaque-posicao>{formatarPosicao(0)}</span>
-            {import.meta.env.DEV && eventos.some((evento) => evento.isExemplo) && <span class="selo-exemplo t-mono-xs">eventos de exemplo</span>}
+            {IS_DEMONSTRACAO && eventos.some((evento) => evento.isExemplo) && <span class="selo-exemplo t-mono-xs">eventos de exemplo</span>}
           </p>
           <p class="t-h2 destaque__titulo" data-destaque-titulo>{primeiro.titulo}</p>
           <p class="t-mono-xs destaque__meta" data-destaque-meta>{descreverEvento(primeiro)}</p>

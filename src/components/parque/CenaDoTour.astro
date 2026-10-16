@@ -2,6 +2,7 @@
 import type { CenaPreparada } from './preparar-tour';
 import ApoioDaCena from './ApoioDaCena.astro';
 import { COPY_DO_TOUR } from '@/data/tour';
+import manifesto from '@/assets/manifest.json';
 import { TOUR } from '@/scripts/parque/constantes';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 const { preparada } = Astro.props;
 const { cena, indice, isUltima, desktop, mobile, mascaraMobile, foco, apoio } = preparada;
+const fotografo = (manifesto as { id: string; fotografo?: string | null }[]).find((entrada) => entrada.id === preparada.cena.foto?.desktop)?.fotografo ?? null;
 const copy = COPY_DO_TOUR[cena.copy];
 const isPrimeira = indice === 0;
 const lado = isPrimeira || foco[0] > 0.5 ? 'esquerda' : 'direita';
@@ -137,6 +139,7 @@ const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.start
             {apoio && <ApoioDaCena apoio={apoio} />}
           </>
         )}
+        {fotografo && <p class="t-mono-xs cena__foto-credito">Foto: {fotografo}</p>}
       </div>
     </div>
   </div>

@@ -225,3 +225,9 @@
 @media (prefers-reduced-motion: reduce) {
   .ct-capacidade__barra, .ct-marcador { transition: none; }
 }
+
+@media (min-width: 1600px) {
+  .ct-secao > .container { max-width: calc(1360px + 2 * var(--margem)); }
+  .ct-secao { padding-block: var(--sp-9); }
+  .ct-duas-colunas { gap: var(--sp-8); }
+}
