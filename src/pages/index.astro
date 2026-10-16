@@ -1,0 +1,72 @@
+---
+import Base from '@/layouts/Base.astro';
+import Abertura from '@/components/home/Abertura.astro';
+import ProximasDatas from '@/components/home/ProximasDatas.astro';
+import Ascensao from '@/components/home/Ascensao.astro';
+import PalcosEmCartaz from '@/components/home/PalcosEmCartaz.astro';
+import Rinoceronte from '@/components/home/Rinoceronte.astro';
+import MesasLocacao from '@/components/home/MesasLocacao.astro';
+import GaleriaAmostra from '@/components/home/GaleriaAmostra.astro';
+import { prepararHero, MIDIA_MOBILE_DO_HERO, TAMANHOS_DESKTOP_DO_HERO } from '@/lib/hero';
+import { buscarProximoEventoAberto } from '@/lib/eventos';
+import { ENDERECO, REDES } from '@/data/site';
+
+const hero = await prepararHero();
+const proximoEvento = await buscarProximoEventoAberto();
+
+const dadosEstruturados = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${Astro.site}#organizacao`,
+      name: 'Surreal Park',
+      url: Astro.site?.href,
+      logo: new URL('/favicon.svg', Astro.site).href,
+      sameAs: REDES.map((rede) => rede.href),
+    },
+    { '@type': 'WebSite', name: 'Surreal Park', url: Astro.site?.href, inLanguage: 'pt-BR' },
+    {
+      '@type': ['NightClub', 'EventVenue'],
+      name: 'Surreal Park',
+      url: Astro.site?.href,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: ENDERECO.logradouro,
+        addressLocality: ENDERECO.cidade,
+        addressRegion: ENDERECO.estado,
+        postalCode: ENDERECO.cep,
+        addressCountry: 'BR',
+      },
+      areaServed: ['Camboriú', 'Balneário Camboriú'],
+    },
+  ],
+};
+---
+<Base
+  titulo="Surreal Park | Club de música eletrônica em Camboriú"
+  descricao="#10 no DJ Mag Top 100 Clubs 2026. Música eletrônica e arte ao ar livre em Camboriú-SC, em 135 mil m². Veja a programação e os ingressos. 18+."
+  descricaoDeCompartilhamento="Um sonho de olhos abertos. #10 no DJ Mag Top 100 Clubs 2026, em Camboriú."
+>
+  <Fragment slot="head">
+    {hero?.mobile && (
+      <link rel="preload" as="image" type="image/avif" media={MIDIA_MOBILE_DO_HERO} imagesrcset={hero.mobile.avif} imagesizes="100vw" fetchpriority="high" />
+    )}
+    {hero && (
+      <link rel="preload" as="image" type="image/avif" media={hero.mobile ? '(min-width: 768px)' : undefined} imagesrcset={hero.desktop.avif} imagesizes={TAMANHOS_DESKTOP_DO_HERO} fetchpriority="high" />
+    )}
+    <script type="application/ld+json" set:html={JSON.stringify(dadosEstruturados)} />
+  </Fragment>
+  <Abertura hero={hero} proximoEvento={proximoEvento} />
+  <ProximasDatas />
+  <Ascensao />
+  <PalcosEmCartaz />
+  <Rinoceronte />
+  <MesasLocacao />
+  <GaleriaAmostra />
+</Base>
+
+<script>
+  import { iniciarHome } from '@/scripts/home';
+  iniciarHome();
+</script>

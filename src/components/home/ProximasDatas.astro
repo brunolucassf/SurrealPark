@@ -1,0 +1,94 @@
+---
+import { getImage } from 'astro:assets';
+import EventoLinha from '@/components/eventos/EventoLinha.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { PALCO_POR_ID } from '@/data/palcos';
+import { REDES, SUFIXO_NOVA_ABA } from '@/data/site';
+import { buscarFotoPorSlot } from '@/lib/fotos';
+import { listarProximosEventos, type Evento } from '@/lib/eventos';
+
+const LIMITE_DE_DATAS = 4;
+const eventos = (await listarProximosEventos()).slice(0, LIMITE_DE_DATAS);
+const instagram = REDES.find((rede) => rede.nome === 'Instagram');
+
+async function gerarUrlDaLente(evento: Evento): Promise<string | undefined> {
+  const [primeiroPalco] = evento.data.palcos;
+  if (!primeiroPalco) return undefined;
+  const foto = buscarFotoPorSlot(PALCO_POR_ID[primeiroPalco].slotDaFoto);
+  if (!foto) return undefined;
+  const imagem = await getImage({ src: foto.imagem, width: 440, format: 'avif', quality: 50 });
+  return imagem.src;
+}
+
+const urlsDasLentes = await Promise.all(eventos.map(gerarUrlDaLente));
+---
+<section class="datas" id="proximas-datas" aria-labelledby="titulo-datas" data-datas data-humor="datas">
+  <div class="container">
+    <header class="datas__topo">
+      <h2 class="t-h2" id="titulo-datas" data-revela-titulo>Próximas datas</h2>
+      <a class="link-nav t-label datas__todas" href="/programacao">
+        Ver programação completa
+        <Icone nome="piramide" class="btn__seta" />
+      </a>
+    </header>
+    {eventos.length > 0 ? (
+      <ol class="datas__lista" role="list">
+        {eventos.map((evento, indice) => (
+          <li data-revela><EventoLinha evento={evento} urlDaLente={urlsDasLentes[indice]} /></li>
+        ))}
+      </ol>
+    ) : (
+      <div class="datas__vazio">
+        <p class="t-lead">Novas datas em breve. Elas saem primeiro no Instagram.</p>
+        {instagram && (
+          <a class="btn btn--secundario" href={instagram.href} target="_blank" rel="noopener">
+            Seguir no Instagram<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
+          </a>
+        )}
+      </div>
+    )}
+  </div>
+  <div class="lente" aria-hidden="true" data-lente-flutuante><img alt="" width="220" height="275" decoding="async" /></div>
+</section>
+
+<style>
+  .datas {
+    position: relative;
+    z-index: 2;
+    padding-block: var(--s-section);
+  }
+  :global(.pin-ok) .datas {
+    margin-top: -48vh;
+    padding-top: 14vh;
+  }
+  .datas__topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--sp-4) var(--sp-6);
+    margin-bottom: var(--s-block);
+  }
+  .datas__todas { gap: var(--sp-2); min-height: 44px; color: var(--gold-300); }
+  .datas__lista { border-bottom: var(--borda-1); }
+  .datas__vazio { display: grid; gap: var(--sp-5); justify-items: start; }
+
+  .lente {
+    position: fixed;
+    left: 0; top: 0;
+    z-index: var(--z-lente);
+    width: 220px; height: 275px;
+    margin: -137px 0 0 -110px;
+    clip-path: url(#f-olho);
+    pointer-events: none;
+    opacity: 0;
+    scale: .6;
+    transition: opacity var(--dur-1-2) var(--ease-ui), scale var(--dur-1-2) var(--ease-ui);
+    display: none;
+  }
+  .lente[data-visivel="true"] { opacity: 1; scale: 1; }
+  .lente img { width: 100%; height: 100%; object-fit: cover; }
+  @media (hover: hover) and (pointer: fine) and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .lente { display: block; }
+  }
+</style>

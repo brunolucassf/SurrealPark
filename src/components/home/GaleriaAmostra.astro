@@ -1,0 +1,92 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { buscarFotoPorSlot } from '@/lib/fotos';
+
+const QUADROS = [
+  { slot: 'ritual-2', ambiente: 'Ritual', alt: 'Ritual: o arco do palco principal em luz azul sobre a pista cheia, à noite' },
+  { slot: 'bells-2', ambiente: 'Bells', alt: 'Bells: luminárias em forma de sino na fachada de madeira do galpão' },
+  { slot: 'nomad-2', ambiente: 'Nomad', alt: 'Nomad: lona de circo acesa por fios de lâmpadas, à noite' },
+  { slot: 'church-ogiva', ambiente: 'Church', alt: 'Church: a fachada da capela iluminada em azul' },
+  { slot: 'jardim-olho', ambiente: 'Jardim', alt: 'Jardim de Esculturas: um olho gigante no gramado, à noite' },
+  { slot: 'juistreet', ambiente: 'Juistreet', alt: 'Juistreet: o letreiro em neon "O suco que é um espetáculo" no bar de sucos' },
+  { slot: 'raw-room-2', ambiente: 'Raw Room', alt: 'Raw Room: o letreiro RxR em lâmpadas sobre a parede de bambu' },
+  { slot: 'galeria-amostra', ambiente: 'Jardim', alt: 'Jardim: o sol se pondo atrás da serra, refletido no lago' },
+];
+
+const quadros = QUADROS.map((quadro) => {
+  const foto = buscarFotoPorSlot(quadro.slot);
+  const proporcao = foto ? foto.imagem.width / foto.imagem.height : 1.5;
+  return { ...quadro, proporcao, credito: foto?.fotografo ?? null };
+});
+---
+<section class="amostra" aria-labelledby="titulo-amostra" data-amostra data-humor="luar">
+  <div class="container amostra__topo">
+    <h2 class="t-h2" id="titulo-amostra" data-revela-titulo>Visto de dentro</h2>
+    <a class="btn btn--secundario" href="/galeria">
+      Ver galeria
+      <Icone nome="piramide" class="btn__seta" />
+    </a>
+  </div>
+  <div class="amostra__janela" role="region" aria-label="Amostra de fotos do parque" tabindex="0">
+    <ol class="amostra__tira" role="list" data-amostra-tira>
+      {quadros.map((quadro, indice) => (
+        <li class="amostra__quadro" style={`--proporcao: ${quadro.proporcao}`}>
+          <figure>
+            <div class="amostra__foto">
+              <FotoAcervo slot={quadro.slot} alt={quadro.alt} sizes={`(min-width: 1024px) ${Math.round(quadro.proporcao * 46)}vh, ${Math.round(quadro.proporcao * 260)}px`} larguraMaxima={1680} />
+            </div>
+            <figcaption class="t-mono-xs amostra__legenda">
+              <span class="amostra__numero">{String(indice + 1).padStart(2, '0')}A</span>
+              <span>{quadro.ambiente}</span>
+              {quadro.credito && <span class="amostra__credito">Foto: {quadro.credito}</span>}
+            </figcaption>
+          </figure>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .amostra { padding-block: var(--s-section); overflow: clip; }
+  .amostra__topo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--sp-5);
+    margin-bottom: var(--s-block);
+  }
+  .amostra__janela {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--ink-600) transparent;
+    padding-inline: var(--margem);
+    scroll-padding-inline: var(--margem);
+    background:
+      repeating-linear-gradient(to right, var(--ink-750) 0 10px, transparent 10px 22px) top / 100% 6px no-repeat,
+      repeating-linear-gradient(to right, var(--ink-750) 0 10px, transparent 10px 22px) bottom / 100% 6px no-repeat;
+    padding-block: var(--sp-5);
+  }
+  .amostra__janela:focus-visible { box-shadow: inset 0 0 0 2px var(--focus); outline: none; }
+  .amostra__tira { display: flex; gap: var(--sp-3); width: max-content; }
+  .amostra__quadro { scroll-snap-align: start; }
+  .amostra__foto {
+    height: 260px;
+    width: calc(260px * var(--proporcao));
+    border-radius: var(--r-1);
+    overflow: clip;
+    background: var(--ink-850);
+  }
+  .amostra__foto :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .amostra__legenda { display: flex; gap: var(--sp-3); padding-top: var(--sp-3); color: var(--ash-400); }
+  .amostra__numero { color: var(--gold-400); }
+  .amostra__credito { margin-left: auto; }
+
+  @media (min-width: 1024px) {
+    .amostra__foto { height: min(46vh, 34rem); width: calc(min(46vh, 34rem) * var(--proporcao)); }
+    .amostra__tira { gap: var(--sp-4); will-change: transform; }
+  }
+</style>

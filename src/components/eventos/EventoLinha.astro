@@ -1,0 +1,136 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+import { NOME_DO_PALCO } from '@/data/palcos';
+import { CONTATOS, SUFIXO_NOVA_ABA, criarLinkWhatsApp } from '@/data/site';
+import { derivarStatus, formatarDataDoCard, formatarDataPorExtenso, formatarHora, nomearPlataforma, extrairPartesDaData, type Evento } from '@/lib/eventos';
+
+interface Props {
+  evento: Evento;
+  urlDaLente?: string | undefined;
+  nivelDoTitulo?: 'h2' | 'h3';
+}
+
+const { evento, urlDaLente, nivelDoTitulo = 'h3' } = Astro.props;
+const { titulo, data_inicio: inicio, artistas, palcos, lotes_info: lotesInfo, exemplo } = evento.data;
+const status = derivarStatus(evento);
+const partes = extrairPartesDaData(inicio);
+const plataforma = nomearPlataforma(evento);
+const destaques = artistas.filter((artista) => artista.destaque).map((artista) => artista.nome);
+const demais = artistas.filter((artista) => !artista.destaque).map((artista) => artista.nome);
+const dataCurta = formatarDataDoCard(inicio);
+const linkDeMesas = criarLinkWhatsApp(
+  CONTATOS.whatsappMesas,
+  ['Olá, quero reservar mesa ou camarote no Surreal Park.', `Evento: ${titulo} · ${dataCurta}`, 'Número de pessoas:', 'Meu nome:'].join('\n'),
+);
+const isLineUpVisivel = artistas.length > 0 && !(artistas.length === 1 && artistas[0]?.nome === titulo);
+const Titulo = nivelDoTitulo;
+---
+<article class="evento" data-status={status} data-lente={urlDaLente}>
+  <p class="evento__data">
+    <span class="t-mono-xs evento__semana">{partes.diaDaSemanaCurto} · {partes.mesCurto}</span>
+    <span class="t-h2 evento__dia" aria-hidden="true">{String(partes.dia).padStart(2, '0')}</span>
+    <span class="sr-only">{dataCurta}</span>
+    <span class="t-mono-xs evento__hora">{partes.ano} · {formatarHora(inicio)}</span>
+  </p>
+  <div class="evento__corpo">
+    <Titulo class="t-h3 evento__titulo">{titulo}</Titulo>
+    {isLineUpVisivel && (
+      <p class="evento__artistas">
+        <span class="evento__destaques">{destaques.join(', ')}</span>
+        {demais.length > 0 && <span class="evento__demais"> · com {demais.join(', ')}</span>}
+      </p>
+    )}
+    {import.meta.env.DEV && exemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
+  </div>
+  <div class="evento__palcos">
+    {palcos.length > 0 ? (
+      <ul class="t-mono" role="list">
+        {palcos.map((palco) => <li style={`--luz: var(--luz-${palco})`}>{NOME_DO_PALCO[palco]}</li>)}
+      </ul>
+    ) : (
+      <p class="t-mono evento__palco-pendente">Palco a anunciar</p>
+    )}
+    {status === 'esgotado' && <span class="t-mono-xs evento__selo">Esgotado</span>}
+    {status === 'em_breve' && <span class="t-mono-xs evento__selo evento__selo--breve">Ingressos em breve</span>}
+  </div>
+  <div class="evento__acao">
+    {status === 'aberto' && (
+      <>
+        <a
+          class="btn btn--primario evento__cta"
+          href={evento.data.ingresso_url}
+          target="_blank"
+          rel="noopener"
+          data-pulso
+          aria-label={`Comprar ingresso para ${titulo}, ${formatarDataPorExtenso(inicio)}, na ${plataforma} ${SUFIXO_NOVA_ABA}`}
+        >
+          Comprar na {plataforma}
+          <Icone nome="externo" class="btn__icone" />
+        </a>
+        <p class="t-mono-xs evento__apoio">{lotesInfo ?? `Abre a ${plataforma} em nova aba`}</p>
+      </>
+    )}
+    {status === 'esgotado' && (
+      <>
+        <span class="btn evento__cta evento__cta--off" aria-disabled="true">Ingressos esgotados</span>
+        <a class="link-texto t-body-s" href={linkDeMesas} target="_blank" rel="noopener">Perguntar por mesas e camarotes<span class="sr-only"> (abre o WhatsApp)</span></a>
+      </>
+    )}
+  </div>
+</article>
+
+<style>
+  .evento {
+    position: relative;
+    display: grid;
+    gap: var(--sp-3) var(--gutter);
+    grid-template-columns: auto 1fr;
+    padding-block: var(--sp-6);
+    border-top: var(--borda-1);
+    transition: background-color var(--dur-1-4) var(--ease-ui);
+  }
+  .evento__data { grid-row: span 2; display: grid; justify-items: start; align-content: start; gap: var(--sp-1); min-width: 4.5rem; }
+  .evento__semana, .evento__hora { color: var(--ash-400); }
+  .evento__dia { color: var(--gold-400); font-variant-numeric: lining-nums tabular-nums; line-height: .9; }
+  .evento__corpo { display: grid; gap: var(--sp-2); align-content: start; justify-items: start; }
+  .evento__titulo { color: var(--bone-50); }
+  .evento__artistas { font-size: var(--fs-body); color: var(--bone-300); }
+  .evento__destaques { color: var(--bone-50); font-size: var(--fs-lead); }
+  .evento__palcos { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-3); }
+  .evento__palcos ul { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-4); color: var(--ash-400); }
+  .evento__palcos li { display: inline-flex; align-items: center; gap: var(--sp-2); }
+  .evento__palcos li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--luz); }
+  .evento__palco-pendente { color: var(--ash-400); }
+  .evento__selo {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    color: var(--bone-300);
+  }
+  .evento__selo--breve { border-color: var(--gold-500); color: var(--gold-300); }
+  .evento__acao { grid-column: 1 / -1; display: grid; gap: var(--sp-2); justify-items: stretch; }
+  .evento__cta { width: 100%; }
+  .evento__cta--off { background: var(--ink-800); color: var(--ash-400); box-shadow: inset 0 0 0 1px var(--line-strong); cursor: not-allowed; }
+  .evento__apoio { color: var(--ash-400); }
+  .evento__palcos { grid-column: 2; }
+
+  @media (min-width: 1024px) {
+    .evento {
+      padding-inline: var(--sp-4);
+      margin-inline: calc(var(--sp-4) * -1);
+      grid-template-columns: 9rem minmax(0, 1fr) 14rem auto;
+      align-items: start;
+      column-gap: var(--gutter);
+    }
+    .evento__data { grid-row: auto; }
+    .evento__palcos { grid-column: 3; flex-direction: column; align-items: flex-start; padding-top: var(--sp-2); }
+    .evento__palcos ul { flex-direction: column; }
+    .evento__acao { grid-column: 4; justify-items: end; min-width: 15rem; padding-top: var(--sp-1); }
+    .evento__cta { width: auto; }
+    .evento__apoio { text-align: right; }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .evento:hover { background: var(--ink-850); }
+  }
+</style>

@@ -1,0 +1,114 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { CONTATOS, LINK_WHATSAPP_MESAS } from '@/data/site';
+
+const TAMANHOS = '(min-width: 1024px) 50vw, 100vw';
+---
+<section class="caminhos" aria-labelledby="titulo-caminhos">
+  <h2 class="container t-mono-xs caminhos__rotulo" id="titulo-caminhos">Para grupos e para eventos</h2>
+  <div class="caminhos__grade">
+    <article class="caminho caminho--mesas" aria-labelledby="titulo-mesas">
+      <FotoAcervo slot="home-mesas" alt="" sizes={TAMANHOS} larguraMaxima={2400} class="caminho__foto" />
+      <div class="caminho__conteudo">
+        <h3 class="t-h2" id="titulo-mesas" data-revela-titulo>Mesas e camarotes</h3>
+        <p class="t-body caminho__texto" data-revela>Um ponto fixo na noite para o seu grupo. Valores e disponibilidade variam por evento e saem pelo WhatsApp.</p>
+        <div class="caminho__acoes" data-revela>
+          <a class="btn btn--primario" href={LINK_WHATSAPP_MESAS} target="_blank" rel="noopener" data-pulso>
+            <Icone nome="whatsapp" class="btn__icone" />
+            Reservar pelo WhatsApp<span class="sr-only"> (abre o WhatsApp)</span>
+          </a>
+          <p class="t-body-s caminho__apoio">Abre o WhatsApp com a mensagem pronta. Você só completa os dados.</p>
+          <p class="t-body-s caminho__apoio">
+            Sem WhatsApp neste aparelho? {CONTATOS.telefoneMesas} ·
+            <button class="link-texto caminho__copiar" type="button" data-copiar={CONTATOS.telefoneMesas}>Copiar número</button>
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <article class="caminho caminho--locacao" aria-labelledby="titulo-locacao">
+      <FotoAcervo slot="home-locacao" alt="" sizes={TAMANHOS} class="caminho__foto" />
+      <div class="caminho__conteudo">
+        <h3 class="t-h2" id="titulo-locacao" data-revela-titulo>Locação do parque</h3>
+        <p class="t-body caminho__texto" data-revela>Casamentos, congressos, lançamentos e shows, em espaços para 1.000 a 8.000 pessoas.</p>
+        <div class="caminho__acoes" data-revela>
+          <a class="btn btn--secundario" href="/contato#locacao">
+            Ver espaços e capacidades
+            <Icone nome="piramide" class="btn__seta" />
+          </a>
+        </div>
+      </div>
+    </article>
+  </div>
+  <p class="toast t-body-s" role="status" data-toast></p>
+</section>
+
+<style>
+  .caminhos { position: relative; padding-block: var(--s-section) 0; }
+  .caminhos__rotulo { color: var(--gold-400); margin-bottom: var(--sp-5); }
+  .caminhos__grade { display: grid; }
+  .caminho {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: 88svh;
+    overflow: clip;
+    isolation: isolate;
+    border-top: 1px solid rgb(230 189 110 / .25);
+  }
+  .caminho--mesas { border-top: 2px solid var(--luz-ritual); }
+  .caminho :global(.caminho__foto) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .caminho::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(to top, rgb(12 11 13 / .92) 0%, rgb(12 11 13 / .72) 38%, rgb(12 11 13 / .12) 68%, rgb(12 11 13 / 0) 100%);
+  }
+  .caminho__conteudo {
+    display: grid;
+    gap: var(--sp-5);
+    justify-items: start;
+    padding: var(--s-block) var(--margem);
+    max-width: 40rem;
+  }
+  .caminho__texto { color: var(--bone-300); max-width: 38ch; }
+  .caminho__acoes { display: grid; gap: var(--sp-3); justify-items: start; width: 100%; }
+  .caminho__acoes .btn { width: 100%; }
+  .caminho__apoio { color: var(--bone-300); }
+  .caminho__copiar { min-height: 44px; color: var(--bone-50); }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--barra-h) + var(--sp-5));
+    z-index: var(--z-toast);
+    translate: -50% 0;
+    padding: var(--sp-3) var(--sp-5);
+    background: var(--ink-800);
+    color: var(--bone-50);
+    border-radius: var(--r-pill);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--dur-1-2) var(--ease-ui);
+  }
+  .toast[data-visivel="true"] { opacity: 1; }
+
+  @media (min-width: 640px) {
+    .caminho__acoes .btn { width: auto; }
+  }
+  @media (min-width: 1024px) {
+    .caminhos__grade { grid-template-columns: 1fr 1fr; }
+    .caminho { min-height: 92vh; }
+    .caminho--locacao { border-left: 1px solid rgb(230 189 110 / .25); }
+    .caminho__conteudo { padding-inline: var(--margem) var(--sp-8); }
+  }
+</style>

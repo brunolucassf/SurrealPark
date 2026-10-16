@@ -1,0 +1,242 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+import { SUFIXO_NOVA_ABA } from '@/data/site';
+import { TRAJETORIA_NO_RANKING } from '@/data/ranking';
+
+const GUIAS = [
+  { rank: 100, rotulo: '#100' },
+  { rank: 50, rotulo: '#50' },
+  { rank: 25, rotulo: '#25' },
+  { rank: 10, rotulo: 'TOP 10', isDestaque: true },
+  { rank: 1, rotulo: '#1' },
+];
+const primeira = TRAJETORIA_NO_RANKING[0];
+const ultima = TRAJETORIA_NO_RANKING[TRAJETORIA_NO_RANKING.length - 1];
+const ganhoTotal = primeira && ultima ? primeira.posicao - ultima.posicao : 0;
+const colunas = TRAJETORIA_NO_RANKING.map((edicao, indice) => {
+  const anterior = TRAJETORIA_NO_RANKING[indice - 1];
+  const variacao = anterior ? anterior.posicao - edicao.posicao : null;
+  return { ...edicao, anterior: anterior?.posicao ?? edicao.posicao, variacao, isUltima: indice === TRAJETORIA_NO_RANKING.length - 1 };
+});
+const ALCA = 51.5 / 0.75;
+const ARCO = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101 0Z`;
+---
+<section class="ascensao" aria-labelledby="titulo-ascensao" data-ascensao data-humor="ascensao">
+  <div class="ascensao__trilho" data-ascensao-trilho>
+    <div class="ascensao__palco container">
+      <div class="ascensao__texto">
+        <p class="t-mono-xs ascensao__rotulo">DJ Mag Top 100 Clubs</p>
+        <h2 class="t-h2 ascensao__titulo" id="titulo-ascensao" data-revela-titulo>Do #79 ao #10, em cinco edições</h2>
+        <p class="t-body ascensao__corpo" data-revela>
+          Cinco edições seguidas no DJ Mag Top 100 Clubs desde a estreia, em 2022. Em 135 mil m²: cinco palcos, um jardim de esculturas e um sexto palco em construção, dentro de um Boeing 727.
+        </p>
+      </div>
+
+      <div class="ascensao__painel">
+        <p class="ascensao__kpi">
+          <span class="t-giga ascensao__ganho" data-ascensao-ganho>+{ganhoTotal}</span>
+          <span class="t-h3 ascensao__posicoes">posições</span>
+          <span class="t-mono-xs ascensao__resumo">#{primeira?.posicao} em {primeira?.ano} → #{ultima?.posicao} em {ultima?.ano}</span>
+        </p>
+
+        <div class="ascensao__cena" data-ascensao-cena>
+          <div class="ascensao__grafico" data-ascensao-grafico>
+            <ul class="ascensao__guias" role="list" aria-hidden="true">
+              {GUIAS.map((guia) => (
+                <li class:list={['ascensao__guia', { 'ascensao__guia--destaque': guia.isDestaque }]} style={`--rank: ${guia.rank}`} data-ascensao-guia>
+                  <span class="t-mono-xs">{guia.rotulo}</span>
+                </li>
+              ))}
+            </ul>
+            <ol class="colunas" role="list" aria-label="Posição no DJ Mag Top 100 Clubs por ano">
+              {colunas.map((coluna, indice) => (
+                <li class:list={['coluna', { 'coluna--atual': coluna.isUltima }]} style={`--rank: ${coluna.posicao}; --anterior: ${coluna.anterior}`} data-coluna={indice}>
+                  <span class="coluna__barra" aria-hidden="true" data-coluna-barra></span>
+                  <span class="coluna__reflexo" aria-hidden="true" data-coluna-reflexo></span>
+                  <span class="coluna__topo">
+                    {coluna.isUltima && (
+                      <svg class="coluna__arcos" viewBox="-130 -100 260 200" aria-hidden="true" focusable="false" data-coluna-arcos>
+                        <path d={ARCO} transform="translate(0 -24)" pathLength="1" />
+                        <path d={ARCO} pathLength="1" />
+                        <path d={ARCO} transform="translate(0 24)" pathLength="1" />
+                      </svg>
+                    )}
+                    <span class:list={['coluna__rank', coluna.isUltima ? 't-h2' : 't-h3']} data-coluna-rank={coluna.posicao}>#{coluna.posicao}</span>
+                  </span>
+                  <span class="t-mono-xs coluna__ano">{coluna.ano}</span>
+                  {coluna.variacao !== null && (
+                    <span class:list={['t-mono-xs', 'coluna__variacao', { 'coluna__variacao--queda': coluna.variacao < 0 }]} data-coluna-variacao>
+                      <span aria-hidden="true">{coluna.variacao >= 0 ? '▲' : '▼'} {Math.abs(coluna.variacao)}</span>
+                      <span class="sr-only">{coluna.variacao >= 0 ? `subiu ${coluna.variacao} posições` : `caiu ${Math.abs(coluna.variacao)} posições`}</span>
+                    </span>
+                  )}
+                  {coluna.variacao !== null && coluna.variacao < 0 && (
+                    <span class="t-mono-xs coluna__nota" aria-hidden="true">caiu {Math.abs(coluna.variacao)} posições</span>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        <p class="t-mono-xs ascensao__fonte" data-ascensao-fonte>
+          Fonte: <a class="link-texto" href="https://djmag.com/top100clubs" target="_blank" rel="noopener">DJ Mag Top 100 Clubs, edições 2022 a 2026<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container ascensao__fecho">
+    <dl class="ascensao__numeros">
+      <div data-revela><dt class="t-mono-xs">de parque</dt><dd class="t-h2">135 mil m²</dd></div>
+      <div data-revela><dt class="t-mono-xs">e o Jet Set em construção</dt><dd class="t-h2">5 palcos</dd></div>
+      <div data-revela><dt class="t-mono-xs">DJ Mag Top 100 Clubs 2026</dt><dd class="t-h2">#10</dd></div>
+      <div data-revela><dt class="t-mono-xs">inauguração</dt><dd class="t-h2">26.12.2021</dd></div>
+    </dl>
+    <a class="btn btn--secundario ascensao__cta" href="/o-parque" data-revela>
+      Explorar o parque
+      <Icone nome="piramide" class="btn__seta" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .ascensao { position: relative; padding-block: var(--s-section); }
+  .ascensao__palco { display: grid; gap: var(--s-block); }
+  .ascensao__texto { display: grid; gap: var(--sp-5); align-content: start; }
+  .ascensao__rotulo { color: var(--gold-400); }
+  .ascensao__titulo { max-width: 14ch; }
+  .ascensao__corpo { color: var(--bone-300); }
+
+  .ascensao__painel { display: grid; gap: var(--sp-6); }
+  .ascensao__kpi { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-2) var(--sp-4); }
+  .ascensao__ganho { color: var(--gold-300); font-weight: 650; font-size: clamp(4.5rem, 2rem + 12vw, 12rem); }
+  .ascensao__posicoes { color: var(--bone-50); }
+  .ascensao__resumo { flex-basis: 100%; color: var(--ash-400); }
+
+  .ascensao__cena { perspective: 1400px; }
+  .ascensao__grafico {
+    --altura: 300px;
+    --chao: 2.75rem;
+    position: relative;
+    height: calc(var(--altura) + var(--chao));
+    padding-left: 3.75rem;
+    padding-bottom: var(--chao);
+    transform-style: preserve-3d;
+  }
+  .ascensao__guias { position: absolute; inset: 0 0 var(--chao) 0; }
+  .ascensao__guia {
+    position: absolute;
+    left: 0; right: 0;
+    bottom: calc((101 - var(--rank)) * 1%);
+    height: 0;
+    border-top: 1px solid rgb(242 236 226 / .12);
+    transform-origin: left;
+  }
+  .ascensao__guia span { position: absolute; left: 0; top: 0; translate: 0 -50%; padding-right: var(--sp-2); color: var(--ash-400); background: transparent; }
+  .ascensao__guia--destaque { border-top: 1px dashed var(--gold-500); }
+  .ascensao__guia--destaque span { color: var(--gold-300); }
+
+  .colunas {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    height: 100%;
+  }
+  .coluna { position: relative; height: 100%; }
+  .coluna__barra, .coluna__reflexo {
+    position: absolute;
+    left: 50%;
+    width: max(28px, 70%);
+    max-width: 7rem;
+    translate: -50% 0;
+    height: calc((101 - var(--rank)) * 1%);
+  }
+  .coluna__barra {
+    bottom: 0;
+    background: linear-gradient(to top, rgb(184 134 47 / .08), rgb(230 189 110 / .9));
+    border-top: 2px solid var(--gold-200);
+    transform-origin: bottom;
+  }
+  .coluna--atual .coluna__barra {
+    background: linear-gradient(to top, rgb(184 134 47 / .14), rgb(240 212 154 / 1));
+    box-shadow: 0 -12px 40px rgb(230 189 110 / .25);
+  }
+  .coluna__reflexo {
+    top: 100%;
+    background: linear-gradient(to top, rgb(184 134 47 / .08), rgb(230 189 110 / .9));
+    transform: scaleY(-1);
+    transform-origin: top;
+    opacity: .12;
+    -webkit-mask-image: linear-gradient(to top, transparent 70%, #000);
+    mask-image: linear-gradient(to top, transparent 70%, #000);
+    height: min(calc((101 - var(--rank)) * 1%), var(--chao));
+  }
+  .coluna__topo {
+    position: absolute;
+    left: 50%;
+    bottom: calc((101 - var(--rank)) * 1% + var(--sp-2));
+    translate: -50% 0;
+    display: grid;
+    place-items: center;
+  }
+  .coluna__rank { font-variant-numeric: lining-nums tabular-nums; color: var(--bone-50); white-space: nowrap; }
+  .coluna--atual .coluna__rank { color: var(--gold-300); }
+  .coluna__arcos {
+    position: absolute;
+    width: 220%;
+    left: 50%; top: 50%;
+    translate: -50% -50%;
+    overflow: visible;
+    fill: none;
+    stroke: var(--gold-300);
+    stroke-width: 4;
+    pointer-events: none;
+  }
+  .coluna__ano { position: absolute; left: 50%; top: calc(100% + var(--sp-3)); translate: -50% 0; color: var(--ash-400); }
+  .coluna__variacao {
+    position: absolute;
+    left: 0;
+    bottom: calc(max(101 - var(--rank), 101 - var(--anterior)) * 1% + 3.2rem);
+    translate: -50% 0;
+    padding: 2px 8px;
+    border: 1px solid rgb(230 189 110 / .45);
+    border-radius: var(--r-pill);
+    color: var(--gold-300);
+    white-space: nowrap;
+    background: rgb(19 18 21 / .7);
+  }
+  .coluna__variacao--queda { color: var(--ash-400); border-color: var(--line-strong); }
+  .coluna__nota {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + var(--sp-6));
+    translate: -50% 0;
+    color: var(--ash-400);
+    white-space: nowrap;
+  }
+  .ascensao__fonte { color: var(--ash-400); }
+
+  .ascensao__fecho { display: grid; gap: var(--sp-7); justify-items: start; margin-top: var(--s-block); }
+  .ascensao__numeros { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-6) var(--gutter); width: 100%; }
+  .ascensao__numeros div { display: flex; flex-direction: column-reverse; gap: var(--sp-2); padding-top: var(--sp-4); border-top: var(--borda-1); }
+  .ascensao__numeros dt { color: var(--ash-400); }
+  .ascensao__numeros dd { font-variant-numeric: lining-nums tabular-nums; white-space: nowrap; font-size: clamp(1.75rem, 1.2rem + 2.4vw, 4rem); }
+
+  @media (max-width: 413.98px) {
+    .coluna__variacao { font-size: .625rem; padding: 1px 5px; }
+  }
+  @media (min-width: 768px) {
+    .ascensao__grafico { --altura: 380px; }
+  }
+  @media (min-width: 1024px) {
+    .ascensao__palco { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: center; }
+    .ascensao__texto { grid-column: 1 / span 4; }
+    .ascensao__painel { grid-column: 5 / span 8; }
+    .ascensao__grafico { --altura: 46vh; }
+    .ascensao__ganho { font-size: clamp(4.5rem, 1rem + 7vw, 12rem); }
+    .ascensao__numeros { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    :global(.pin-ok) .ascensao__trilho { height: 220vh; }
+    :global(.pin-ok) .ascensao__palco { position: sticky; top: 0; height: 100vh; padding-block: calc(var(--header-h) + var(--sp-4)) var(--sp-6); }
+  }
+</style>

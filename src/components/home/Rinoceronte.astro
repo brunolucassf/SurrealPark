@@ -1,0 +1,122 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+
+const ALT_DA_ESCULTURA = 'Escultura de rinoceronte do Jardim de Esculturas do Surreal Park';
+---
+<section class="rino" aria-labelledby="titulo-rino" data-rino data-modo="imagem" data-humor="noite">
+  <div class="rino__grade container">
+    <div class="rino__texto">
+      <p class="t-mono-xs rino__rotulo">Jardim de Esculturas</p>
+      <h2 class="t-h2" id="titulo-rino" data-revela-titulo>O jardim tem olhos</h2>
+      <p class="t-body rino__legenda" data-revela>Entre os palcos, o Jardim de Esculturas: olhos gigantes, um rinoceronte, uma vaca, um touro.</p>
+      <a class="btn btn--secundario rino__cta" href="/o-parque#jardim" data-revela>
+        Conhecer o jardim
+        <Icone nome="piramide" class="btn__seta" />
+      </a>
+    </div>
+
+    <div class="rino__visual">
+      <svg class="rino__arcos" viewBox="142 15 215 164" aria-hidden="true" focusable="false">
+        <path pathLength="1" d="M149 73.3C193 4.6 307 4.6 351 73.3 307 142 193 142 149 73.3Z" />
+        <path pathLength="1" d="M149 97.3C193 28.6 307 28.6 351 97.3 307 166 193 166 149 97.3Z" />
+        <path pathLength="1" d="M149 121.3C193 52.6 307 52.6 351 121.3 307 190 193 190 149 121.3Z" />
+      </svg>
+      <div class="rino__lanterna" aria-hidden="true" data-rino-lanterna></div>
+      <div class="rino__objeto">
+        <img
+          class="rino__poster"
+          src="/models/rino-poster.webp"
+          alt={ALT_DA_ESCULTURA}
+          width="1200"
+          height="1200"
+          loading="lazy"
+          decoding="async"
+          data-rino-poster
+        />
+        <div class="rino__canvas" aria-hidden="true" data-rino-canvas></div>
+        <div class="rino__sombra" aria-hidden="true"></div>
+      </div>
+      <div class="rino__controles">
+        <button class="btn btn--secundario rino__alternar" type="button" hidden data-rino-alternar>Ver em 3D</button>
+        <p class="t-mono-xs rino__dica" hidden data-rino-dica>
+          <span class="rino__dica-fino">Arraste para girar</span>
+          <span class="rino__dica-toque">Toque e arraste para girar</span>
+        </p>
+      </div>
+      <p class="sr-only" role="status" data-rino-status></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rino {
+    position: relative;
+    padding-block: var(--s-section);
+    overflow: clip;
+    isolation: isolate;
+  }
+  .rino__grade { display: grid; gap: var(--sp-7); }
+  .rino__texto { display: grid; gap: var(--sp-5); justify-items: start; align-content: center; }
+  .rino__rotulo { color: var(--gold-400); }
+  .rino__legenda { color: var(--bone-300); max-width: 36ch; }
+
+  .rino__visual { position: relative; display: grid; place-items: center; min-height: min(80svh, 120vw); }
+  .rino__arcos {
+    position: absolute;
+    left: 50%; top: 46%;
+    width: min(80vmin, 115vw);
+    translate: -50% -50%;
+    fill: none;
+    stroke: var(--gold-400);
+    stroke-width: .6;
+    opacity: .55;
+    overflow: visible;
+    z-index: -1;
+  }
+  .rino__lanterna {
+    position: absolute;
+    left: 50%; top: 40%;
+    width: 70vmin; height: 70vmin;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(255 194 122 / .16), rgb(255 194 122 / 0));
+    z-index: -1;
+    pointer-events: none;
+  }
+  .rino__objeto { position: relative; width: min(64vmin, 92vw, 640px); aspect-ratio: 1; }
+  .rino__poster, .rino__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .rino__poster { object-fit: contain; mix-blend-mode: lighten; transition: opacity var(--dur-1) var(--ease-ui); }
+  .rino__canvas { opacity: 0; transition: opacity var(--dur-1) var(--ease-ui); touch-action: pan-y; cursor: grab; }
+  .rino__canvas:active { cursor: grabbing; }
+  .rino__canvas :global(canvas) { width: 100% !important; height: 100% !important; display: block; }
+  .rino[data-modo="3d"] .rino__canvas { opacity: 1; }
+  .rino[data-modo="3d"] .rino__poster { opacity: 0; }
+  .rino__sombra {
+    position: absolute;
+    left: 20%; right: 20%; bottom: 2%;
+    height: 6%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(0 0 0 / .7), rgb(0 0 0 / 0));
+    z-index: -1;
+  }
+  .rino__controles { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--sp-4); margin-top: var(--sp-4); }
+  .rino__dica { color: var(--ash-400); }
+  .rino__dica-fino { display: none; }
+  @media (pointer: fine) {
+    .rino__dica-fino { display: inline; }
+    .rino__dica-toque { display: none; }
+  }
+
+  @media (min-width: 1024px) {
+    .rino { min-height: 100svh; display: grid; align-items: center; }
+    .rino__grade { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: center; }
+    .rino__texto { grid-column: 1 / span 4; }
+    .rino__visual { grid-column: 5 / span 8; min-height: 80vh; }
+    .rino__objeto { width: min(70vh, 46vw); }
+  }
+</style>
+
+<script>
+  import { prepararRinoceronte } from '@/scripts/rino-controle';
+  prepararRinoceronte();
+</script>

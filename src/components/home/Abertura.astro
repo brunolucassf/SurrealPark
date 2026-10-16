@@ -1,0 +1,237 @@
+---
+import CtaIngresso from '@/components/ui/CtaIngresso.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { RANKING_ATUAL } from '@/data/site';
+import { MIDIA_MOBILE_DO_HERO, TAMANHOS_DESKTOP_DO_HERO, type HeroPreparado } from '@/lib/hero';
+import type { Evento } from '@/lib/eventos';
+
+interface Props {
+  hero: HeroPreparado | null;
+  proximoEvento: Evento | undefined;
+}
+
+const { hero, proximoEvento } = Astro.props;
+const ALCA = 51.5 / 0.75;
+const DESENHO_DO_ANEL = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101 0Z`;
+const DESENHOS_DOS_ANEIS = [DESENHO_DO_ANEL, DESENHO_DO_ANEL, DESENHO_DO_ANEL];
+const focoMobile = hero?.mobile ? '50% 50%' : '66% 50%';
+---
+<section class="abertura" aria-labelledby="titulo-abertura" data-abertura style={`--foco-mobile: ${focoMobile}`}>
+  <div class="abertura__palco">
+    <div class="abertura__midia" data-abertura-midia>
+      {hero && (
+        <picture>
+          {hero.mobile && <source media={MIDIA_MOBILE_DO_HERO} type="image/avif" srcset={hero.mobile.avif} sizes="100vw" />}
+          {hero.mobile && <source media={MIDIA_MOBILE_DO_HERO} type="image/webp" srcset={hero.mobile.webp} sizes="100vw" />}
+          <source type="image/avif" srcset={hero.desktop.avif} sizes={TAMANHOS_DESKTOP_DO_HERO} />
+          <source type="image/webp" srcset={hero.desktop.webp} sizes={TAMANHOS_DESKTOP_DO_HERO} />
+          <img
+            class="abertura__foto"
+            src={hero.desktop.src}
+            alt={hero.alt}
+            width={hero.desktop.largura}
+            height={hero.desktop.altura}
+            loading="eager"
+            fetchpriority="high"
+            decoding="sync"
+            data-abertura-foto
+            data-carga-hero
+          />
+        </picture>
+      )}
+      {hero && (
+        <canvas
+          class="abertura__liquido"
+          aria-hidden="true"
+          data-hero-liquido
+          data-revelada-desktop={hero.reveladaDesktop.join('|')}
+          data-revelada-mobile={hero.reveladaMobile.join('|')}
+          data-midia-mobile={MIDIA_MOBILE_DO_HERO}
+        ></canvas>
+      )}
+      <div class="abertura__veu" aria-hidden="true" data-abertura-veu></div>
+    </div>
+    <div class="abertura__scrim" aria-hidden="true"></div>
+    <div class="abertura__grao" aria-hidden="true"></div>
+    <svg class="abertura__arcos abertura__eco" viewBox="-120 -90 240 180" aria-hidden="true" focusable="false" data-olho-eco>
+      {DESENHOS_DOS_ANEIS.map((d) => <g class="abertura__anel"><path d={d} pathLength="1" /></g>)}
+      <polygon class="abertura__pupila" points="0,-22 -24,21.7 24,21.7" />
+    </svg>
+    <svg class="abertura__arcos abertura__eco" viewBox="-120 -90 240 180" aria-hidden="true" focusable="false" data-olho-eco>
+      {DESENHOS_DOS_ANEIS.map((d) => <g class="abertura__anel"><path d={d} pathLength="1" /></g>)}
+      <polygon class="abertura__pupila" points="0,-22 -24,21.7 24,21.7" />
+    </svg>
+    <svg class="abertura__arcos" viewBox="-120 -90 240 180" aria-hidden="true" focusable="false" data-olho-arcos>
+      {DESENHOS_DOS_ANEIS.map((d) => <g class="abertura__anel"><path d={d} pathLength="1" /></g>)}
+      <polygon class="abertura__pupila" points="0,-22 -24,21.7 24,21.7" />
+    </svg>
+
+    <div class="abertura__conteudo">
+      <p class="abertura__selo selo-ranking t-mono-xs" data-abertura-revela>{RANKING_ATUAL.rotulo}</p>
+      <h1 class="abertura__titulo t-hero" id="titulo-abertura">
+        <span class="sr-only">Surreal Park, um sonho de olhos abertos</span>
+        <span class="abertura__frase" aria-hidden="true" data-abertura-frase>Um sonho de olhos <span class="drop" data-abertura-drop>abertos.</span></span>
+      </h1>
+      <p class="abertura__apoio t-lead" data-abertura-revela>
+        Música eletrônica e arte ao ar livre em Camboriú, SC. Cinco palcos em 135 mil m², com vista para a serra e o skyline de Balneário Camboriú.
+      </p>
+      <div class="abertura__ctas" data-abertura-revela>
+        <CtaIngresso evento={proximoEvento} class="abertura__cta" />
+        <a class="btn btn--secundario abertura__cta" href="/o-parque">
+          Conhecer o parque
+          <Icone nome="piramide" class="btn__seta" />
+        </a>
+      </div>
+      {import.meta.env.DEV && proximoEvento?.data.exemplo && (
+        <p class="abertura__aviso-exemplo" data-abertura-revela><span class="selo-exemplo t-mono-xs">exemplo</span> <span class="t-mono-xs">o CTA aponta para um evento de exemplo</span></p>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .abertura { position: relative; height: 100svh; min-height: 600px; }
+  .abertura__palco {
+    position: relative;
+    height: 100%;
+    overflow: clip;
+    isolation: isolate;
+  }
+  :global(.pin-ok) .abertura { height: 220vh; }
+  :global(.pin-ok) .abertura__palco { position: sticky; top: 0; height: 100vh; min-height: 600px; }
+
+  .abertura__midia {
+    position: absolute;
+    inset: 0;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: 50% 50%;
+    mask-position: 50% 50%;
+  }
+  .abertura__foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--foco-mobile, 66% 50%);
+  }
+  @media (min-width: 768px) { .abertura__foto { object-position: 50% 45%; } }
+  .abertura__liquido {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--dur-1-2) var(--ease-ui);
+  }
+  .abertura__liquido[data-pronto="true"] { opacity: 1; }
+  .abertura__veu { position: absolute; inset: 0; background: var(--ink-950); opacity: 0; pointer-events: none; }
+
+  .abertura__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to bottom, rgb(12 11 13 / .45) 0%, rgb(12 11 13 / 0) 22%),
+      linear-gradient(to top, rgb(12 11 13 / .92) 0%, rgb(12 11 13 / .78) 38%, rgb(12 11 13 / .2) 68%, rgb(12 11 13 / 0) 82%);
+    pointer-events: none;
+  }
+  @media (min-width: 1024px) {
+    .abertura__scrim {
+      background:
+        linear-gradient(to bottom, rgb(12 11 13 / .45) 0%, rgb(12 11 13 / 0) 18%),
+        linear-gradient(to top, rgb(12 11 13 / .9) 0%, rgb(12 11 13 / .7) 30%, rgb(12 11 13 / 0) 72%),
+        linear-gradient(to right, rgb(12 11 13 / .55) 0%, rgb(12 11 13 / 0) 60%);
+    }
+  }
+
+  .abertura__grao { display: none; }
+  @media (pointer: fine) and (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    .abertura__grao {
+      display: block;
+      position: absolute;
+      inset: -64px;
+      opacity: .06;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 2.2 -.6'/%3E%3C/filter%3E%3Crect width='128' height='128' filter='url(%23g)'/%3E%3C/svg%3E");
+      background-size: 128px 128px;
+      animation: grao .33s steps(4) infinite;
+    }
+  }
+  @keyframes grao {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-37px, 21px); }
+    50% { transform: translate(23px, -45px); }
+    75% { transform: translate(-11px, -19px); }
+    100% { transform: translate(0, 0); }
+  }
+
+  .abertura__arcos {
+    --largura-dos-arcos: 86vw;
+    position: absolute;
+    left: calc(50% - var(--largura-dos-arcos) / 2);
+    top: calc(30% - var(--largura-dos-arcos) * .375);
+    width: var(--largura-dos-arcos);
+    height: calc(var(--largura-dos-arcos) * .75);
+    overflow: visible;
+    pointer-events: none;
+    opacity: 0;
+    color: var(--gold-400);
+    transform-origin: 50% 50%;
+  }
+  .abertura__arcos path { fill: none; stroke: currentColor; stroke-linejoin: bevel; }
+  .abertura__arcos polygon { fill: currentColor; }
+  .abertura__eco { opacity: 0; }
+  @media (min-width: 1024px) {
+    .abertura__arcos { --largura-dos-arcos: calc(34vw * 240 / 190); top: calc(50% - var(--largura-dos-arcos) * .375); }
+  }
+
+  .abertura__conteudo {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    max-width: calc(var(--container) + 2 * var(--margem));
+    margin-inline: auto;
+    padding: calc(var(--header-h) + var(--sp-5)) var(--margem) calc(var(--barra-h) + var(--sp-6));
+  }
+  .abertura__selo { background: rgb(12 11 13 / .6); }
+  .abertura__titulo { color: var(--bone-50); max-width: 11ch; }
+  .abertura__frase { display: block; }
+  .abertura__apoio { color: var(--bone-300); max-width: 46ch; font-size: var(--fs-body); line-height: 1.5; }
+  .abertura__ctas { display: grid; gap: var(--sp-3); width: 100%; margin-top: var(--sp-2); }
+  .abertura__cta { width: 100%; }
+  .abertura__aviso-exemplo { display: flex; gap: var(--sp-2); align-items: center; color: var(--alert-300); }
+
+  @media (min-width: 640px) {
+    .abertura__ctas { display: flex; flex-wrap: wrap; width: auto; }
+    .abertura__cta { width: auto; }
+  }
+  @media (min-width: 768px) {
+    .abertura__apoio { font-size: var(--fs-lead); }
+  }
+  @media (min-width: 1024px) {
+    .abertura__conteudo {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      column-gap: var(--gutter);
+      align-content: end;
+      row-gap: var(--sp-5);
+      padding-bottom: clamp(3rem, 6vh, 6rem);
+    }
+    .abertura__selo { position: absolute; top: calc(var(--header-h) + var(--sp-6)); right: var(--margem); }
+    .abertura__titulo { grid-column: 1 / span 9; max-width: none; }
+    .abertura__apoio { grid-column: 1 / span 5; }
+    .abertura__ctas { grid-column: 1 / span 9; }
+    .abertura__aviso-exemplo { grid-column: 1 / span 9; }
+  }
+
+</style>
+
+<script>
+  import { iniciarAbertura } from '@/scripts/abertura';
+  iniciarAbertura();
+</script>

@@ -1,0 +1,212 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import { PALCOS_EM_CARTAZ } from '@/data/palcos';
+import { AVIAO_727, LAMPADAS_DO_X } from '@/data/formas';
+import { getImage } from 'astro:assets';
+import { buscarImagemPorArquivo } from '@/lib/fotos';
+
+const VIEWBOX_DO_AVIAO = '8 2 474 102';
+const FOTO_DO_AVIAO = buscarImagemPorArquivo('fotos/jardim/contato-skyline-aerea.jpg');
+const urlDaFotoDoAviao = FOTO_DO_AVIAO ? (await getImage({ src: FOTO_DO_AVIAO, format: 'avif', width: 960, quality: 55 })).src : null;
+const [RECORTE_FUSELAGEM, RECORTE_ESTABILIZADOR, RECORTE_MOTOR, RECORTE_ASA] = AVIAO_727.tracos;
+const RECORTES_DO_AVIAO = [RECORTE_FUSELAGEM, RECORTE_ESTABILIZADOR, RECORTE_MOTOR, RECORTE_ASA];
+
+const isRawRoomQuadrada = Boolean(buscarImagemPorArquivo('fotos/raw-room/raw-room-recorte-1x1.jpg'));
+const arquivoDaFoto = (palco: (typeof PALCOS_EM_CARTAZ)[number]) => (palco.id === 'raw-room' && isRawRoomQuadrada ? 'fotos/raw-room/raw-room-recorte-1x1.jpg' : undefined);
+---
+<section class="cartaz" aria-labelledby="titulo-cartaz" data-cartaz data-humor="palcos">
+  <div class="container cartaz__grade">
+    <header class="cartaz__topo">
+      <p class="t-mono-xs cartaz__rotulo">Line-up de arquitetura</p>
+      <h2 class="t-h2 cartaz__titulo" id="titulo-cartaz" data-revela-titulo>Cinco palcos, nenhum igual ao outro</h2>
+    </header>
+
+    <ol class="cartaz__lista" role="list" data-cartaz-lista>
+      {PALCOS_EM_CARTAZ.map((palco, indice) => (
+        <li class="cartaz__item" style={`--luz: var(--luz-${palco.id}); --forma: url(#${palco.forma})`} data-revela>
+          <a class="cartaz__link" href={`/o-parque#${palco.id}`} aria-label={`Conhecer o ${palco.nome}`} data-cartaz-palco={palco.id}>
+            <span class="t-mono-xs cartaz__indice" aria-hidden="true">{String(indice + 1).padStart(2, '0')}</span>
+            <span class="t-display cartaz__nome">{palco.nome}</span>
+            <span class="cartaz__info">
+              {palco.som && <span class="t-mono-xs cartaz__som">{palco.som}</span>}
+              <span class="t-body-s cartaz__linha">{palco.linha}</span>
+            </span>
+            <span class:list={['cartaz__miniatura', { 'cartaz__miniatura--x': palco.id === 'raw-room' }]} aria-hidden="true">
+              <FotoAcervo slot={palco.slotDaFoto} arquivo={arquivoDaFoto(palco)} alt="" sizes="88px" larguras={[176, 264]} class="cartaz__miniatura-img" />
+              {palco.id === 'raw-room' && (
+                <svg class="cartaz__lampadas cartaz__lampadas--acesas" viewBox="0 0 1 1" focusable="false">
+                  {LAMPADAS_DO_X.map((lampada) => <circle cx={lampada.x} cy={lampada.y} r=".03" />)}
+                </svg>
+              )}
+            </span>
+          </a>
+        </li>
+      ))}
+      <li class="cartaz__item cartaz__item--jet-set" data-revela>
+        <a class="cartaz__link" href="/o-parque#jet-set" aria-label="Ver o Jet Set" data-cartaz-palco="jet-set">
+          <span class="t-mono-xs cartaz__indice" aria-hidden="true">06</span>
+          <span class="t-display cartaz__nome cartaz__nome--contorno">Jet Set</span>
+          <span class="cartaz__info">
+            <span class="t-mono-xs cartaz__som cartaz__som--lua">Em breve · em construção</span>
+            <span class="t-body-s cartaz__linha">Dentro da fuselagem de um Boeing 727.</span>
+          </span>
+          <svg class="cartaz__aviao-mini" viewBox={VIEWBOX_DO_AVIAO} aria-hidden="true" focusable="false">
+            {urlDaFotoDoAviao && <image href={urlDaFotoDoAviao} x="8" y="2" width="474" height="102" preserveAspectRatio="xMidYMid slice" clip-path="url(#recorte-do-aviao)" />}
+            {AVIAO_727.tracos.map((traco) => <path d={traco} />)}
+            {AVIAO_727.janelas.map((cx) => <circle cx={cx} cy="70" r="2.2" />)}
+          </svg>
+        </a>
+      </li>
+    </ol>
+
+    <div class="cartaz__previa" aria-hidden="true" data-cartaz-previa>
+      <div class="cartaz__inclinacao" data-cartaz-inclinacao>
+        <div class="cartaz__forma" data-cartaz-forma>
+          {PALCOS_EM_CARTAZ.map((palco) => (
+            <figure class="cartaz__quadro" data-cartaz-quadro={palco.id}>
+              <FotoAcervo slot={palco.slotDaFoto} arquivo={arquivoDaFoto(palco)} alt="" sizes="(min-width: 2560px) 30vw, 34vw" larguraMaxima={1680} class="cartaz__quadro-img" />
+            </figure>
+          ))}
+          <svg class="cartaz__lampadas" viewBox="0 0 1 1" focusable="false" data-cartaz-lampadas>
+            {LAMPADAS_DO_X.map((lampada) => <circle cx={lampada.x} cy={lampada.y} r=".03" data-ordem={lampada.ordem} />)}
+          </svg>
+        </div>
+        <svg class="cartaz__aviao" viewBox={VIEWBOX_DO_AVIAO} focusable="false" data-cartaz-aviao>
+          <g class="cartaz__aviao-corpo" data-cartaz-aviao-corpo>
+            {urlDaFotoDoAviao && <image href={urlDaFotoDoAviao} x="8" y="2" width="474" height="102" preserveAspectRatio="xMidYMid slice" clip-path="url(#recorte-do-aviao)" />}
+            {AVIAO_727.tracos.map((traco) => <path d={traco} pathLength="1" />)}
+            {AVIAO_727.janelas.map((cx) => <circle cx={cx} cy="70" r="2.2" data-janela />)}
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <svg width="0" height="0" class="cartaz__defs" aria-hidden="true" focusable="false">
+    <defs>
+      <clipPath id="recorte-do-aviao">{RECORTES_DO_AVIAO.map((caminho) => <path d={caminho} />)}</clipPath>
+      <radialGradient id="lampada-acesa">
+        <stop offset="0" stop-color="#F0D49A" />
+        <stop offset=".4" stop-color="#D6A24A" />
+        <stop offset="1" stop-color="#D6A24A" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+  </svg>
+</section>
+
+<style>
+  .cartaz { position: relative; padding-block: var(--s-section); overflow: clip; }
+  .cartaz__defs { position: absolute; }
+  .cartaz__grade { position: relative; display: grid; gap: var(--s-block); }
+  .cartaz__topo { display: grid; gap: var(--sp-4); }
+  .cartaz__rotulo { color: var(--gold-400); }
+  .cartaz__titulo { max-width: 16ch; }
+
+  .cartaz__lista { border-top: var(--borda-1); }
+  .cartaz__item { border-bottom: var(--borda-1); }
+  .cartaz__link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 72px;
+    grid-template-areas: "indice miniatura" "nome miniatura" "info info";
+    column-gap: var(--sp-4);
+    row-gap: var(--sp-2);
+    align-items: end;
+    padding-block: var(--sp-5);
+  }
+  .cartaz__indice { grid-area: indice; color: var(--luz); }
+  .cartaz__nome {
+    grid-area: nome;
+    color: var(--bone-50);
+    font-stretch: 100%;
+    transition: color var(--dur-1-4) var(--ease-ui);
+  }
+  .cartaz__nome--contorno { color: transparent; -webkit-text-stroke: 1px var(--moon-200); }
+  .cartaz__info { grid-area: info; display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-2) var(--sp-4); }
+  .cartaz__som { color: var(--gold-300); }
+  .cartaz__som--lua { color: var(--moon-200); }
+  .cartaz__linha { color: var(--bone-300); }
+  .cartaz__miniatura { position: relative; grid-area: miniatura; width: 72px; height: 88px; clip-path: var(--forma); background: var(--ink-800); align-self: center; }
+  .cartaz__miniatura--x { height: 72px; }
+  .cartaz__miniatura :global(img), .cartaz__miniatura :global(.foto-ausente) { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .cartaz__lampadas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .cartaz__lampadas circle { fill: url(#lampada-acesa); opacity: 0; }
+  .cartaz__lampadas--acesas circle { opacity: 1; }
+  .cartaz__item--jet-set .cartaz__link { grid-template-columns: minmax(0, 1fr) 120px; grid-template-areas: "indice aviao" "nome aviao" "info info"; }
+  .cartaz__aviao-mini { grid-area: aviao; width: 120px; height: 26px; align-self: center; overflow: visible; }
+  .cartaz__aviao-mini path, .cartaz__aviao path { fill: none; stroke: var(--gold-300); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+  .cartaz__aviao-mini circle { fill: var(--gold-300); }
+  .cartaz__aviao-mini image, .cartaz__aviao image { filter: brightness(1.7) contrast(1.1) saturate(1.15); }
+  .cartaz__previa { display: none; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cartaz__link:hover .cartaz__nome:not(.cartaz__nome--contorno) { color: var(--gold-300); }
+    .cartaz__link:hover .cartaz__nome--contorno { -webkit-text-stroke-color: var(--gold-200); }
+  }
+  .cartaz__link:focus-visible .cartaz__nome:not(.cartaz__nome--contorno) { color: var(--gold-300); }
+
+  @media (min-width: 1024px) {
+    .cartaz__grade { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); }
+    .cartaz__topo { grid-column: 1 / span 7; }
+    .cartaz__lista { grid-column: 1 / span 8; position: relative; z-index: 1; container-type: inline-size; }
+    .cartaz__link {
+      grid-template-columns: 3rem minmax(0, 1fr);
+      grid-template-areas: "indice nome" ". info";
+      align-items: baseline;
+      padding-block: var(--sp-4);
+    }
+    .cartaz__nome { font-stretch: 125%; line-height: .95; font-size: min(var(--fs-display), 9.6cqi); white-space: nowrap; }
+    .cartaz__miniatura, .cartaz__aviao-mini { display: none; }
+    .cartaz__item--jet-set .cartaz__link { grid-template-columns: 3rem minmax(0, 1fr); grid-template-areas: "indice nome" ". info"; }
+    .cartaz__info { opacity: .85; }
+
+    .cartaz__previa {
+      display: block;
+      grid-column: 9 / span 4;
+      grid-row: 2;
+      position: relative;
+      align-self: start;
+      aspect-ratio: 4 / 5;
+      pointer-events: none;
+      perspective: 1000px;
+      will-change: transform;
+    }
+    .cartaz__previa::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(closest-side, var(--luz-ativa, var(--luz-ritual)), transparent);
+      opacity: .22;
+      transition: background var(--dur-1) var(--ease-ui);
+    }
+    .cartaz__inclinacao { position: absolute; inset: 0; transform-style: preserve-3d; }
+    .cartaz__forma {
+      position: absolute;
+      inset: 0;
+      clip-path: url(#f-previa);
+      transition: opacity var(--dur-1-2) var(--ease-ui);
+    }
+    .cartaz__previa[data-modo="aviao"] .cartaz__forma { opacity: 0; }
+    .cartaz__quadro {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity var(--dur-1) var(--ease-ui);
+    }
+    .cartaz__quadro[data-ativo="true"] { opacity: 1; }
+    .cartaz__quadro :global(img) { width: 100%; height: 100%; object-fit: cover; scale: 1.04; transition: scale var(--dur-2) var(--ease-saida); }
+    .cartaz__quadro[data-ativo="true"] :global(img) { scale: 1; }
+    .cartaz__forma .cartaz__lampadas { inset: 10% 0; height: 80%; }
+    .cartaz__aviao {
+      position: absolute;
+      left: -6%;
+      top: 50%;
+      width: min(112%, 560px);
+      aspect-ratio: 474 / 102;
+      translate: 0 -50%;
+      overflow: visible;
+      opacity: 0;
+      transition: opacity var(--dur-1-2) var(--ease-ui);
+    }
+    .cartaz__previa[data-modo="aviao"] .cartaz__aviao { opacity: 1; }
+    .cartaz__aviao circle { fill: var(--ink-750); }
+  }
+</style>
