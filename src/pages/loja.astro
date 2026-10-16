@@ -1,10 +1,55 @@
 ---
 import Base from '@/layouts/Base.astro';
-import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
+import NeonDoOlho from '@/components/loja/NeonDoOlho.astro';
+import GradeDeProdutos from '@/components/loja/GradeDeProdutos.astro';
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { REDES, SUFIXO_NOVA_ABA } from '@/data/site';
+import { isLojaAtiva } from '@/data/loja';
+import '@/styles/loja.css';
+
+const instagram = REDES.find((rede) => rede.nome === 'Instagram');
 ---
 <Base
   titulo="Surreal Store em breve | Surreal Park"
   descricao="Produtos oficiais do Surreal Park, em breve on-line. Acompanhe o lançamento pelo Instagram."
 >
-  <TopoDePagina humor="loja" rotulo="Loja" titulo="Surreal Store" apoio="A loja on-line do Surreal Park está a caminho, ainda sem data." />
+  <header class="loja-topo container" data-humor="loja">
+    <div class="loja-topo__texto">
+      <p class="t-mono-xs loja-topo__rotulo">A loja está a caminho</p>
+      <h1 class="t-h1 loja-topo__titulo">Surreal Store</h1>
+      <p class="t-lead loja-topo__apoio">A loja on-line do Surreal Park está a caminho, ainda sem data.</p>
+      <div class="loja-topo__acoes">
+        {instagram && (
+          <a class="btn btn--primario" href={instagram.href} target="_blank" rel="noopener" aria-label={`Acompanhar no Instagram ${SUFIXO_NOVA_ABA}`}>
+            <span class="btn__texto">Acompanhar no Instagram</span>
+            <Icone nome="externo" class="btn__icone" />
+          </a>
+        )}
+        <a class="link-texto" href="/o-parque#loja">Conhecer a loja no parque</a>
+      </div>
+    </div>
+    <NeonDoOlho />
+  </header>
+
+  <section class="loja-foto container" aria-labelledby="titulo-enquanto-isso">
+    <figure class="loja-foto__figura">
+      <div class="loja-foto__imagem">
+        <FotoAcervo
+          slot="loja-diego-0054"
+          arquivo="fotos/loja/loja-diego-0054.jpg"
+          alt="Surreal Store: fachada da loja do parque à noite, com letreiros de neon e vitrines acesas"
+          sizes="(min-width: 1440px) 1600px, 100vw"
+          larguraMaxima={2400}
+        />
+      </div>
+      <figcaption class="t-mono-xs loja-foto__legenda">Foto: Diego Jarschel</figcaption>
+    </figure>
+    <div class="loja-foto__corpo">
+      <h2 class="t-h3" id="titulo-enquanto-isso">Enquanto isso</h2>
+      <p class="t-body">A Surreal Store funciona dentro do parque.</p>
+    </div>
+  </section>
+
+  {isLojaAtiva && <GradeDeProdutos />}
 </Base>

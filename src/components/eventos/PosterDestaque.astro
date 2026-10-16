@@ -1,0 +1,80 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+import { NOME_DO_PALCO } from '@/data/palcos';
+import { CONTATOS, SUFIXO_NOVA_ABA, criarLinkWhatsApp } from '@/data/site';
+import { derivarStatus, extrairPartesDaData, formatarDataDoCard, formatarDataPorExtenso, formatarHora, nomearPlataforma, type Evento } from '@/lib/eventos';
+
+interface Props { evento: Evento }
+
+const { evento } = Astro.props;
+const { titulo, data_inicio: inicio, artistas, palcos, lotes_info: lotesInfo, exemplo } = evento.data;
+const status = derivarStatus(evento);
+const partes = extrairPartesDaData(inicio);
+const plataforma = nomearPlataforma(evento);
+const dataCurta = formatarDataDoCard(inicio);
+const destaques = artistas.filter((artista) => artista.destaque).map((artista) => artista.nome);
+const demais = artistas.filter((artista) => !artista.destaque).map((artista) => artista.nome);
+const isLineUpVisivel = artistas.length > 0 && !(artistas.length === 1 && artistas[0]?.nome === titulo);
+const linkDeMesas = criarLinkWhatsApp(
+  CONTATOS.whatsappMesas,
+  ['Olá, quero reservar mesa ou camarote no Surreal Park.', `Evento: ${titulo} · ${dataCurta}`, 'Número de pessoas:', 'Meu nome:'].join('\n'),
+);
+---
+<article class="poster-cena" aria-labelledby="titulo-destaque" data-status={status}>
+  <div class="poster" data-poster>
+    <div class="poster__reflexo" aria-hidden="true"></div>
+    <p class="t-mono-xs poster__rotulo">Próxima data</p>
+    <p class="poster__data">
+      <span class="poster__dia" aria-hidden="true">{String(partes.dia).padStart(2, '0')}</span>
+      <span class="sr-only">{dataCurta}</span>
+      <span class="t-mono poster__mes">{partes.mesCurto} · {partes.diaDaSemanaCurto} · {partes.ano}</span>
+      <span class="t-mono-xs poster__hora">abertura {formatarHora(inicio)}</span>
+    </p>
+    <div class="poster__corpo">
+      <h2 class="t-h2 titulo-peso poster__titulo" id="titulo-destaque">{titulo}</h2>
+      {isLineUpVisivel && (
+        <p class="poster__artistas">
+          <span class="poster__destaques">{destaques.join(', ')}</span>
+          {demais.length > 0 && <span class="poster__demais"> · com {demais.join(', ')}</span>}
+        </p>
+      )}
+      {palcos.length > 0 && (
+        <ul class="t-mono poster__palcos" role="list">
+          {palcos.map((palco) => <li style={`--luz: var(--luz-${palco})`}>{NOME_DO_PALCO[palco]}</li>)}
+        </ul>
+      )}
+      {import.meta.env.DEV && exemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
+    </div>
+    <div class="poster__acao">
+      {status === 'aberto' && (
+        <>
+          <a
+            class="btn btn--primario poster__cta"
+            href={evento.data.ingresso_url}
+            target="_blank"
+            rel="noopener"
+            data-pulso
+            aria-label={`Comprar ingresso para ${titulo}, ${formatarDataPorExtenso(inicio)}, na ${plataforma} ${SUFIXO_NOVA_ABA}`}
+          >
+            Comprar na {plataforma}
+            <Icone nome="externo" class="btn__icone" />
+          </a>
+          <p class="t-mono-xs poster__apoio">{lotesInfo ?? `Abre a ${plataforma} em nova aba`}</p>
+        </>
+      )}
+      {status === 'esgotado' && (
+        <>
+          <span class="t-mono-xs poster__selo">Esgotado</span>
+          <span class="btn poster__cta poster__cta--off" aria-disabled="true">Ingressos esgotados</span>
+          <a class="link-texto t-body-s" href={linkDeMesas} target="_blank" rel="noopener">Perguntar por mesas e camarotes<span class="sr-only"> (abre o WhatsApp)</span></a>
+        </>
+      )}
+      {status === 'em_breve' && (
+        <>
+          <span class="t-mono-xs poster__selo poster__selo--breve">Ingressos em breve</span>
+          <a class="link-texto t-body-s" href="#mesas">Ver mesas e camarotes</a>
+        </>
+      )}
+    </div>
+  </div>
+</article>

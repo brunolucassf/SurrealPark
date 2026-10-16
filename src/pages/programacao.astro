@@ -1,10 +1,36 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '@/layouts/Base.astro';
 import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
 import EventoLinha from '@/components/eventos/EventoLinha.astro';
-import { listarProximosEventos } from '@/lib/eventos';
+import PosterDestaque from '@/components/eventos/PosterDestaque.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { CONTATOS, LINK_WHATSAPP_MESAS, REDES } from '@/data/site';
+import { derivarStatus, extrairPartesDaData, formatarDataDoCard, formatarDataPorExtenso, listarProximosEventos } from '@/lib/eventos';
+import '@/styles/programacao.css';
 
-const eventos = await listarProximosEventos();
+const LIMITE_PARA_FILTRO = 6;
+
+const proximos = await listarProximosEventos();
+const [destaque, ...demais] = proximos;
+const isFiltroVisivel = proximos.length > LIMITE_PARA_FILTRO;
+const instagram = REDES.find((rede) => rede.nome === 'Instagram');
+
+const passados = (await getCollection('eventos'))
+  .filter((evento) => derivarStatus(evento) === 'encerrado')
+  .sort((a, b) => Date.parse(b.data.data_inicio) - Date.parse(a.data.data_inicio));
+
+function chaveDoMes(iso: string): string {
+  const { ano, mes } = extrairPartesDaData(iso);
+  return `${ano}-${String(mes + 1).padStart(2, '0')}`;
+}
+
+const mesesDoFiltro = [...new Map(
+  demais.map((evento) => {
+    const iso = evento.data.data_inicio;
+    return [chaveDoMes(iso), { chave: chaveDoMes(iso), curto: extrairPartesDaData(iso).mesCurto, porExtenso: formatarDataPorExtenso(iso).split(' de ')[1] ?? '' }];
+  }),
+).values()];
 ---
 <Base
   titulo="Programação e ingressos | Surreal Park Camboriú"
@@ -16,14 +42,84 @@ const eventos = await listarProximosEventos();
     titulo="Quem toca no Surreal Park"
     apoio="Datas, line-ups e ingressos. A compra é feita na plataforma de cada evento, Ingresse ou Blueticket, em nova aba. 18+."
   />
-  <section class="agenda container" id="agenda" aria-label="Próximas datas" data-humor="datas">
-    <ol class="agenda__lista" role="list">
-      {eventos.map((evento) => <li><EventoLinha evento={evento} nivelDoTitulo="h2" /></li>)}
-    </ol>
+
+  {destaque ? (
+    <div class="container"><PosterDestaque evento={destaque} /></div>
+  ) : (
+    <section class="container vazio" aria-labelledby="titulo-vazio">
+      <h2 class="t-h2" id="titulo-vazio">Novas datas em breve</h2>
+      <p class="t-lead vazio__texto">As próximas datas saem primeiro no Instagram.</p>
+      <div class="vazio__acoes">
+        {instagram && (
+          <a class="btn btn--primario" href={instagram.href} target="_blank" rel="noopener">
+            Seguir no Instagram<span class="sr-only"> (abre em nova aba)</span>
+          </a>
+        )}
+        <a class="btn btn--secundario" href="#mesas">Falar sobre mesas e camarotes</a>
+      </div>
+    </section>
+  )}
+
+  {demais.length > 0 && (
+    <section class="agenda container" id="agenda" aria-labelledby="titulo-agenda" data-humor="datas">
+      <div class="agenda__cabeca">
+        <h2 class="t-mono-xs agenda__rotulo" id="titulo-agenda">Depois disso</h2>
+        {isFiltroVisivel && (
+          <div class="filtro" role="group" aria-label="Filtrar por mês" data-filtro>
+            <button class="filtro__botao" type="button" data-mes="todas" aria-pressed="true">Todas</button>
+            {mesesDoFiltro.map((mes) => (
+              <button class="filtro__botao" type="button" data-mes={mes.chave} data-mes-por-extenso={mes.porExtenso} aria-pressed="false">{mes.curto}</button>
+            ))}
+          </div>
+        )}
+      </div>
+      {isFiltroVisivel && <p class="sr-only" role="status" aria-live="polite" data-filtro-aviso></p>}
+      <ol class="agenda__lista" role="list">
+        {demais.map((evento) => (
+          <li class="evento-linha" data-mes-da-linha={chaveDoMes(evento.data.data_inicio)}>
+            <EventoLinha evento={evento} nivelDoTitulo="h3" />
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {passados.length > 0 && (
+    <details class="passadas container">
+      <summary class="passadas__resumo t-mono-xs">Já aconteceu · {passados.length} {passados.length === 1 ? 'data' : 'datas'}</summary>
+      <ol role="list">
+        {passados.map((evento) => (
+          <li class="passada">
+            <span class="t-mono-xs">{formatarDataDoCard(evento.data.data_inicio)}</span>
+            <span class="t-h4 passada__titulo">{evento.data.titulo}</span>
+            {evento.data.artistas.length > 0 && <span class="t-body-s">{evento.data.artistas.map((artista) => artista.nome).join(', ')}</span>}
+          </li>
+        ))}
+      </ol>
+    </details>
+  )}
+
+  <section class="mesas container" id="mesas" aria-labelledby="titulo-mesas">
+    <div class="mesas__interno">
+      <h2 class="t-h2 titulo-peso" id="titulo-mesas">Mesas e camarotes</h2>
+      <p class="t-lead mesas__texto">Para grupos que querem um ponto fixo na noite. Valores, lugares e disponibilidade mudam a cada evento; quem responde é a equipe do Surreal, pelo WhatsApp.</p>
+      <div class="mesas__acoes">
+        <a class="btn btn--primario" href={LINK_WHATSAPP_MESAS} target="_blank" rel="noopener" data-pulso>
+          <Icone nome="whatsapp" class="btn__icone" />
+          Reservar pelo WhatsApp<span class="sr-only"> (abre o WhatsApp)</span>
+        </a>
+        <p class="t-body-s mesas__apoio">Abre o WhatsApp com a mensagem pronta. Você só completa o número de pessoas.</p>
+        <p class="t-body-s mesas__apoio">
+          Sem WhatsApp neste aparelho? {CONTATOS.telefoneMesas} ·
+          <button class="link-texto mesas__copiar" type="button" data-copiar={CONTATOS.telefoneMesas}>Copiar número</button>
+        </p>
+        <p class="sr-only" role="status" aria-live="polite" data-copiar-aviso></p>
+      </div>
+    </div>
   </section>
 </Base>
 
-<style>
-  .agenda { padding-block-end: var(--s-section); }
-  .agenda__lista { border-bottom: var(--borda-1); }
-</style>
+<script>
+  import { iniciarProgramacao } from '@/scripts/programacao';
+  iniciarProgramacao();
+</script>

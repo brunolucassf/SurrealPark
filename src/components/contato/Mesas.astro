@@ -1,0 +1,26 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { CONTATOS, LINK_WHATSAPP_MESAS, SUFIXO_NOVA_ABA } from '@/data/site';
+---
+<section class="ct-secao ct-mesas" id="mesas" aria-labelledby="titulo-mesas">
+  <div class="container ct-duas-colunas">
+    <div class="ct-bloco">
+      <p class="t-mono-xs ct-rotulo">01 · Mesas e camarotes</p>
+      <h2 class="t-h2" id="titulo-mesas">Mesas e camarotes</h2>
+      <p class="t-body ct-texto">Um ponto fixo na noite para o seu grupo. Valores e disponibilidade variam por evento e saem pelo WhatsApp.</p>
+      <div class="ct-acoes">
+        <a class="btn btn--primario" href={LINK_WHATSAPP_MESAS} target="_blank" rel="noopener" data-pulso data-pulso-ao-entrar>
+          <Icone nome="whatsapp" class="btn__icone" />
+          Reservar pelo WhatsApp<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
+        </a>
+        <a class="link-nav t-label ct-link" href="/programacao">Ver as próximas datas</a>
+      </div>
+      <p class="t-body-s ct-apoio">Abre o WhatsApp com a mensagem pronta. Você só completa os dados.</p>
+      <p class="t-body-s ct-apoio">Sem WhatsApp neste aparelho? Ligue para <a class="link-texto" href={`tel:${CONTATOS.telefoneMesas.replace(/[^\d+]/g, '')}`}>{CONTATOS.telefoneMesas}</a>.</p>
+    </div>
+    <div class="ct-moldura ct-mesas__foto">
+      <FotoAcervo slot="programacao-mesas" alt="" sizes="(min-width: 1024px) 50vw, 100vw" larguraMaxima={1680} class="ct-moldura__img" />
+    </div>
+  </div>
+</section>

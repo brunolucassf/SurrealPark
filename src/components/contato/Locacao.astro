@@ -1,0 +1,46 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+import { CONTATOS, SUFIXO_NOVA_ABA } from '@/data/site';
+import { CAPACIDADES, LINK_EMAIL_LOCACAO, LINK_INSTAGRAM_LOCACAO, LINK_WHATSAPP_LOCACAO, TELEFONE_LOCACAO, TIPOS_DE_EVENTO } from './mensagens';
+
+const MAIOR_CAPACIDADE = Math.max(...CAPACIDADES);
+const formatarNumero = (valor: number) => valor.toLocaleString('pt-BR');
+---
+<section class="ct-secao ct-locacao" id="locacao" aria-labelledby="titulo-locacao">
+  <div class="container ct-duas-colunas">
+    <div class="ct-bloco">
+      <p class="t-mono-xs ct-rotulo">02 · Locação</p>
+      <h2 class="t-h2" id="titulo-locacao">Locação de espaços no Surreal Park</h2>
+      <p class="t-body ct-texto">Espaços para 1.000 a 8.000 pessoas em 135 mil m², com estacionamento para cerca de 1.500 veículos e portaria 24 h. Para casamentos, congressos, lançamentos, feiras, formaturas, eventos automotivos e shows.</p>
+      <ul class="ct-tipos" role="list" aria-label="Tipos de evento">
+        {TIPOS_DE_EVENTO.map((tipo) => <li class="t-label">{tipo}</li>)}
+      </ul>
+      <p class="t-body-s ct-apoio">Conte o tipo, a data e o público estimado. A proposta começa daí.</p>
+      <div class="ct-acoes">
+        <a class="btn btn--primario" href={LINK_WHATSAPP_LOCACAO} target="_blank" rel="noopener" data-pulso>
+          <Icone nome="whatsapp" class="btn__icone" />
+          Falar sobre meu evento<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
+        </a>
+        <a class="btn btn--secundario" href={LINK_EMAIL_LOCACAO}>Enviar por e-mail</a>
+      </div>
+      <ul class="ct-canais t-body-s" role="list" aria-label="Canais de locação">
+        <li>WhatsApp <a class="link-texto" href={LINK_WHATSAPP_LOCACAO} target="_blank" rel="noopener">{TELEFONE_LOCACAO}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a></li>
+        <li>E-mail <a class="link-texto" href={`mailto:${CONTATOS.emailLocacao}`}>{CONTATOS.emailLocacao}</a></li>
+        <li>Instagram <a class="link-texto" href={LINK_INSTAGRAM_LOCACAO} target="_blank" rel="noopener">@surrealpark.locacao<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a></li>
+      </ul>
+    </div>
+
+    <div class="ct-capacidades" data-capacidades>
+      <h3 class="t-mono-xs ct-rotulo" id="titulo-capacidades">Capacidade máxima por espaço</h3>
+      <ol class="ct-capacidades__lista" role="list" aria-labelledby="titulo-capacidades">
+        {CAPACIDADES.map((capacidade) => (
+          <li class="ct-capacidade" style={`--proporcao: ${capacidade / MAIOR_CAPACIDADE}`}>
+            <span class="ct-capacidade__numero t-h3" data-contar={capacidade}>{formatarNumero(capacidade)}</span>
+            <span class="ct-capacidade__unidade t-label">pessoas</span>
+            <span class="ct-capacidade__barra" aria-hidden="true"></span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+</section>

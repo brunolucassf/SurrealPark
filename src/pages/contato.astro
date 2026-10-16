@@ -1,11 +1,41 @@
 ---
 import Base from '@/layouts/Base.astro';
 import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
+import Mesas from '@/components/contato/Mesas.astro';
+import Locacao from '@/components/contato/Locacao.astro';
+import OutrosAssuntos from '@/components/contato/OutrosAssuntos.astro';
+import ComoChegar from '@/components/contato/ComoChegar.astro';
+import Regras from '@/components/contato/Regras.astro';
+import '@/styles/contato.css';
+
+const ATALHOS = [
+  { rotulo: 'Mesas', href: '#mesas' },
+  { rotulo: 'Locação', href: '#locacao' },
+  { rotulo: 'Outros assuntos', href: '#geral' },
+  { rotulo: 'Como chegar', href: '#como-chegar' },
+  { rotulo: 'Regras', href: '#regras' },
+];
 ---
 <Base
   titulo="Contato, mesas e locação de espaço | Surreal Park"
   descricao="Mesas e camarotes, locação de espaços para 1.000 a 8.000 pessoas, endereço e como chegar. Av. João da Costa, 3051, Rio do Meio, Camboriú."
   luz="amanhecer"
 >
-  <TopoDePagina humor="amanhecer" rotulo="Contato" titulo="Fale com o Surreal Park" apoio="Mesas e camarotes, locação, imprensa e dúvidas. Escolha o assunto e fale direto com quem resolve." />
+  <TopoDePagina humor="amanhecer" rotulo="Contato" titulo="Fale com o Surreal Park" apoio="Mesas e camarotes, locação, imprensa e dúvidas. Escolha o assunto e fale direto com quem resolve.">
+    <nav aria-label="Assuntos desta página">
+      <ul class="ct-atalhos t-label" role="list">
+        {ATALHOS.map((atalho) => <li><a href={atalho.href}>{atalho.rotulo}</a></li>)}
+      </ul>
+    </nav>
+  </TopoDePagina>
+  <Mesas />
+  <Locacao />
+  <OutrosAssuntos />
+  <ComoChegar />
+  <Regras />
 </Base>
+
+<script>
+  import { iniciarContato } from '@/scripts/contato/contato';
+  iniciarContato();
+</script>

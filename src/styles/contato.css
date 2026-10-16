@@ -1,0 +1,209 @@
+.ct-atalhos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
+}
+.ct-atalhos a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--sp-5);
+  border-radius: var(--r-pill);
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: background-color var(--dur-1-4) var(--ease-ui), color var(--dur-1-4) var(--ease-ui);
+}
+@media (hover: hover) {
+  .ct-atalhos a:hover { background: var(--text); color: var(--bg); }
+}
+
+.ct-secao {
+  padding-block: var(--s-section);
+  border-top: 1px solid var(--border);
+  scroll-margin-top: var(--header-h);
+}
+
+.ct-duas-colunas {
+  display: grid;
+  gap: var(--sp-7);
+  align-items: start;
+}
+
+.ct-bloco { display: grid; gap: var(--sp-5); justify-items: start; align-content: start; min-width: 0; }
+.ct-rotulo { color: var(--text-3); }
+.ct-texto { color: var(--text-2); max-width: 52ch; }
+.ct-apoio { color: var(--text-3); max-width: 52ch; }
+.ct-acoes { display: grid; gap: var(--sp-3); width: 100%; justify-items: stretch; }
+.ct-acoes .btn { width: 100%; }
+.ct-link { min-height: 44px; color: var(--accent-text); }
+
+.ct-moldura {
+  position: relative;
+  overflow: clip;
+  border-radius: var(--r-2);
+  background: var(--ink-900);
+}
+.ct-moldura__img { width: 100%; height: 100%; object-fit: cover; }
+.ct-mesas__foto { aspect-ratio: 4 / 3; }
+
+.ct-tipos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.ct-tipos li {
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-pill);
+  box-shadow: inset 0 0 0 1px var(--border);
+  color: var(--text-2);
+}
+.ct-canais { display: grid; gap: var(--sp-2); color: var(--text-2); }
+.ct-canais a { display: inline-block; min-height: 44px; line-height: 44px; color: var(--text); overflow-wrap: anywhere; }
+
+.ct-capacidades {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-5);
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  border-radius: var(--r-2);
+}
+.ct-capacidades__lista { display: grid; }
+.ct-capacidade {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  padding-block: var(--sp-4);
+  border-top: 1px solid var(--divider);
+}
+.ct-capacidade__numero {
+  min-width: 4.2ch;
+  font-variant-numeric: lining-nums tabular-nums;
+  font-weight: 400;
+  color: var(--text);
+}
+.ct-capacidade__unidade { color: var(--text-3); }
+.ct-capacidade__barra {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-text);
+  transform: scaleX(var(--proporcao));
+  transform-origin: left;
+  transition: transform var(--dur-2) var(--ease-saida);
+}
+[data-capacidades][data-estado="aguardando"] .ct-capacidade__barra { transform: scaleX(0); }
+
+.ct-email {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-weight: 400;
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-text);
+  text-underline-offset: .25em;
+}
+.ct-redes { display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); }
+.ct-redes a { min-height: 44px; gap: var(--sp-2); }
+.ct-redes__icone { width: .875rem; height: .875rem; }
+
+.ct-endereco { font-style: normal; color: var(--text); max-width: 32ch; }
+.ct-fatos { display: grid; gap: var(--sp-3); color: var(--text-2); max-width: 52ch; }
+.ct-fatos li { padding-left: var(--sp-5); position: relative; }
+.ct-fatos li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: .5rem;
+  height: .5rem;
+  background: var(--accent-text);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.ct-chegar__foto {
+  --marcador-x: 18%;
+  --marcador-y: 45%;
+  aspect-ratio: 4 / 5;
+  view-timeline: --aerea block;
+}
+.ct-chegar__deslocamento { position: absolute; inset: -6% 0; }
+.ct-chegar__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ct-chegar__img--larga { display: none; }
+
+.ct-marcador {
+  position: absolute;
+  left: var(--marcador-x);
+  top: var(--marcador-y);
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-1);
+  translate: -50% -100%;
+  color: var(--bone-50);
+  pointer-events: none;
+  transition: transform var(--dur-1) var(--ease-drop), opacity var(--dur-1-2) var(--ease-ui);
+}
+.ct-marcador__seta { width: 1.5rem; height: 1.5rem; filter: drop-shadow(0 2px 6px rgb(0 0 0 / .6)); }
+.ct-marcador__rotulo {
+  padding: var(--sp-1) var(--sp-3);
+  border-radius: var(--r-pill);
+  background: var(--ink-900);
+  color: var(--bone-50);
+  white-space: nowrap;
+  order: -1;
+}
+[data-aerea][data-estado="aguardando"] .ct-marcador { opacity: 0; transform: translateY(-6rem); }
+
+.ct-regras__lista { display: grid; gap: var(--sp-5); max-width: none; }
+.ct-regras__lista li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  padding-block: var(--sp-4);
+  border-top: 1px solid var(--divider);
+  color: var(--text);
+}
+.ct-regras__selo { min-width: 3ch; color: var(--accent-text); font-weight: 600; }
+
+@media (min-width: 640px) {
+  .ct-acoes { display: flex; flex-wrap: wrap; align-items: center; }
+  .ct-acoes .btn { width: auto; }
+  .ct-chegar__foto { aspect-ratio: 3 / 2; --marcador-x: 33%; --marcador-y: 43%; }
+  .ct-chegar__img--larga { display: block; }
+  .ct-chegar__img--alta { display: none; }
+}
+
+@media (min-width: 1024px) {
+  .ct-duas-colunas { grid-template-columns: 5fr 6fr; gap: var(--sp-9); }
+  .ct-duas-colunas--equilibrada { grid-template-columns: 1fr 1fr; }
+  .ct-duas-colunas--foto-larga { grid-template-columns: 4fr 7fr; }
+  .ct-capacidades { padding: var(--sp-7); }
+  .ct-capacidade { padding-block: var(--sp-5); }
+  .ct-mesas__foto { aspect-ratio: 4 / 5; }
+  .ct-mesas .ct-duas-colunas { grid-template-columns: 6fr 5fr; }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ct-chegar__deslocamento { animation: ct-paralaxe linear both; animation-timeline: --aerea; }
+    .ct-secao h2 { animation: ct-peso-do-titulo linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+    @keyframes ct-paralaxe {
+      from { transform: translateY(-5%); }
+      to { transform: translateY(5%); }
+    }
+    @keyframes ct-peso-do-titulo {
+      from { font-weight: 200; }
+      to { font-weight: 650; }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ct-capacidade__barra, .ct-marcador { transition: none; }
+}

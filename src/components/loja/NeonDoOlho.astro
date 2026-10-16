@@ -1,0 +1,14 @@
+---
+import SimboloTraco from '@/components/marca/SimboloTraco.astro';
+---
+<div class="neon" data-neon aria-hidden="true">
+  <span class="neon__brilho"></span>
+  <div class="neon__palco" data-neon-palco>
+    <SimboloTraco class="neon__olho" />
+  </div>
+</div>
+
+<script>
+  import { iniciarNeonDaLoja } from '@/scripts/loja/neon';
+  iniciarNeonDaLoja();
+</script>

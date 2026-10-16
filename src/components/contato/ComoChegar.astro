@@ -1,0 +1,44 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { ENDERECO, SUFIXO_NOVA_ABA } from '@/data/site';
+import { LINK_GOOGLE_MAPS, LINK_WAZE } from './mensagens';
+
+const ALT_DA_AEREA = 'Vista aérea noturna do Surreal Park, com a cidade de Camboriú ao fundo';
+---
+<section class="ct-secao ct-chegar" id="como-chegar" aria-labelledby="titulo-chegar">
+  <div class="container ct-duas-colunas ct-duas-colunas--foto-larga">
+    <div class="ct-bloco">
+      <p class="t-mono-xs ct-rotulo">04 · Onde fica</p>
+      <h2 class="t-h2" id="titulo-chegar">Como chegar ao Surreal Park</h2>
+      <address class="t-lead ct-endereco">{ENDERECO.linha}</address>
+      <p class="t-body ct-texto">Em Camboriú, com vista para a serra e o skyline de Balneário Camboriú.</p>
+      <div class="ct-acoes">
+        <a class="btn btn--primario" href={LINK_GOOGLE_MAPS} target="_blank" rel="noopener">
+          Abrir no mapa<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
+          <Icone nome="externo" class="btn__icone" />
+        </a>
+        <a class="btn btn--secundario" href={LINK_WAZE} target="_blank" rel="noopener">
+          Abrir no Waze<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
+          <Icone nome="externo" class="btn__icone" />
+        </a>
+      </div>
+      <ul class="ct-fatos t-body" role="list">
+        <li>Estacionamento no local para cerca de 1.500 veículos.</li>
+        <li>Portaria 24 h.</li>
+        <li>Vai beber? Combine a volta antes: táxi, carro de aplicativo ou alguém que não vai beber.</li>
+      </ul>
+    </div>
+
+    <div class="ct-moldura ct-chegar__foto" data-aerea>
+      <div class="ct-chegar__deslocamento">
+        <FotoAcervo slot="contato-como-chegar" alt={ALT_DA_AEREA} sizes="(min-width: 1024px) 58vw, 100vw" larguraMaxima={2000} class="ct-chegar__img ct-chegar__img--larga" />
+        <FotoAcervo slot="" arquivo="fotos/jardim/contato-skyline-aerea-m.jpg" alt={ALT_DA_AEREA} sizes="100vw" larguraMaxima={1200} class="ct-chegar__img ct-chegar__img--alta" />
+      </div>
+      <div class="ct-marcador" data-marcador aria-hidden="true">
+        <svg class="ct-marcador__seta" viewBox="0 0 10 10" focusable="false"><path fill="currentColor" d="M0 0h10L5 10z" /></svg>
+        <span class="ct-marcador__rotulo t-mono-xs">Surreal Park</span>
+      </div>
+    </div>
+  </div>
+</section>

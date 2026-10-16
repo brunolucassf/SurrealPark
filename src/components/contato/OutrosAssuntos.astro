@@ -1,0 +1,26 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+import { CONTATOS, REDES, SUFIXO_NOVA_ABA } from '@/data/site';
+---
+<section class="ct-secao ct-geral" id="geral" aria-labelledby="titulo-geral">
+  <div class="container ct-duas-colunas ct-duas-colunas--equilibrada">
+    <div class="ct-bloco">
+      <p class="t-mono-xs ct-rotulo">03 · Imprensa, parcerias e dúvidas</p>
+      <h2 class="t-h2" id="titulo-geral">Outros assuntos</h2>
+    </div>
+    <div class="ct-bloco">
+      <p class="t-body ct-texto">Para tudo o que não é mesa nem locação, escreva para o e-mail geral.</p>
+      <a class="ct-email t-h4" href={`mailto:${CONTATOS.email}`}>{CONTATOS.email}</a>
+      <ul class="ct-redes" role="list" aria-label="Redes sociais">
+        {REDES.map((rede) => (
+          <li>
+            <a class="link-nav t-label" href={rede.href} target="_blank" rel="noopener">
+              {rede.nome}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
+              <Icone nome="externo" class="ct-redes__icone" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
