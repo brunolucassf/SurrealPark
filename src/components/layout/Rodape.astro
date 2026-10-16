@@ -52,6 +52,7 @@ const ano = new Date().getFullYear();
 
     <div class="rodape__base t-mono-xs">
       <p>© {ano} Surreal Park</p>
+      <p><a class="link-nav" href="/privacidade">Privacidade</a></p>
       <p>
         <a class="link-nav" href={CREDITO_FONTE_DEV.href} target="_blank" rel="noopener">{CREDITO_FONTE_DEV.texto}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a>
       </p>
@@ -121,7 +122,7 @@ const ano = new Date().getFullYear();
 
   .rodape__horizonte {
     position: relative;
-    height: calc(19vw * .7);
+    height: 19.4vw;
     margin-block-start: var(--sp-8);
     overflow: hidden;
   }
@@ -144,7 +145,7 @@ const ano = new Date().getFullYear();
     position: absolute;
     left: 0; right: 0; top: 0;
     padding-inline: 1vw;
-    transform: translateY(18%);
+    transform: translateY(2%);
   }
   .rodape__wordmark { width: 100%; height: auto; color: var(--gold-400); }
 
@@ -154,7 +155,7 @@ const ano = new Date().getFullYear();
       .rodape__arcos { animation: arcos-fecham linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
     }
   }
-  @keyframes sol-nasce { from { transform: translateY(100%); } to { transform: translateY(18%); } }
+  @keyframes sol-nasce { from { transform: translateY(100%); } to { transform: translateY(2%); } }
   @keyframes arcos-fecham { from { transform: scaleY(1); opacity: .9; } to { transform: scaleY(.02); opacity: .7; } }
 
   @media (min-width: 768px) {

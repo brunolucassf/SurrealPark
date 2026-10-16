@@ -57,7 +57,7 @@
   --scrim-left: linear-gradient(to right, rgb(12 11 13 / .85) 0%, rgb(12 11 13 / .55) 45%, rgb(12 11 13 / 0) 80%);
   --scrim-full: rgb(12 11 13 / .55);
 
-  --font-display: "Kalnia", "Kalnia Fallback", "Georgia", serif;
+  --font-display: "Kalnia Numerais", "Kalnia", "Kalnia Fallback", "Georgia", serif;
   --font-text: "Instrument Sans", "Instrument Sans Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 

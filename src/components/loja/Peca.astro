@@ -1,0 +1,17 @@
+---
+interface Props {
+  d: string;
+  tom?: 'base' | 'escuro' | 'claro' | 'metal';
+  cor?: string;
+  isComLuz?: boolean;
+}
+
+const { d, tom = 'base', cor, isComLuz = true } = Astro.props;
+---
+<path d={d} class="ip-base" style={cor ? `fill:${cor}` : undefined} />
+{tom === 'escuro' && <path d={d} fill="#000" fill-opacity=".3" />}
+{tom === 'claro' && <path d={d} fill="#fff" fill-opacity=".14" />}
+<path d={d} fill="url(#loja-volume)" />
+{tom === 'metal' && <path d={d} fill="url(#loja-metal)" opacity=".75" />}
+{isComLuz && <path d={d} fill="url(#loja-luz-dourada)" />}
+<path d={d} class="ip-contorno" />

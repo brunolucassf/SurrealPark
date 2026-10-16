@@ -780,7 +780,7 @@
     "ambiente": "jardim",
     "largura": 2048,
     "altura": 1367,
-    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "alt": "Esfera luminosa como uma lua cheia junto à água do lago, na névoa do fim de tarde, com a serra e os prédios de Balneário Camboriú ao fundo",
     "slot": null,
     "fotografo": null
   },
@@ -820,7 +820,7 @@
     "ambiente": "jardim",
     "largura": 2880,
     "altura": 1979,
-    "alt": "Olho gigante no jardim",
+    "alt": "Olho gigante de réptil, em laranja, num disco sobre o gramado à noite, com um prédio em luz roxa ao fundo",
     "slot": "jardim-olho",
     "fotografo": "Diego Jarschel"
   },
@@ -850,7 +850,7 @@
     "ambiente": "jardim",
     "largura": 2880,
     "altura": 1979,
-    "alt": "Lua sobre o lago ao pôr do sol",
+    "alt": "Ao pôr do sol, uma lua luminosa surge entre as árvores à beira do lago, que reflete o céu laranja, com a serra ao fundo",
     "slot": "o-parque-topo",
     "fotografo": "Diego Jarschel"
   },
@@ -942,7 +942,7 @@
     "ambiente": "jardim",
     "largura": 2880,
     "altura": 1920,
-    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "alt": "Escultura de vaca malhada deitada na encosta gramada do Jardim de Esculturas, de dia",
     "slot": null,
     "fotografo": "Ebraim Martini"
   },
@@ -993,7 +993,7 @@
     "ambiente": "jardim",
     "largura": 2880,
     "altura": 1920,
-    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "alt": "Escultura de vaca malhada deitada no gramado à noite, com uma palmeira saindo das costas e as luzes do parque ao fundo",
     "slot": "jardim-3",
     "fotografo": "Ebraim Martini"
   },
@@ -1147,5 +1147,79 @@
     "alt": "Foto do ambiente crepúsculo no Surreal Park (rascunho)",
     "slot": null,
     "fotografo": null
+  },
+  {
+    "id": "jet-lateral",
+    "arquivo": "fotos/jet-set/jet-lateral.jpg",
+    "ambiente": "jet-set",
+    "alt": "Render conceitual do Jet Set, imagem de projeto: a fuselagem prateada de um Boeing 727 sobre o gramado, com plateia em degraus e mirante sobre a asa",
+    "slot": "jet-set-render",
+    "fotografo": null,
+    "isRender": true,
+    "largura": 2560,
+    "altura": 1440
+  },
+  {
+    "id": "jet-lateral-b",
+    "arquivo": "fotos/jet-set/jet-lateral-b.jpg",
+    "ambiente": "jet-set",
+    "alt": "Render conceitual do Jet Set, imagem de projeto: a fuselagem prateada de um Boeing 727 sobre o gramado, com plateia em degraus e mirante sobre a asa",
+    "slot": null,
+    "fotografo": null,
+    "isRender": true,
+    "largura": 1882,
+    "altura": 1024
+  },
+  {
+    "id": "jet-aerea",
+    "arquivo": "fotos/jet-set/jet-aerea.jpg",
+    "ambiente": "jet-set",
+    "alt": "Render conceitual do Jet Set visto do alto, imagem de projeto: o Boeing 727 prateado sobre a plateia em degraus, cercado de jardim",
+    "slot": "jet-set-render-aereo",
+    "fotografo": null,
+    "isRender": true,
+    "largura": 700,
+    "altura": 416
+  },
+  {
+    "id": "jardim-olho-azul",
+    "arquivo": "fotos/jardim/jardim-olho-azul.jpg",
+    "ambiente": "jardim",
+    "largura": 1704,
+    "altura": 1136,
+    "alt": "Olho gigante de íris azul deitado no gramado do Jardim de Esculturas, à sombra de uma árvore",
+    "slot": "jardim-olho-azul",
+    "fotografo": null
+  },
+  {
+    "id": "jet-lateral-m",
+    "arquivo": "fotos/jet-set/jet-lateral-m.jpg",
+    "ambiente": "jet-set",
+    "alt": "Render conceitual do Jet Set, imagem de projeto: a fuselagem prateada de um Boeing 727 sobre o gramado, com plateia em degraus e mirante sobre a asa",
+    "slot": null,
+    "fotografo": null,
+    "isRender": true,
+    "largura": 1152,
+    "altura": 1440
+  },
+  {
+    "id": "jardim-olho-gigante-m",
+    "arquivo": "fotos/jardim/jardim-olho-gigante-m.jpg",
+    "ambiente": "jardim",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Olho gigante de réptil, em laranja, num disco sobre o gramado à noite, com um prédio em luz roxa ao fundo",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "parque-lua-no-lago-m",
+    "arquivo": "fotos/jardim/parque-lua-no-lago-m.jpg",
+    "ambiente": "jardim",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Ao pôr do sol, uma lua luminosa surge entre as árvores à beira do lago, que reflete o céu laranja, com a serra ao fundo",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
   }
 ]

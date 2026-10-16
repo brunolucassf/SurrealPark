@@ -1,12 +1,21 @@
 ---
 import Base from '@/layouts/Base.astro';
-import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
-import GaleriaDeFotos from '@/components/galeria/GaleriaDeFotos.astro';
+import CarrosselDeEventos from '@/components/galeria/CarrosselDeEventos.astro';
+import FechoDaGaleria from '@/components/galeria/FechoDaGaleria.astro';
+import { carregarEventosResolvidos } from '@/components/galeria/acervoDaGaleria';
+import '@/styles/galeria.css';
+
+const eventos = await carregarEventosResolvidos();
 ---
 <Base
   titulo="Galeria de fotos | Surreal Park"
-  descricao="Ritual, Bells, Raw Room, Nomad, Church e o jardim de esculturas do Surreal Park em Camboriú, por ambiente. Veja as fotos."
+  descricao="As noites do Surreal Park em Camboriú, evento por evento: Ritual, Bells, Raw Room, Nomad, Church e o jardim de esculturas. Veja as fotos."
 >
-  <TopoDePagina humor="luar" rotulo="Galeria" titulo="Surreal Park em fotos" apoio="Palcos, jardim e noites do parque, por ambiente." />
-  <GaleriaDeFotos />
+  <header class="galeria-topo container" data-humor="luar">
+    <p class="t-mono-xs galeria-topo__rotulo">Galeria</p>
+    <h1 class="t-h1 galeria-topo__titulo">Surreal Park em fotos</h1>
+    <p class="t-lead galeria-topo__apoio">Escolha uma noite e entre nas fotos.</p>
+  </header>
+  <CarrosselDeEventos eventos={eventos} />
+  <FechoDaGaleria />
 </Base>

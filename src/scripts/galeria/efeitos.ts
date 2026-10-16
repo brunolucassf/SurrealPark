@@ -7,7 +7,6 @@ const TOLERANCIA_DE_LINHA_EM_PX = 8;
 
 export interface EfeitosDaGrade {
   observar: (quadros: HTMLElement[]) => void;
-  reiniciar: () => void;
 }
 
 const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -22,7 +21,7 @@ function agruparPorLinha(quadros: HTMLElement[]): HTMLElement[][] {
   }, []);
 }
 
-function iniciarEntradaPorLinha(grade: HTMLElement): EfeitosDaGrade {
+function iniciarEntradaPorLinha(): EfeitosDaGrade {
   const observador = new IntersectionObserver((entradas) => {
     const aparecendo = entradas.filter((entrada) => entrada.isIntersecting).map((entrada) => entrada.target as HTMLElement);
     agruparPorLinha(aparecendo).forEach((linha, indice) => {
@@ -40,10 +39,6 @@ function iniciarEntradaPorLinha(grade: HTMLElement): EfeitosDaGrade {
         if (prefereMenosMovimento.matches) quadro.dataset.entrou = 'true';
         else if (!quadro.dataset.entrou) observador.observe(quadro);
       });
-    },
-    reiniciar: () => {
-      observador.disconnect();
-      grade.querySelectorAll<HTMLElement>('[data-quadro]').forEach((quadro) => delete quadro.dataset.entrou);
     },
   };
 }
@@ -85,5 +80,5 @@ function iniciarCurvaPorVelocidade(grade: HTMLElement): void {
 
 export function iniciarEfeitosDaGrade(grade: HTMLElement): EfeitosDaGrade {
   iniciarCurvaPorVelocidade(grade);
-  return iniciarEntradaPorLinha(grade);
+  return iniciarEntradaPorLinha();
 }

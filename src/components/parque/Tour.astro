@@ -11,6 +11,7 @@ const { alvosDepoisDoTour } = Astro.props;
 const { cenas, motor } = await prepararTour();
 const alvosExistentes = new Set([...cenas.map(({ cena }) => cena.ancora).filter(Boolean), ...alvosDepoisDoTour]);
 const itensDoIndice = INDICE_DO_PARQUE.filter((item) => alvosExistentes.has(item.alvo));
+const alvoDoPulo = alvosDepoisDoTour[0];
 ---
 <div class="parque">
   <div class="parque__mapa" data-tour-mapa>
@@ -20,8 +21,8 @@ const itensDoIndice = INDICE_DO_PARQUE.filter((item) => alvosExistentes.has(item
           <li><a class="mapa__item t-label" href={`#${item.alvo}`} data-alvo={item.alvo}>{item.rotulo}</a></li>
         ))}
       </ol>
-      {alvosDepoisDoTour.includes('ranking') && (
-        <a class="mapa__pular t-mono-xs" href="#ranking">
+      {alvoDoPulo && (
+        <a class="mapa__pular t-mono-xs" href={`#${alvoDoPulo}`}>
           Pular o tour
           <svg viewBox="0 0 10 10" width="10" height="10" aria-hidden="true" focusable="false"><path d="M5 1v8M1.5 5.5 5 9l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.2" /></svg>
         </a>

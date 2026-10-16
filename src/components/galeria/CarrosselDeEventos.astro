@@ -1,0 +1,111 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import type { EventoResolvido } from './acervoDaGaleria';
+
+interface Props {
+  eventos: EventoResolvido[];
+}
+
+const { eventos } = Astro.props;
+const total = eventos.length;
+const LARGURAS_DA_CAPA = [480, 828, 1200];
+const SIZES_DA_CAPA = '(min-width: 1024px) 34vw, 70vw';
+const LIMITE_VISIVEL = Math.min(2.6, total / 2 - 0.4);
+
+const calcularDistancia = (indice: number): number => {
+  const metade = total / 2;
+  return ((((indice + metade) % total) + total) % total) - metade;
+};
+const formatarPosicao = (indice: number): string => `${String(indice + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
+const descreverEvento = (evento: EventoResolvido): string => `${evento.dataCurta} · ${evento.nomesDosAmbientes.join(', ')} · ${evento.totalDeFotos} fotos`;
+const primeiro = eventos[0];
+---
+<section class="eventos" data-carrossel aria-labelledby="titulo-eventos">
+  <script is:inline>document.currentScript.parentElement.setAttribute('data-arco', '');</script>
+  <h2 class="sr-only" id="titulo-eventos">Eventos com fotos</h2>
+
+  {primeiro ? (
+    <>
+      <div class="eventos__palco" data-palco data-lenis-prevent-horizontal role="group" aria-roledescription="carrossel" aria-label="Eventos">
+        <ul class="eventos__lista" role="list" data-lista>
+          {eventos.map((evento, indice) => {
+            const distancia = calcularDistancia(indice);
+            return (
+              <li
+                class="painel"
+                data-painel
+                data-titulo={evento.titulo}
+                data-ambientes={evento.ambientes.join(' ')}
+                data-meta={descreverEvento(evento)}
+                data-posicao={formatarPosicao(indice)}
+                data-centro={distancia === 0 ? '' : undefined}
+                data-oculto={Math.abs(distancia) > LIMITE_VISIVEL ? '' : undefined}
+                style={`--d: ${distancia}; --dist: ${Math.abs(distancia)}`}
+              >
+                <a class="painel__link" href={`/galeria/${evento.slug}`} draggable="false" data-link>
+                  <span class="painel__rotulo t-mono-xs">{evento.titulo}</span>
+                  <span class="painel__moldura">
+                    {evento.capaResolvida ? (
+                      <FotoAcervo
+                        slot={evento.capaResolvida.id}
+                        arquivo={evento.capaResolvida.arquivo}
+                        alt=""
+                        sizes={SIZES_DA_CAPA}
+                        larguras={LARGURAS_DA_CAPA.filter((largura) => largura <= (evento.capaResolvida?.imagem.width ?? 0))}
+                        isPrioritaria={Math.abs(distancia) <= 1}
+                        class="painel__imagem"
+                      />
+                    ) : (
+                      <span class="painel__sem-capa" aria-hidden="true"></span>
+                    )}
+                    <span class="painel__veu" aria-hidden="true"></span>
+                  </span>
+                  <span class="painel__meta t-mono-xs">
+                    <span class="sr-only">, </span><time datetime={evento.data}>{evento.dataCurta}</time> · {evento.totalDeFotos} fotos
+                  </span>
+                  {import.meta.env.DEV && evento.isExemplo && <span class="painel__selo selo-exemplo t-mono-xs">exemplo</span>}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      <div class="container eventos__destaque" data-destaque>
+        <div class="destaque__texto" data-destaque-texto aria-hidden="true">
+          <p class="t-mono-xs destaque__posicao">
+            <span data-destaque-posicao>{formatarPosicao(0)}</span>
+            {import.meta.env.DEV && eventos.some((evento) => evento.isExemplo) && <span class="selo-exemplo t-mono-xs">eventos de exemplo</span>}
+          </p>
+          <p class="t-h2 destaque__titulo" data-destaque-titulo>{primeiro.titulo}</p>
+          <p class="t-mono-xs destaque__meta" data-destaque-meta>{descreverEvento(primeiro)}</p>
+        </div>
+        <div class="destaque__acoes">
+          <a class="btn btn--primario" href={`/galeria/${primeiro.slug}`} data-destaque-link>
+            Ver as fotos<span class="sr-only" data-destaque-nome> de {primeiro.titulo}</span>
+            <Icone nome="piramide" class="btn__seta" />
+          </a>
+          <div class="destaque__setas">
+            <button class="seta-redonda seta-redonda--anterior" type="button" data-anterior aria-label="Evento anterior">
+              <Icone nome="piramide" />
+            </button>
+            <button class="seta-redonda" type="button" data-proximo aria-label="Próximo evento">
+              <Icone nome="piramide" />
+            </button>
+          </div>
+        </div>
+        <p class="t-mono-xs destaque__dica" aria-hidden="true">Arraste, deslize ou use as setas</p>
+      </div>
+      <p class="sr-only" aria-live="polite" data-anuncio></p>
+    </>
+  ) : (
+    <div class="container eventos__vazio">
+      <p class="t-lead">Nenhum evento com fotos por enquanto.</p>
+    </div>
+  )}
+</section>
+
+<script>
+  import '@/scripts/galeria/carrossel';
+</script>

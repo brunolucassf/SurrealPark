@@ -1,0 +1,49 @@
+---
+import IlustracaoDeProduto from '@/components/loja/IlustracaoDeProduto.astro';
+import Icone from '@/components/ui/Icone.astro';
+import Preco from '@/components/loja/Preco.astro';
+import type { Produto } from '@/data/loja';
+
+interface Props {
+  produto: Produto;
+  ordem: number;
+  isDestaqueAmpliado?: boolean;
+}
+
+const { produto, ordem, isDestaqueAmpliado = true } = Astro.props;
+const [corPrincipal] = produto.cores;
+const palavraFantasma = produto.nome.split(' ').at(-1);
+const isAmpliado = produto.isDestaque && isDestaqueAmpliado;
+const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
+---
+<li
+  class:list={['produto', { 'produto--destaque': isAmpliado }]}
+  data-produto
+  data-categoria={produto.categoria}
+  data-preco={produto.precoEmCentavos}
+  data-ordem={ordem}
+>
+  <a class="produto__link" href={`/loja/${produto.slug}`} data-inclinavel>
+    <div class="produto__vitrine" style={`--cor-vitrine:${corPrincipal.base};view-transition-name:produto-${produto.slug}`}>
+      <span class="produto__fantasma" aria-hidden="true">{palavraFantasma}</span>
+      <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} class="produto__ilustracao" />
+      <span class="produto__brilho" aria-hidden="true"></span>
+      {produto.isDestaque && <span class="produto__selo t-mono-xs">Destaque</span>}
+      {import.meta.env.DEV && produto.isExemplo && <span class="produto__exemplo selo-exemplo t-mono-xs">exemplo</span>}
+    </div>
+    <div class="produto__info">
+      <span class="produto__tipo t-mono-xs">{produto.tipo}</span>
+      <h3 class="produto__nome">{produto.nome}</h3>
+      <span class="produto__rodape">
+        <Preco precoEmCentavos={produto.precoEmCentavos} class="produto__preco" />
+        {produto.cores.length > 1 && (
+          <span class="produto__cores">
+            {produto.cores.map((cor) => <span class="produto__cor" style={`--cor-amostra:${cor.base}`}></span>)}
+            <span class="sr-only">Cores: {nomesDasCores}</span>
+          </span>
+        )}
+      </span>
+      <span class="produto__seta" aria-hidden="true"><Icone nome="piramide" /></span>
+    </div>
+  </a>
+</li>

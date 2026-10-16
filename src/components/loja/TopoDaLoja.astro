@@ -1,0 +1,26 @@
+---
+import NeonDoOlho from '@/components/loja/NeonDoOlho.astro';
+import Icone from '@/components/ui/Icone.astro';
+
+const COMPROMISSOS = ['Compra e retirada no parque', 'Sem venda on-line', 'Dúvidas pelo WhatsApp'];
+---
+<header class="loja-topo container" data-humor="loja">
+  <div class="loja-topo__olho">
+    <NeonDoOlho />
+  </div>
+  <div class="loja-topo__texto">
+    <p class="t-mono-xs loja-topo__rotulo">Dentro do Surreal Park</p>
+    <h1 class="t-h1 loja-topo__titulo">Surreal Store</h1>
+    <p class="t-lead loja-topo__apoio">Camisetas, bonés, jaquetas e outros produtos com a marca Surreal. Veja aqui o que tem na loja e compre lá, no parque.</p>
+    <div class="loja-topo__acoes">
+      <a class="btn btn--primario" href="#produtos">
+        <span class="btn__texto">Ver produtos</span>
+        <Icone nome="piramide" class="btn__seta" />
+      </a>
+      <a class="link-texto" href="/contato#como-chegar">Como chegar</a>
+    </div>
+    <ul class="loja-topo__compromissos" role="list">
+      {COMPROMISSOS.map((compromisso) => <li class="t-mono-xs">{compromisso}</li>)}
+    </ul>
+  </div>
+</header>

@@ -1,0 +1,51 @@
+---
+import CartaoDeProduto from '@/components/loja/CartaoDeProduto.astro';
+import { CATEGORIAS_DA_LOJA, PRODUTOS, contarProdutosPorCategoria } from '@/data/loja';
+
+const categoriasComProdutos = CATEGORIAS_DA_LOJA.filter((categoria) => contarProdutosPorCategoria(categoria.id) > 0);
+---
+<section class="catalogo container" id="produtos" aria-labelledby="titulo-catalogo" data-catalogo>
+  <div class="catalogo__cabeca">
+    <h2 class="t-h2" id="titulo-catalogo">Na loja</h2>
+    <p class="t-body-s catalogo__aviso">Preço e disponibilidade confirmados no balcão. O site não vende on-line.</p>
+  </div>
+
+  {PRODUTOS.length > 0 && (
+    <div class="catalogo__barra">
+      <div class="catalogo__filtros" role="group" aria-label="Filtrar por categoria" data-catalogo-filtros>
+        <button class="chip" type="button" data-filtro="todos" aria-pressed="true">
+          Todos <span class="chip__contagem">{PRODUTOS.length}</span>
+        </button>
+        {categoriasComProdutos.map((categoria) => (
+          <button class="chip" type="button" data-filtro={categoria.id} aria-pressed="false">
+            {categoria.rotulo} <span class="chip__contagem">{contarProdutosPorCategoria(categoria.id)}</span>
+          </button>
+        ))}
+      </div>
+      <label class="catalogo__ordem">
+        <span class="t-mono-xs catalogo__ordem-rotulo">Ordenar</span>
+        <select class="catalogo__seletor" data-catalogo-ordem>
+          <option value="destaques">Destaques</option>
+          <option value="menor-preco">Menor preço</option>
+          <option value="maior-preco">Maior preço</option>
+        </select>
+      </label>
+    </div>
+  )}
+
+  <p class="sr-only" aria-live="polite" data-catalogo-status></p>
+
+  {PRODUTOS.length > 0 && (
+    <ul class="catalogo__grade" role="list" data-catalogo-grade>
+      {PRODUTOS.map((produto, indice) => <CartaoDeProduto produto={produto} ordem={indice} />)}
+    </ul>
+  )}
+  <p class="t-body catalogo__vazio" data-catalogo-vazio hidden={PRODUTOS.length > 0}>Nenhum produto disponível agora.</p>
+</section>
+
+<script is:inline>(function(){try{var c=document.querySelector('[data-catalogo]');if(!c||matchMedia('(prefers-reduced-motion: reduce)').matches)return;c.classList.add('catalogo--anima');setTimeout(function(){if(!c.dataset.pronto)c.classList.remove('catalogo--anima')},4000)}catch(e){}})();</script>
+
+<script>
+  import { iniciarCatalogo } from '@/scripts/loja/catalogo';
+  iniciarCatalogo();
+</script>

@@ -142,6 +142,7 @@ Regra: o texto fica onde o scrim tem ≥ 0,70 (ou ≥ 0,55 se `luminanciaMedia` 
   --font-mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 ```
+Numerais: os dígitos da Kalnia têm caudas decorativas (o 2, o 7) e ilegíveis em tamanho de dado; ela não oferece lnum nem alternativas. `--font-display` começa por "Kalnia Numerais" (Playfair Display, lining, subset 0-9, 2,4 KB, `unicode-range: U+0030-0039`, `public/fonts/playfair-numerais.woff2`), então só os dígitos mudam de família e o resto do texto segue em Kalnia.
 Licença: todas SIL OFL 1.1 (Google Fonts). Baixar de fonts.google.com/github google/fonts. Peso latin: Kalnia 47 KB, Instrument Sans 57 KB, DM Mono 15+15 KB. Fallbacks com `size-adjust`/`ascent-override` gerados (ex.: fontaine/capsize) para CLS 0.
 
 ### 2.2 Escala fluida (360 → 1920; acima disso cresce pelo root scale, §5)

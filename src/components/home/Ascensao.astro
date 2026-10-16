@@ -55,7 +55,7 @@ const ARCO = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101
                   <span class="coluna__reflexo" aria-hidden="true" data-coluna-reflexo></span>
                   <span class="coluna__topo">
                     {coluna.isUltima && (
-                      <svg class="coluna__arcos" viewBox="-130 -100 260 200" aria-hidden="true" focusable="false" data-coluna-arcos>
+                      <svg class="coluna__arcos" viewBox="-106 -80 212 160" aria-hidden="true" focusable="false" data-coluna-arcos>
                         <path d={ARCO} transform="translate(0 -24)" pathLength="1" />
                         <path d={ARCO} pathLength="1" />
                         <path d={ARCO} transform="translate(0 24)" pathLength="1" />
@@ -118,13 +118,15 @@ const ARCO = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101
   .ascensao__grafico {
     --altura: 300px;
     --chao: 2.75rem;
+    --teto: clamp(3.25rem, 2rem + 2.6vw, 5rem);
     position: relative;
-    height: calc(var(--altura) + var(--chao));
+    height: calc(var(--altura) + var(--chao) + var(--teto));
+    padding-top: var(--teto);
     padding-left: 3.75rem;
     padding-bottom: var(--chao);
     transform-style: preserve-3d;
   }
-  .ascensao__guias { position: absolute; inset: 0 0 var(--chao) 0; }
+  .ascensao__guias { position: absolute; inset: var(--teto) 0 var(--chao) 0; }
   .ascensao__guia {
     position: absolute;
     left: 0; right: 0;
@@ -178,19 +180,20 @@ const ARCO = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101
     bottom: calc((101 - var(--rank)) * 1% + var(--sp-2));
     translate: -50% 0;
     display: grid;
-    place-items: center;
+    justify-items: center;
+    gap: var(--sp-1);
   }
   .coluna__rank { font-variant-numeric: lining-nums tabular-nums; color: var(--bone-50); white-space: nowrap; }
   .coluna--atual .coluna__rank { color: var(--gold-300); }
+  .coluna--atual .coluna__rank { line-height: .9; }
   .coluna__arcos {
-    position: absolute;
-    width: 220%;
-    left: 50%; top: 50%;
-    translate: -50% -50%;
+    display: block;
+    width: clamp(2.25rem, 1.6rem + 1.6vw, 4rem);
+    height: auto;
     overflow: visible;
     fill: none;
     stroke: var(--gold-300);
-    stroke-width: 4;
+    stroke-width: 7;
     pointer-events: none;
   }
   .coluna__ano { position: absolute; left: 50%; top: calc(100% + var(--sp-3)); translate: -50% 0; color: var(--ash-400); }
@@ -226,6 +229,9 @@ const ARCO = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101
   @media (max-width: 413.98px) {
     .coluna__variacao { font-size: .625rem; padding: 1px 5px; }
   }
+  @media (max-width: 767.98px) {
+    .coluna--atual .coluna__variacao { translate: -85% 0; }
+  }
   @media (min-width: 768px) {
     .ascensao__grafico { --altura: 380px; }
   }
@@ -233,7 +239,7 @@ const ARCO = `M-101 0C-57 ${-ALCA} 57 ${-ALCA} 101 0C57 ${ALCA} -57 ${ALCA} -101
     .ascensao__palco { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: center; }
     .ascensao__texto { grid-column: 1 / span 4; }
     .ascensao__painel { grid-column: 5 / span 8; }
-    .ascensao__grafico { --altura: 46vh; }
+    .ascensao__grafico { --altura: 42vh; }
     .ascensao__ganho { font-size: clamp(4.5rem, 1rem + 7vw, 12rem); }
     .ascensao__numeros { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     :global(.pin-ok) .ascensao__trilho { height: 220vh; }

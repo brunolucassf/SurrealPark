@@ -1,0 +1,37 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import { CONTATOS, REDES, SUFIXO_NOVA_ABA, criarLinkWhatsApp } from '@/data/site';
+
+const instagram = REDES.find((rede) => rede.nome === 'Instagram');
+const linkWhatsAppDaLoja = criarLinkWhatsApp(CONTATOS.whatsappMesas, 'Olá, quero saber de um produto da Surreal Store.\nProduto:');
+---
+<section class="retirada container" id="retirada" aria-labelledby="titulo-retirada">
+  <figure class="retirada__figura">
+    <div class="retirada__imagem">
+      <FotoAcervo
+        slot="loja-diego-0054"
+        arquivo="fotos/loja/loja-diego-0054.jpg"
+        alt="Surreal Store: fachada da loja do parque à noite, com letreiros de neon e vitrines acesas"
+        sizes="(min-width: 1440px) 1600px, 100vw"
+        larguraMaxima={2400}
+      />
+    </div>
+    <figcaption class="t-mono-xs retirada__legenda">Foto: Diego Jarschel</figcaption>
+  </figure>
+  <div class="retirada__corpo">
+    <h2 class="t-h2" id="titulo-retirada">Compre no parque</h2>
+    <div class="retirada__texto">
+      <p class="t-body">A Surreal Store fica dentro do Surreal Park. Escolha, pagamento e retirada acontecem no balcão da loja.</p>
+      <p class="t-body">Para saber se um tamanho ou uma cor está na arara antes de ir, respondemos pelo WhatsApp.</p>
+      <div class="retirada__acoes">
+        <a class="btn btn--secundario" href={linkWhatsAppDaLoja} target="_blank" rel="noopener" aria-label={`Perguntar pelo WhatsApp ${SUFIXO_NOVA_ABA}`}>
+          <Icone nome="whatsapp" class="btn__icone" />
+          <span class="btn__texto">Perguntar pelo WhatsApp</span>
+        </a>
+        <a class="link-texto" href="/contato#como-chegar">Como chegar</a>
+        {instagram && <a class="link-texto" href={instagram.href} target="_blank" rel="noopener">Novidades no Instagram<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a>}
+      </div>
+    </div>
+  </div>
+</section>

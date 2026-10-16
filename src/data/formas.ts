@@ -28,6 +28,14 @@ const PASSOS_DAS_LAMPADAS = [0.06, 0.15, 0.24, 0.33, 0.42, 0.5, 0.58, 0.67, 0.76
 export const LAMPADAS_DO_X = PASSOS_DAS_LAMPADAS.flatMap((passo) => (passo === 0.5 ? [[passo, passo]] : [[passo, passo], [passo, 1 - passo]]))
   .map(([x = 0, y = 0]) => ({ x, y, ordem: Math.round(Math.abs(x - 0.5) / 0.09) }));
 
+type Caixa = readonly [x: number, y: number, largura: number, altura: number];
+
+export function normalizarCaminho(caminho: string, [x0, y0, largura, altura]: Caixa): string {
+  return caminho.replace(/(-?\d*\.?\d+),(-?\d*\.?\d+)/g, (_, x: string, y: string) => `${+((Number(x) - x0) / largura).toFixed(4)},${+((Number(y) - y0) / altura).toFixed(4)}`);
+}
+
+export const CAIXA_DO_AVIAO: Caixa = [8, 2, 474, 102];
+
 export const AVIAO_727 = {
   viewBox: '0 0 480 120',
   tracos: [
@@ -40,3 +48,5 @@ export const AVIAO_727 = {
   ],
   janelas: Array.from({ length: 24 }, (_, indice) => 78 + indice * 9.6),
 };
+
+export const RECORTE_DO_AVIAO = AVIAO_727.tracos.slice(0, 4).map((traco) => normalizarCaminho(traco, CAIXA_DO_AVIAO));

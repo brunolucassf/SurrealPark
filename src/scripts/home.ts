@@ -2,17 +2,62 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import { CustomEase } from 'gsap/CustomEase';
-import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 import { FORMAS_DA_PREVIA } from '@/data/formas';
 import { lerBeatEmSegundos } from './gl/motor';
 
-gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase, MorphSVGPlugin);
+gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase);
 CustomEase.create('olho', '0.83,0,0.17,1');
 
 const prefereMenosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isPonteiroFino = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 1024px)').matches;
 
 const BEAT = lerBeatEmSegundos();
+
+let isMorfoseDisponivel = false;
+
+async function carregarMorfose(): Promise<void> {
+  try {
+    const { MorphSVGPlugin } = await import('gsap/MorphSVGPlugin');
+    gsap.registerPlugin(MorphSVGPlugin);
+    isMorfoseDisponivel = true;
+  } catch (erro) {
+    console.warn('MorphSVG indisponível; as formas trocam sem morph.', erro);
+  }
+}
+
+function animarAuroraDasDatas(): void {
+  const secao = document.querySelector<HTMLElement>('[data-datas]');
+  const aurora = secao?.querySelector<HTMLElement>('[data-datas-aurora]');
+  const foco = aurora?.querySelector<HTMLElement>('[data-datas-foco]');
+  if (!secao || !aurora) return;
+
+  new IntersectionObserver(([entrada]) => {
+    aurora.dataset.ativa = String(Boolean(entrada?.isIntersecting));
+  }).observe(secao);
+
+  if (!foco || !isPonteiroFino) return;
+  const alvo = { x: 0, y: 0 };
+  const atual = { x: 0, y: 0 };
+  let quadro = 0;
+  const animar = () => {
+    atual.x += (alvo.x - atual.x) * 0.06;
+    atual.y += (alvo.y - atual.y) * 0.06;
+    foco.style.transform = `translate3d(${atual.x.toFixed(1)}px, ${atual.y.toFixed(1)}px, 0)`;
+    quadro = Math.abs(alvo.x - atual.x) + Math.abs(alvo.y - atual.y) > 0.5 ? requestAnimationFrame(animar) : 0;
+  };
+  secao.addEventListener('pointermove', (evento) => {
+    const caixa = aurora.getBoundingClientRect();
+    alvo.x = evento.clientX - caixa.left;
+    alvo.y = evento.clientY - caixa.top;
+    if (aurora.dataset.foco !== 'true') {
+      atual.x = alvo.x;
+      atual.y = alvo.y;
+      aurora.dataset.foco = 'true';
+    }
+    if (!quadro) quadro = requestAnimationFrame(animar);
+  });
+  secao.addEventListener('pointerleave', () => { aurora.dataset.foco = 'false'; });
+}
 
 function revelarAoEntrar(): void {
   document.querySelectorAll<HTMLElement>('[data-revela-titulo]').forEach((titulo) => {
@@ -214,9 +259,9 @@ function animarCartaz(): void {
   const mascara = document.querySelector<SVGPathElement>('[data-cartaz-mascara]');
   const inclinacao = previa.querySelector<HTMLElement>('[data-cartaz-inclinacao]');
   const lampadas = [...previa.querySelectorAll<SVGCircleElement>('[data-cartaz-lampadas] circle')];
-  const corpoDoAviao = previa.querySelector<SVGGElement>('[data-cartaz-aviao-corpo]');
+  const corpoDoAviao = previa.querySelector<HTMLElement>('[data-cartaz-aviao-corpo]');
   const tracosDoAviao = corpoDoAviao ? [...corpoDoAviao.querySelectorAll<SVGPathElement>('path')] : [];
-  const janelas = corpoDoAviao ? [...corpoDoAviao.querySelectorAll<SVGCircleElement>('[data-janela]')] : [];
+  const brilhoDoAviao = corpoDoAviao?.querySelector<HTMLElement>('[data-aviao-brilho]') ?? null;
   let ativo = '';
   let morfose: gsap.core.Tween | null = null;
   let lampadasAcesas: gsap.core.Tween | null = null;
@@ -238,7 +283,7 @@ function animarCartaz(): void {
     taxiamento?.kill();
     taxiamento = gsap.timeline()
       .fromTo(tracosDoAviao, { strokeDasharray: 1, strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: BEAT * 2, ease: 'expo.out', stagger: BEAT / 16 }, 0)
-      .fromTo(janelas, { fill: '#2B292F' }, { fill: '#E6BD6E', duration: BEAT / 4, stagger: BEAT / 16 }, BEAT / 2)
+      .fromTo(brilhoDoAviao, { xPercent: -120 }, { xPercent: 120, duration: BEAT * 2, ease: 'power2.inOut' }, BEAT / 2)
       .fromTo(corpoDoAviao, { xPercent: -4, rotation: -1.5, transformOrigin: '50% 50%' }, { xPercent: 0, rotation: 0, duration: BEAT * 2, ease: 'expo.out' }, 0);
   };
 
@@ -256,7 +301,7 @@ function animarCartaz(): void {
     const destino = FORMAS_DA_PREVIA[id];
     if (mascara && destino) {
       morfose?.kill();
-      morfose = prefereMenosMovimento
+      morfose = prefereMenosMovimento || !isMorfoseDisponivel
         ? gsap.set(mascara, { attr: { d: destino } })
         : gsap.to(mascara, { morphSVG: { shape: destino, shapeIndex: 'auto' }, duration: BEAT * 2, ease: 'olho' });
     }
@@ -342,12 +387,22 @@ function ativarCopiaDeNumero(): void {
   });
 }
 
-export function iniciarHome(): void {
-  ativarCopiaDeNumero();
+function iniciarIsolado(iniciar: () => void): void {
+  try {
+    iniciar();
+  } catch (erro) {
+    console.error(`Falha ao iniciar ${iniciar.name} na Home.`, erro);
+  }
+}
+
+export async function iniciarHome(): Promise<void> {
+  iniciarIsolado(ativarCopiaDeNumero);
   if (prefereMenosMovimento) return;
-  revelarAoEntrar();
-  seguirComLente();
-  animarAscensao();
-  animarCartaz();
-  deslizarAmostra();
+  iniciarIsolado(revelarAoEntrar);
+  iniciarIsolado(seguirComLente);
+  iniciarIsolado(animarAuroraDasDatas);
+  iniciarIsolado(animarAscensao);
+  iniciarIsolado(deslizarAmostra);
+  if (isPonteiroFino) await carregarMorfose();
+  iniciarIsolado(animarCartaz);
 }

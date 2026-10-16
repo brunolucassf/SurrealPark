@@ -46,7 +46,7 @@ const MARGEM_DA_MASCARA = 0.1;
 const FATOR_DE_RESOLUCAO = 1.1;
 const DURACAO_DA_CARGA_S = 0.6;
 const MAXIMO_DE_MASCARAS = 2;
-const NEVOA_POR_TIPO: Record<CenaParaOMotor['tipo'], number> = { aereo: 0.22, caminho: 0.16, palco: 0.12, jardim: 0.14, jet: 0.2 };
+const NEVOA_POR_TIPO: Record<CenaParaOMotor['tipo'], number> = { aereo: 0.22, caminho: 0.16, palco: 0.12, lago: 0.2, jardim: 0.14, jet: 0.1 };
 
 function proporcaoDaForma(forma: IdDaForma): [number, number] {
   if (forma === 'f-olho') return [2, 1];

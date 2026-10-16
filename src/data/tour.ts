@@ -1,12 +1,17 @@
 import type { IdDaForma } from './formas';
 
-export type TipoDaCena = 'aereo' | 'caminho' | 'palco' | 'jardim' | 'jet';
+export type TipoDaCena = 'aereo' | 'caminho' | 'palco' | 'lago' | 'jardim' | 'jet';
 export type TipoDeParticula = 'nevoa-densa' | 'nevoa-rala' | 'vaga-lumes' | 'po-dourado' | 'fumaca' | 'bokeh' | 'po-feixe' | 'estrelas';
-export type HumorDoTour = 'luar' | 'ouro' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'jardim';
+export type HumorDoTour = 'luar' | 'ouro' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'lago' | 'jardim';
 
 export interface FotoDaCena {
   desktop: string;
   mobile: string;
+}
+
+export interface ApoioDaCena {
+  foto: string;
+  legenda: string;
 }
 
 export interface CenaDoTour {
@@ -23,6 +28,7 @@ export interface CenaDoTour {
   vh: { desktop: number; mobile: number };
   copy: ChaveDeCopy;
   alt: string;
+  apoio?: ApoioDaCena;
   isVarredura?: boolean;
   relevo?: number;
   isRenderizada: boolean;
@@ -42,7 +48,7 @@ export interface CenaParaOMotor {
   relevo: number;
 }
 
-export type ChaveDeCopy = 'ceu' | 'historia' | 'manifesto' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'jardim';
+export type ChaveDeCopy = 'ceu' | 'historia' | 'manifesto' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'lago' | 'jardim';
 
 const profundidadeDe = (id: string) => `/img/parque/${id}-depth.webp`;
 
@@ -181,32 +187,51 @@ export const CENAS_DO_TOUR: CenaDoTour[] = [
     id: 'jet-set',
     ancora: 'jet-set',
     tipo: 'jet',
-    foto: null,
-    profundidade: null,
+    foto: { desktop: 'jet-lateral', mobile: 'jet-lateral-m' },
+    profundidade: profundidadeDe('jet-lateral'),
     portal: 'f-jet-set',
     formaMobile: 'f-jet-set',
-    foco: [0.5, 0.5],
+    foco: [0.42, 0.55],
     humor: 'jet-set',
-    particulas: { tipo: 'estrelas', n: 300 },
+    particulas: { tipo: 'nevoa-rala', n: 14 },
     vh: { desktop: 150, mobile: 170 },
     copy: 'jet-set',
-    alt: 'Jet Set: o traço de um Boeing 727 no céu noturno, com as janelas acendendo',
+    relevo: 0.7,
+    alt: 'Render conceitual do Jet Set, imagem de projeto: a fuselagem prateada de um Boeing 727 sobre o gramado, com plateia em degraus e mirante sobre a asa',
+    apoio: { foto: 'jet-aerea', legenda: 'Render de projeto · vista do alto' },
+    isRenderizada: true,
+  },
+  {
+    id: 'lago',
+    ancora: 'lago',
+    tipo: 'lago',
+    foto: { desktop: 'parque-lua-no-lago', mobile: 'parque-lua-no-lago-m' },
+    profundidade: profundidadeDe('parque-lua-no-lago'),
+    portal: 'nuvem',
+    formaMobile: null,
+    foco: [0.5, 0.5],
+    humor: 'lago',
+    particulas: { tipo: 'vaga-lumes', n: 90 },
+    vh: { desktop: 150, mobile: 150 },
+    copy: 'lago',
+    alt: 'Ao pôr do sol, uma lua luminosa surge entre as árvores à beira do lago, que reflete o céu laranja, com a serra ao fundo',
+    apoio: { foto: 'jardim-5', legenda: 'A lua junto à água, no fim da tarde' },
     isRenderizada: true,
   },
   {
     id: 'jardim',
     ancora: 'jardim',
     tipo: 'jardim',
-    foto: { desktop: 'jardim-ebraim-2132', mobile: 'jardim-ebraim-2132-m' },
-    profundidade: profundidadeDe('jardim-ebraim-2132'),
+    foto: { desktop: 'jardim-olho-gigante', mobile: 'jardim-olho-gigante-m' },
+    profundidade: profundidadeDe('jardim-olho-gigante'),
     portal: 'f-olho',
     formaMobile: 'f-olho',
-    foco: [0.6, 0.5],
+    foco: [0.36, 0.48],
     humor: 'jardim',
     particulas: { tipo: 'vaga-lumes', n: 100 },
     vh: { desktop: 180, mobile: 170 },
     copy: 'jardim',
-    alt: 'Jardim de Esculturas: escultura em silhueta no gramado, com as lonas acesas do Nomad e a lua ao fundo',
+    alt: 'Jardim de Esculturas: olho gigante de réptil, em laranja, num disco sobre o gramado à noite, com um prédio em luz roxa ao fundo',
     isRenderizada: true,
   },
 ];
@@ -220,6 +245,7 @@ export const COR_DO_HUMOR: Record<HumorDoTour, string> = {
   nomad: '#F4B860',
   church: '#7FA6FF',
   'jet-set': '#C3CEDC',
+  lago: '#E9C27A',
   jardim: '#A9CF74',
 };
 
@@ -234,6 +260,7 @@ export interface CopyDoPalco {
   nome: string;
   complemento: string;
   selo?: string;
+  credito?: string;
   assinatura: string;
   corpo: string;
   ficha: LinhaDeFicha[];
@@ -259,7 +286,14 @@ export interface CopyDoManifesto {
   linhas: string[];
 }
 
-export type CopyDaCena = CopyDoCeu | CopyDaHistoria | CopyDoManifesto | CopyDoPalco;
+export interface CopyDoInterludio {
+  tipo: 'interludio';
+  rotulo: string;
+  titulo: string;
+  corpo: string;
+}
+
+export type CopyDaCena = CopyDoCeu | CopyDaHistoria | CopyDoManifesto | CopyDoPalco | CopyDoInterludio;
 
 export const COPY_DO_TOUR: Partial<Record<ChaveDeCopy, CopyDaCena>> = {
   ceu: {
@@ -363,9 +397,16 @@ export const COPY_DO_TOUR: Partial<Record<ChaveDeCopy, CopyDaCena>> = {
     nome: 'Jet Set',
     complemento: ', o palco em construção do Surreal Park',
     selo: 'Em construção',
+    credito: 'Imagens: render de projeto',
     assinatura: 'Um Boeing 727 trocou de pista.',
     corpo: 'O sexto palco do Surreal está sendo montado dentro da fuselagem de um Boeing 727. A data de abertura ainda não foi anunciada. Quando abrir, aparece aqui e na programação.',
     ficha: [],
+  },
+  lago: {
+    tipo: 'interludio',
+    rotulo: 'Entre os palcos',
+    titulo: 'O lago e a lua',
+    corpo: 'O Nomad arma suas lonas à beira do lago, e a Church fica entre ele e o Jardim de Esculturas. Do gramado, a vista vai até a serra e o skyline de Balneário Camboriú.',
   },
   jardim: {
     tipo: 'palco',
@@ -399,7 +440,9 @@ export const INDICE_DO_PARQUE: ItemDoIndice[] = [
   { rotulo: 'Nomad', alvo: 'nomad' },
   { rotulo: 'Church', alvo: 'church' },
   { rotulo: 'Jet Set', alvo: 'jet-set' },
+  { rotulo: 'Lago', alvo: 'lago' },
   { rotulo: 'Jardim', alvo: 'jardim' },
+  { rotulo: 'Esculturas', alvo: 'esculturas' },
   { rotulo: 'Ranking', alvo: 'ranking' },
   { rotulo: 'Juistreet', alvo: 'juistreet' },
   { rotulo: 'Serviços', alvo: 'servicos' },

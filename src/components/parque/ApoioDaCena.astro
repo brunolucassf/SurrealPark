@@ -1,0 +1,18 @@
+---
+import type { ApoioPreparado } from './preparar-tour';
+
+interface Props {
+  apoio: ApoioPreparado;
+}
+
+const { apoio } = Astro.props;
+const TAMANHOS = '(min-width: 1024px) 15rem, (min-width: 768px) 20rem, 60vw';
+---
+<figure class="cena__apoio">
+  <picture>
+    <source type="image/avif" srcset={apoio.fonte.avif} sizes={TAMANHOS} />
+    <source type="image/webp" srcset={apoio.fonte.webp} sizes={TAMANHOS} />
+    <img class="cena__apoio-img" src={apoio.fonte.src} width={apoio.fonte.largura} height={apoio.fonte.altura} alt={apoio.alt} loading="lazy" decoding="async" />
+  </picture>
+  <figcaption class="t-mono-xs cena__apoio-legenda">{apoio.legenda}</figcaption>
+</figure>

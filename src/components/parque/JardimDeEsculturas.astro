@@ -1,0 +1,93 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import manifesto from '@/assets/manifest.json';
+
+interface EsculturaDoJardim {
+  id: string;
+  legenda: string;
+  destaque?: boolean;
+}
+
+const ESCULTURAS: EsculturaDoJardim[] = [
+  { id: 'jardim-3', legenda: 'Vaca · uma palmeira nas costas', destaque: true },
+  { id: 'jardim-olho-azul', legenda: 'Olho gigante · íris azul' },
+  { id: 'jardim-ebraim-2983', legenda: 'Vaca · na encosta, de dia' },
+];
+
+const entradas = manifesto as { id: string; arquivo: string; alt: string }[];
+const fotos = ESCULTURAS.flatMap((escultura) => {
+  const entrada = entradas.find((item) => item.id === escultura.id);
+  return entrada ? [{ ...escultura, arquivo: entrada.arquivo, alt: entrada.alt }] : [];
+});
+---
+<section class="esculturas container" id="esculturas" aria-labelledby="titulo-esculturas" data-humor="noite">
+  <header class="esculturas__topo">
+    <p class="t-mono-xs esculturas__rotulo">Jardim de Esculturas</p>
+    <h2 class="t-h2 esculturas__titulo" id="titulo-esculturas">Entre um palco e outro</h2>
+    <p class="t-body esculturas__corpo">Entre os palcos, o Jardim de Esculturas: olhos gigantes, um rinoceronte, uma vaca, um touro.</p>
+  </header>
+  <ul class="esculturas__grade" role="list">
+    {fotos.map((foto) => (
+      <li class:list={['esculturas__item', { 'esculturas__item--destaque': foto.destaque }]}>
+        <figure class="esculturas__figura">
+          <div class="esculturas__moldura">
+            <FotoAcervo
+              slot={foto.id}
+              arquivo={foto.arquivo}
+              alt={foto.alt}
+              class="esculturas__img"
+              sizes={foto.destaque ? '(min-width: 768px) 58vw, 100vw' : '(min-width: 768px) 56vw, 100vw'}
+              larguraMaxima={foto.destaque ? 2400 : 1680}
+            />
+          </div>
+          <figcaption class="t-mono-xs esculturas__legenda">{foto.legenda}</figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .esculturas { display: grid; gap: var(--s-block); padding-block: var(--s-section) var(--s-block); }
+  .esculturas__topo { display: grid; gap: var(--sp-4); max-width: 40rem; }
+  .esculturas__rotulo { color: var(--gold-300); }
+  .esculturas__titulo { color: var(--bone-50); }
+  .esculturas__corpo { color: var(--bone-300); }
+  .esculturas__grade { display: grid; gap: var(--sp-7) var(--gutter); margin: 0; padding: 0; }
+  .esculturas__figura { display: grid; gap: var(--sp-3); margin: 0; }
+  .esculturas__moldura { position: relative; overflow: hidden; aspect-ratio: 3 / 2; background: var(--ink-900); }
+  .esculturas__moldura :global(.esculturas__img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .esculturas__legenda { color: var(--ash-400); }
+
+  @media (min-width: 768px) {
+    .esculturas__grade { grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: var(--s-block); }
+    .esculturas__item { grid-column: 8 / span 5; grid-row: 1; align-self: end; }
+    .esculturas__item:nth-child(2) .esculturas__moldura { aspect-ratio: 4 / 3; }
+    .esculturas__item:nth-child(3) { grid-column: 3 / span 7; grid-row: 2; align-self: start; }
+    .esculturas__item:nth-child(3) .esculturas__moldura { aspect-ratio: 16 / 9; }
+    .esculturas__item--destaque { grid-column: 1 / span 7; grid-row: 1; }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .esculturas__moldura {
+        animation: revelar-escultura linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 70%;
+      }
+      .esculturas__moldura :global(.esculturas__img) {
+        animation: aproximar-escultura linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 50%;
+      }
+    }
+  }
+  @keyframes revelar-escultura {
+    from { opacity: 0; transform: translate3d(0, 2rem, 0); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes aproximar-escultura {
+    from { transform: scale(1.12); }
+    to { transform: scale(1); }
+  }
+</style>

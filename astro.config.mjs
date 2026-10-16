@@ -13,7 +13,7 @@ export default defineConfig({
   devToolbar: { enabled: false },
   vite: {
     build: { chunkSizeWarningLimit: 700 },
-    optimizeDeps: { include: ['gsap', 'gsap/ScrollTrigger', 'gsap/SplitText', 'gsap/CustomEase', 'lenis', 'three', 'three/addons/loaders/GLTFLoader.js', 'three/addons/libs/meshopt_decoder.module.js'] },
+    optimizeDeps: { include: ['gsap', 'gsap/ScrollTrigger', 'gsap/SplitText', 'gsap/CustomEase', 'gsap/MorphSVGPlugin', 'lenis', 'three', 'three/addons/loaders/GLTFLoader.js', 'three/addons/libs/meshopt_decoder.module.js'] },
   },
   i18n: {
     locales: ['pt-BR', 'en'],

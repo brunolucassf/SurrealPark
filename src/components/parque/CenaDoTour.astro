@@ -1,6 +1,6 @@
 ---
 import type { CenaPreparada } from './preparar-tour';
-import Aviao727 from './Aviao727.astro';
+import ApoioDaCena from './ApoioDaCena.astro';
 import { COPY_DO_TOUR } from '@/data/tour';
 import { TOUR } from '@/scripts/parque/constantes';
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { preparada } = Astro.props;
-const { cena, indice, isUltima, desktop, mobile, mascaraMobile, foco } = preparada;
+const { cena, indice, isUltima, desktop, mobile, mascaraMobile, foco, apoio } = preparada;
 const copy = COPY_DO_TOUR[cena.copy];
 const isPrimeira = indice === 0;
 const lado = isPrimeira || foco[0] > 0.5 ? 'esquerda' : 'direita';
@@ -23,6 +23,8 @@ const estilo = [
   mascaraMobile ? `--mascara:${mascaraMobile}` : '',
 ].filter(Boolean).join(';');
 const dividirPalavras = (texto: string) => texto.split(' ');
+const LIMITE_DA_PALAVRA_LONGA = 8;
+const isNomeLongo = copy?.tipo === 'palco' && dividirPalavras(copy.nome).some((palavra) => palavra.length > LIMITE_DA_PALAVRA_LONGA);
 const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.startsWith(',');
 ---
 <section
@@ -36,11 +38,6 @@ const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.start
   {cena.ancora && <span class="cena__ancora" id={cena.ancora}></span>}
   <span class="cena__humor" data-humor={cena.humor} aria-hidden="true"></span>
   <div class="cena__carta">
-    {cena.tipo === 'jet' && (
-      <div class="cena__ceu" role="img" aria-label={cena.alt}>
-        <Aviao727 class="cena__aviao" />
-      </div>
-    )}
     {desktop && (
       <picture>
         {mobile && <source media="(max-width: 1023.98px)" type="image/avif" srcset={mobile.avif} sizes="100vw" />}
@@ -97,14 +94,19 @@ const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.start
           <>
             <p class="t-mono-xs cena__rotulo">{copy.rotulo}</p>
             <h2 class="cena__palco" id={idDoTitulo}>
-              <span class="cena__nome">
+              <span class:list={['cena__nome', { 'cena__nome--longo': isNomeLongo }]}>
                 {dividirPalavras(copy.nome).map((palavra, posicao) => (
                   <>{posicao > 0 && ' '}<span class="cena__palavra"><span style={`--i:${posicao}`}>{palavra}</span></span></>
                 ))}
               </span>
               <span class="cena__complemento">{isComplementoComVirgula && <span class="sr-only">,</span>}{copy.complemento.replace(/^,\s*/, '')}</span>
             </h2>
-            {copy.selo && <p class="t-mono-xs cena__selo">{copy.selo}</p>}
+            {copy.selo && (
+              <p class="t-mono-xs cena__selo">
+                <span class="cena__selo-marca">{copy.selo}</span>
+                {copy.credito && <span class="cena__credito">{copy.credito}</span>}
+              </p>
+            )}
             <h3 class="t-h3 cena__assinatura">{copy.assinatura}</h3>
             <p class="t-body cena__corpo">{copy.corpo}</p>
             {copy.ficha.length > 0 && (
@@ -118,6 +120,21 @@ const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.start
               </dl>
             )}
             {copy.link && <a class="link-texto cena__link t-label" href={copy.link.href}>{copy.link.texto}</a>}
+            {apoio && <ApoioDaCena apoio={apoio} />}
+          </>
+        )}
+        {copy?.tipo === 'interludio' && (
+          <>
+            <p class="t-mono-xs cena__rotulo">{copy.rotulo}</p>
+            <h2 class="cena__palco" id={idDoTitulo}>
+              <span class="cena__nome cena__nome--interludio">
+                {dividirPalavras(copy.titulo).map((palavra, posicao) => (
+                  <>{posicao > 0 && ' '}<span class="cena__palavra"><span style={`--i:${posicao}`}>{palavra}</span></span></>
+                ))}
+              </span>
+            </h2>
+            <p class="t-body cena__corpo">{copy.corpo}</p>
+            {apoio && <ApoioDaCena apoio={apoio} />}
           </>
         )}
       </div>

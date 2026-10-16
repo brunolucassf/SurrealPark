@@ -1,15 +1,9 @@
 ---
 import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import AviaoRecortado from '@/components/home/AviaoRecortado.astro';
 import { PALCOS_EM_CARTAZ } from '@/data/palcos';
-import { AVIAO_727, LAMPADAS_DO_X } from '@/data/formas';
-import { getImage } from 'astro:assets';
+import { LAMPADAS_DO_X, RECORTE_DO_AVIAO } from '@/data/formas';
 import { buscarImagemPorArquivo } from '@/lib/fotos';
-
-const VIEWBOX_DO_AVIAO = '8 2 474 102';
-const FOTO_DO_AVIAO = buscarImagemPorArquivo('fotos/jardim/contato-skyline-aerea.jpg');
-const urlDaFotoDoAviao = FOTO_DO_AVIAO ? (await getImage({ src: FOTO_DO_AVIAO, format: 'avif', width: 960, quality: 55 })).src : null;
-const [RECORTE_FUSELAGEM, RECORTE_ESTABILIZADOR, RECORTE_MOTOR, RECORTE_ASA] = AVIAO_727.tracos;
-const RECORTES_DO_AVIAO = [RECORTE_FUSELAGEM, RECORTE_ESTABILIZADOR, RECORTE_MOTOR, RECORTE_ASA];
 
 const isRawRoomQuadrada = Boolean(buscarImagemPorArquivo('fotos/raw-room/raw-room-recorte-1x1.jpg'));
 const arquivoDaFoto = (palco: (typeof PALCOS_EM_CARTAZ)[number]) => (palco.id === 'raw-room' && isRawRoomQuadrada ? 'fotos/raw-room/raw-room-recorte-1x1.jpg' : undefined);
@@ -50,11 +44,7 @@ const arquivoDaFoto = (palco: (typeof PALCOS_EM_CARTAZ)[number]) => (palco.id ==
             <span class="t-mono-xs cartaz__som cartaz__som--lua">Em breve · em construção</span>
             <span class="t-body-s cartaz__linha">Dentro da fuselagem de um Boeing 727.</span>
           </span>
-          <svg class="cartaz__aviao-mini" viewBox={VIEWBOX_DO_AVIAO} aria-hidden="true" focusable="false">
-            {urlDaFotoDoAviao && <image href={urlDaFotoDoAviao} x="8" y="2" width="474" height="102" preserveAspectRatio="xMidYMid slice" clip-path="url(#recorte-do-aviao)" />}
-            {AVIAO_727.tracos.map((traco) => <path d={traco} />)}
-            {AVIAO_727.janelas.map((cx) => <circle cx={cx} cy="70" r="2.2" />)}
-          </svg>
+          <AviaoRecortado class="cartaz__aviao-mini" sizes="200px" larguras={[200, 400]} />
         </a>
       </li>
     </ol>
@@ -71,19 +61,15 @@ const arquivoDaFoto = (palco: (typeof PALCOS_EM_CARTAZ)[number]) => (palco.id ==
             {LAMPADAS_DO_X.map((lampada) => <circle cx={lampada.x} cy={lampada.y} r=".03" data-ordem={lampada.ordem} />)}
           </svg>
         </div>
-        <svg class="cartaz__aviao" viewBox={VIEWBOX_DO_AVIAO} focusable="false" data-cartaz-aviao>
-          <g class="cartaz__aviao-corpo" data-cartaz-aviao-corpo>
-            {urlDaFotoDoAviao && <image href={urlDaFotoDoAviao} x="8" y="2" width="474" height="102" preserveAspectRatio="xMidYMid slice" clip-path="url(#recorte-do-aviao)" />}
-            {AVIAO_727.tracos.map((traco) => <path d={traco} pathLength="1" />)}
-            {AVIAO_727.janelas.map((cx) => <circle cx={cx} cy="70" r="2.2" data-janela />)}
-          </g>
-        </svg>
+        <div class="cartaz__aviao" data-cartaz-aviao>
+          <AviaoRecortado sizes="(min-width: 1024px) min(60vw, 910px), 1px" larguras={[640, 960, 1280, 1820]} isAnimavel />
+        </div>
       </div>
     </div>
   </div>
   <svg width="0" height="0" class="cartaz__defs" aria-hidden="true" focusable="false">
     <defs>
-      <clipPath id="recorte-do-aviao">{RECORTES_DO_AVIAO.map((caminho) => <path d={caminho} />)}</clipPath>
+      <clipPath id="recorte-do-aviao" clipPathUnits="objectBoundingBox">{RECORTE_DO_AVIAO.map((caminho) => <path d={caminho} />)}</clipPath>
       <radialGradient id="lampada-acesa">
         <stop offset="0" stop-color="#F0D49A" />
         <stop offset=".4" stop-color="#D6A24A" />
@@ -131,10 +117,7 @@ const arquivoDaFoto = (palco: (typeof PALCOS_EM_CARTAZ)[number]) => (palco.id ==
   .cartaz__lampadas circle { fill: url(#lampada-acesa); opacity: 0; }
   .cartaz__lampadas--acesas circle { opacity: 1; }
   .cartaz__item--jet-set .cartaz__link { grid-template-columns: minmax(0, 1fr) 120px; grid-template-areas: "indice aviao" "nome aviao" "info info"; }
-  .cartaz__aviao-mini { grid-area: aviao; width: 120px; height: 26px; align-self: center; overflow: visible; }
-  .cartaz__aviao-mini path, .cartaz__aviao path { fill: none; stroke: var(--gold-300); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
-  .cartaz__aviao-mini circle { fill: var(--gold-300); }
-  .cartaz__aviao-mini image, .cartaz__aviao image { filter: brightness(1.7) contrast(1.1) saturate(1.15); }
+  .cartaz__link :global(.cartaz__aviao-mini) { grid-area: aviao; width: 120px; align-self: center; }
   .cartaz__previa { display: none; }
 
   @media (hover: hover) and (pointer: fine) {
@@ -154,7 +137,7 @@ const arquivoDaFoto = (palco: (typeof PALCOS_EM_CARTAZ)[number]) => (palco.id ==
       padding-block: var(--sp-4);
     }
     .cartaz__nome { font-stretch: 125%; line-height: .95; font-size: min(var(--fs-display), 9.6cqi); white-space: nowrap; }
-    .cartaz__miniatura, .cartaz__aviao-mini { display: none; }
+    .cartaz__miniatura, .cartaz__link :global(.cartaz__aviao-mini) { display: none; }
     .cartaz__item--jet-set .cartaz__link { grid-template-columns: 3rem minmax(0, 1fr); grid-template-areas: "indice nome" ". info"; }
     .cartaz__info { opacity: .85; }
 
@@ -197,16 +180,14 @@ const arquivoDaFoto = (palco: (typeof PALCOS_EM_CARTAZ)[number]) => (palco.id ==
     .cartaz__forma .cartaz__lampadas { inset: 10% 0; height: 80%; }
     .cartaz__aviao {
       position: absolute;
-      left: -6%;
+      left: 50%;
       top: 50%;
-      width: min(112%, 560px);
-      aspect-ratio: 474 / 102;
-      translate: 0 -50%;
-      overflow: visible;
+      width: min(118%, 600px);
+      translate: -50% -50%;
+      rotate: -14deg;
       opacity: 0;
       transition: opacity var(--dur-1-2) var(--ease-ui);
     }
     .cartaz__previa[data-modo="aviao"] .cartaz__aviao { opacity: 1; }
-    .cartaz__aviao circle { fill: var(--ink-750); }
   }
 </style>

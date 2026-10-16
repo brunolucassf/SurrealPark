@@ -1,0 +1,10 @@
+---
+interface Props {
+  precoEmCentavos: number;
+  class?: string;
+}
+
+const { precoEmCentavos, class: className } = Astro.props;
+const valor = (precoEmCentavos / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+---
+<span class:list={['preco', className]}><span class="preco__moeda">R$</span>&nbsp;{valor}</span>

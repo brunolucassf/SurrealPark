@@ -69,28 +69,46 @@
   border: 1px solid var(--divider);
   border-radius: var(--r-2);
 }
-.ct-capacidades__lista { display: grid; }
+.ct-capacidades__frase { max-width: 24ch; color: var(--text); }
+.ct-capacidades__cta { justify-self: start; }
+.ct-capacidades__lista { display: grid; gap: var(--sp-3); }
 .ct-capacidade {
-  position: relative;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
   align-items: baseline;
-  gap: var(--sp-3);
-  padding-block: var(--sp-4);
-  border-top: 1px solid var(--divider);
+  gap: var(--sp-2) var(--sp-4);
+  padding: var(--sp-4);
+  background: var(--bg);
+  border: 1px solid var(--divider);
+  border-radius: var(--r-2);
 }
+.ct-capacidade__rotulo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); color: var(--text-2); }
+.ct-capacidade__selo {
+  padding: 0 var(--sp-2);
+  border-radius: var(--r-pill);
+  box-shadow: inset 0 0 0 1px var(--border);
+  font-size: .6875rem;
+  color: var(--text-2);
+}
+.ct-capacidade__valor { display: flex; align-items: baseline; gap: var(--sp-2); }
 .ct-capacidade__numero {
-  min-width: 4.2ch;
   font-variant-numeric: lining-nums tabular-nums;
   font-weight: 400;
   color: var(--text);
 }
-.ct-capacidade__unidade { color: var(--text-3); }
+.ct-capacidade__unidade { color: var(--text-2); }
+.ct-capacidade__descricao { grid-column: 1 / -1; color: var(--text-2); }
+.ct-capacidade__trilho {
+  grid-column: 1 / -1;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--divider);
+}
 .ct-capacidade__barra {
-  position: absolute;
-  left: 0;
-  bottom: -1px;
+  display: block;
   width: 100%;
-  height: 2px;
+  height: 100%;
   background: var(--accent-text);
   transform: scaleX(var(--proporcao));
   transform-origin: left;
@@ -184,7 +202,7 @@
   .ct-duas-colunas--equilibrada { grid-template-columns: 1fr 1fr; }
   .ct-duas-colunas--foto-larga { grid-template-columns: 4fr 7fr; }
   .ct-capacidades { padding: var(--sp-7); }
-  .ct-capacidade { padding-block: var(--sp-5); }
+  .ct-capacidade { padding: var(--sp-5); }
   .ct-mesas__foto { aspect-ratio: 4 / 5; }
   .ct-mesas .ct-duas-colunas { grid-template-columns: 6fr 5fr; }
 }

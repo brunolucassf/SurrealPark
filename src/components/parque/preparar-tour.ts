@@ -9,6 +9,7 @@ const QUALIDADE_AVIF = 55;
 const QUALIDADE_WEBP = 65;
 const LARGURAS_DESKTOP = [1200, 1680, 2400];
 const LARGURAS_MOBILE = [480, 828, 1200];
+const LARGURAS_DO_APOIO = [480, 700, 960];
 const FRACAO_MAIS_DISTANTE = 0.05;
 
 interface EntradaDoManifesto {
@@ -16,6 +17,7 @@ interface EntradaDoManifesto {
   arquivo: string;
   largura: number;
   altura: number;
+  alt: string;
   mobile?: string;
 }
 
@@ -27,6 +29,12 @@ export interface FonteDaFoto {
   altura: number;
 }
 
+export interface ApoioPreparado {
+  fonte: FonteDaFoto;
+  alt: string;
+  legenda: string;
+}
+
 export interface CenaPreparada {
   cena: CenaDoTour;
   indice: number;
@@ -35,6 +43,7 @@ export interface CenaPreparada {
   mobile: FonteDaFoto | null;
   mascaraMobile: string | null;
   foco: [number, number];
+  apoio: ApoioPreparado | null;
 }
 
 const entradas = manifesto as EntradaDoManifesto[];
@@ -81,6 +90,13 @@ async function calcularFocoPeloDepth(caminhoPublico: string): Promise<[number, n
   }
 }
 
+async function carregarApoio(cena: CenaDoTour): Promise<ApoioPreparado | null> {
+  if (!cena.apoio) return null;
+  const entrada = buscarEntrada(cena.apoio.foto);
+  const fonte = await carregarFoto(cena.apoio.foto, LARGURAS_DO_APOIO);
+  return entrada && fonte ? { fonte, alt: entrada.alt, legenda: cena.apoio.legenda } : null;
+}
+
 function proporcaoDaFormaMobile(forma: IdDaForma): [number, number] {
   if (forma === 'f-olho') return [2, 1];
   if (forma === 'f-raw-room') return [1, 1];
@@ -104,9 +120,10 @@ export async function prepararTour(): Promise<{ cenas: CenaPreparada[]; motor: C
   const cenas = await Promise.all(CENAS_RENDERIZADAS.map(async (cena, indice): Promise<CenaPreparada> => {
     const entradaDesktop = cena.foto ? buscarEntrada(cena.foto.desktop) : undefined;
     const idMobile = cena.foto ? (buscarEntrada(cena.foto.mobile) ? cena.foto.mobile : entradaDesktop?.mobile ?? cena.foto.desktop) : null;
-    const [desktop, mobile] = await Promise.all([
+    const [desktop, mobile, apoio] = await Promise.all([
       cena.foto ? carregarFoto(cena.foto.desktop, LARGURAS_DESKTOP) : Promise.resolve(null),
       idMobile ? carregarFoto(idMobile, LARGURAS_MOBILE) : Promise.resolve(null),
+      carregarApoio(cena),
     ]);
     const foco = cena.foco ?? (cena.profundidade ? await calcularFocoPeloDepth(cena.profundidade) : [0.5, 0.5]);
     return {
@@ -117,6 +134,7 @@ export async function prepararTour(): Promise<{ cenas: CenaPreparada[]; motor: C
       mobile,
       mascaraMobile: cena.formaMobile ? gerarMascaraSvg(cena.formaMobile) : null,
       foco,
+      apoio,
     };
   }));
 

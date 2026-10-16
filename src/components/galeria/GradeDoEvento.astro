@@ -1,0 +1,66 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Lightbox from './Lightbox.astro';
+import type { FotoDaGaleria } from './acervoDaGaleria';
+
+interface Props {
+  fotos: FotoDaGaleria[];
+  tituloDoEvento: string;
+}
+
+const { fotos, tituloDoEvento } = Astro.props;
+const LARGURAS_DA_GRADE = [480, 828, 1200, 1680];
+const SIZES_RETRATO = '(min-width: 2400px) 19vw, (min-width: 1280px) 24vw, (min-width: 640px) 32vw, 48vw';
+const SIZES_LARGO = '(min-width: 2400px) 38vw, (min-width: 1280px) 48vw, (min-width: 640px) 64vw, 96vw';
+---
+<section class="galeria" data-galeria aria-label={`Fotos de ${tituloDoEvento}`}>
+  <div class="container">
+    <div class="galeria__corpo">
+      {fotos.length > 0 ? (
+        <ol class="grade" role="list" data-grade>
+          {fotos.map((foto, indice) => {
+            const isDestaque = indice === 0;
+            return (
+              <li
+                class:list={['quadro', { 'quadro--paisagem': foto.isPaisagem && !isDestaque, 'quadro--destaque': isDestaque }]}
+                data-quadro
+                data-grande={foto.grande.src}
+                data-largura={foto.grande.largura}
+                data-altura={foto.grande.altura}
+                data-alt={foto.alt}
+                data-legenda={foto.legenda}
+                data-fotografo={foto.fotografo ?? undefined}
+              >
+                <button class="quadro__abrir" type="button" aria-haspopup="dialog" data-abrir>
+                  <FotoAcervo
+                    slot={foto.id}
+                    arquivo={foto.arquivo}
+                    alt={foto.alt}
+                    sizes={foto.isPaisagem || isDestaque ? SIZES_LARGO : SIZES_RETRATO}
+                    larguras={LARGURAS_DA_GRADE.filter((largura) => largura <= foto.imagem.width)}
+                    isPrioritaria={indice < 3}
+                    class="quadro__imagem"
+                  />
+                </button>
+                <div class="quadro__falha" data-falha hidden>
+                  <p class="t-mono-xs">Não carregou.</p>
+                  <button class="btn btn--secundario" type="button" data-tentar-de-novo>Tentar de novo</button>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      ) : (
+        <div class="vazio">
+          <p class="t-lead">Nenhuma foto deste evento por enquanto.</p>
+          <a class="btn btn--secundario" href="/galeria">Ver outros eventos</a>
+        </div>
+      )}
+    </div>
+  </div>
+  <Lightbox />
+</section>
+
+<script>
+  import '@/scripts/galeria/galeria';
+</script>

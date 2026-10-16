@@ -21,4 +21,13 @@ export const TELEFONE_LOCACAO = '(47) 98468-0168';
 
 export const TIPOS_DE_EVENTO = ['Casamentos', 'Congressos', 'Lançamentos', 'Feiras', 'Formaturas', 'Eventos automotivos', 'Shows'];
 
-export const CAPACIDADES = [8000, 4000, 3000, 1500, 1000, 1000];
+interface EspacoDeLocacao {
+  rotulo: string;
+  capacidade: number;
+  descricao?: string;
+}
+
+export const ESPACOS_DE_LOCACAO: EspacoDeLocacao[] = [8000, 4000, 3000, 1500, 1000, 1000].map((capacidade, indice) => ({
+  rotulo: `Espaço ${indice + 1}`,
+  capacidade,
+}));

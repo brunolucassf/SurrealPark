@@ -8,13 +8,14 @@ import { buscarFotoPorSlot } from '@/lib/fotos';
 import { listarProximosEventos, type Evento } from '@/lib/eventos';
 
 const LIMITE_DE_DATAS = 4;
+const SLOT_NEUTRO_DA_LENTE = 'jardim-olho';
 const eventos = (await listarProximosEventos()).slice(0, LIMITE_DE_DATAS);
 const instagram = REDES.find((rede) => rede.nome === 'Instagram');
 
 async function gerarUrlDaLente(evento: Evento): Promise<string | undefined> {
+  if (evento.data.imagem) return evento.data.imagem.src;
   const [primeiroPalco] = evento.data.palcos;
-  if (!primeiroPalco) return undefined;
-  const foto = buscarFotoPorSlot(PALCO_POR_ID[primeiroPalco].slotDaFoto);
+  const foto = buscarFotoPorSlot(primeiroPalco ? PALCO_POR_ID[primeiroPalco].slotDaFoto : SLOT_NEUTRO_DA_LENTE);
   if (!foto) return undefined;
   const imagem = await getImage({ src: foto.imagem, width: 440, format: 'avif', quality: 50 });
   return imagem.src;
@@ -23,6 +24,13 @@ async function gerarUrlDaLente(evento: Evento): Promise<string | undefined> {
 const urlsDasLentes = await Promise.all(eventos.map(gerarUrlDaLente));
 ---
 <section class="datas" id="proximas-datas" aria-labelledby="titulo-datas" data-datas data-humor="datas">
+  <div class="datas__aurora" aria-hidden="true" data-datas-aurora>
+    <span class="datas__veu datas__veu--ouro"></span>
+    <span class="datas__veu datas__veu--ambar"></span>
+    <span class="datas__veu datas__veu--lua"></span>
+    <span class="datas__onda"></span>
+    <span class="datas__foco" data-datas-foco></span>
+  </div>
   <div class="container">
     <header class="datas__topo">
       <h2 class="t-h2" id="titulo-datas" data-revela-titulo>Próximas datas</h2>
@@ -69,6 +77,91 @@ const urlsDasLentes = await Promise.all(eventos.map(gerarUrlDaLente));
     gap: var(--sp-4) var(--sp-6);
     margin-bottom: var(--s-block);
   }
+  .datas > .container { position: relative; }
+  .datas :global(.evento) { transition: background-color var(--dur-1-2) var(--ease-ui); }
+  @media (hover: hover) and (pointer: fine) {
+    .datas :global(.evento:hover) { background: rgb(242 236 226 / .035); }
+  }
+
+  .datas__aurora {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  }
+  :global(.pin-ok) .datas__aurora { top: 34vh; }
+  .datas__veu {
+    position: absolute;
+    border-radius: 50%;
+    will-change: transform;
+    animation: var(--deriva) var(--duracao) var(--ease-olho) infinite alternate;
+    animation-play-state: paused;
+  }
+  .datas__aurora[data-ativa="true"] .datas__veu,
+  .datas__aurora[data-ativa="true"] .datas__onda { animation-play-state: running; }
+  .datas__veu--ouro {
+    --deriva: deriva-ouro;
+    --duracao: 26s;
+    left: -20%; top: 4%;
+    width: 90vw; height: 70%;
+    background: radial-gradient(closest-side, rgb(214 162 74 / .13), rgb(214 162 74 / .05) 55%, transparent);
+  }
+  .datas__veu--ambar {
+    --deriva: deriva-ambar;
+    --duracao: 34s;
+    right: -25%; top: 30%;
+    width: 80vw; height: 75%;
+    background: radial-gradient(closest-side, rgb(184 104 47 / .12), rgb(184 104 47 / .04) 60%, transparent);
+  }
+  .datas__veu--lua {
+    --deriva: deriva-lua;
+    --duracao: 41s;
+    left: 20%; bottom: -15%;
+    width: 60vw; height: 50%;
+    background: radial-gradient(closest-side, rgb(195 206 220 / .06), transparent);
+  }
+  .datas__onda {
+    position: absolute;
+    inset: -10% -50%;
+    background: repeating-linear-gradient(100deg, transparent 0 9%, rgb(230 189 110 / .028) 12%, transparent 15% 24%);
+    animation: onda-desliza 48s ease-in-out infinite alternate;
+    animation-play-state: paused;
+    will-change: transform;
+  }
+  .datas__foco {
+    position: absolute;
+    left: 0; top: 0;
+    width: 44rem; height: 44rem;
+    margin: -22rem 0 0 -22rem;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(230 189 110 / .09), transparent);
+    opacity: 0;
+    transition: opacity var(--dur-1) var(--ease-ui);
+  }
+  .datas__aurora[data-foco="true"] .datas__foco { opacity: 1; }
+  @keyframes deriva-ouro {
+    from { transform: translate3d(0, 0, 0) scale(1) rotate(0deg); }
+    to { transform: translate3d(22vw, 8%, 0) scale(1.18) rotate(8deg); }
+  }
+  @keyframes deriva-ambar {
+    from { transform: translate3d(0, 0, 0) scale(1.1); }
+    to { transform: translate3d(-26vw, -12%, 0) scale(.92); }
+  }
+  @keyframes deriva-lua {
+    from { transform: translate3d(0, 0, 0) scale(.9); opacity: .6; }
+    to { transform: translate3d(18vw, -20%, 0) scale(1.2); opacity: 1; }
+  }
+  @keyframes onda-desliza {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(25%, 0, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .datas__veu, .datas__onda { animation: none; }
+    .datas__foco { display: none; }
+  }
+
   .datas__todas { gap: var(--sp-2); min-height: 44px; color: var(--gold-300); }
   .datas__lista { border-bottom: var(--borda-1); }
   .datas__vazio { display: grid; gap: var(--sp-5); justify-items: start; }

@@ -1,0 +1,173 @@
+---
+import Base from '@/layouts/Base.astro';
+import DefinicoesDaLoja from '@/components/loja/DefinicoesDaLoja.astro';
+import IlustracaoDeProduto from '@/components/loja/IlustracaoDeProduto.astro';
+import CartaoDeProduto from '@/components/loja/CartaoDeProduto.astro';
+import Preco from '@/components/loja/Preco.astro';
+import Icone from '@/components/ui/Icone.astro';
+import Simbolo from '@/components/marca/Simbolo.astro';
+import { SUFIXO_NOVA_ABA } from '@/data/site';
+import {
+  PRODUTOS,
+  buscarProdutosRelacionados,
+  buscarRotuloDaCategoria,
+  criarLinkWhatsAppDoProduto,
+  formatarPreco,
+  isLojaAtiva,
+  type Produto,
+} from '@/data/loja';
+import '@/styles/loja.css';
+
+export function getStaticPaths() {
+  if (!isLojaAtiva) return [];
+  return PRODUTOS.map((produto) => ({ params: { slug: produto.slug }, props: { produto } }));
+}
+
+interface Props { produto: Produto }
+
+const { produto } = Astro.props;
+const [corPrincipal] = produto.cores;
+const preco = formatarPreco(produto.precoEmCentavos);
+const rotuloDaCategoria = buscarRotuloDaCategoria(produto.categoria);
+const relacionados = buscarProdutosRelacionados(produto);
+const linkWhatsApp = criarLinkWhatsAppDoProduto(produto);
+const isGaleriaMultipla = produto.imagens.length > 1;
+const descreverVista = (rotuloDaVista: string, nomeDaCor: string) => `Ilustração de ${produto.nome}, ${rotuloDaVista.toLowerCase()}, cor ${nomeDaCor.toLowerCase()}`;
+
+const produtoEstruturado = produto.isExemplo
+  ? null
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: produto.nome,
+      description: produto.descricao,
+      brand: { '@type': 'Brand', name: 'Surreal' },
+      offers: {
+        '@type': 'Offer',
+        price: (produto.precoEmCentavos / 100).toFixed(2),
+        priceCurrency: 'BRL',
+        availability: 'https://schema.org/InStoreOnly',
+        url: new URL(`/loja/${produto.slug}`, Astro.site).href,
+      },
+    };
+---
+<Base
+  titulo={`${produto.nome} | Surreal Store`}
+  descricao={`${produto.tipo} da Surreal Store, à venda na loja dentro do Surreal Park. ${preco}, compra e retirada no parque.`}
+>
+  {produto.isExemplo && <meta slot="head" name="robots" content="noindex" />}
+  {produtoEstruturado && <script slot="head" type="application/ld+json" set:html={JSON.stringify(produtoEstruturado)} />}
+  <DefinicoesDaLoja />
+
+  <article class="ficha container" data-ficha>
+    <nav class="ficha__trilha" aria-label="Trilha">
+      <ol class="t-mono-xs" role="list">
+        <li><a class="link-nav" href="/loja">Loja</a></li>
+        <li><a class="link-nav" href={`/loja?categoria=${produto.categoria}#produtos`}>{rotuloDaCategoria}</a></li>
+        <li aria-current="page">{produto.nome}</li>
+      </ol>
+    </nav>
+
+    <div class="ficha__cabeca">
+      <p class="t-mono-xs ficha__tipo">{produto.tipo}</p>
+      <h1 class="t-h2 ficha__nome">{produto.nome}</h1>
+      <p><Preco precoEmCentavos={produto.precoEmCentavos} class="ficha__preco" /></p>
+      {import.meta.env.DEV && produto.isExemplo && <span class="selo-exemplo t-mono-xs">exemplo: nome e preço fictícios</span>}
+    </div>
+
+    <div class="ficha__palco" data-ficha-palco>
+      <div class="ficha__vitrine" style={`--cor-vitrine:${corPrincipal.base};view-transition-name:produto-${produto.slug}`} data-inclinavel>
+        <span class="ficha__fantasma" aria-hidden="true">{produto.nome.split(' ').at(-1)}</span>
+        {produto.imagens.map((imagem, indice) => (
+          <div class="ficha__vista" id={`vista-${imagem.vista}`} data-vista={imagem.vista} hidden={indice > 0}>
+            <IlustracaoDeProduto
+              forma={produto.forma}
+              cor={corPrincipal}
+              vista={imagem.vista}
+              rotulo={descreverVista(imagem.rotulo, corPrincipal.nome)}
+              class="ficha__ilustracao"
+            />
+          </div>
+        ))}
+        <span class="produto__brilho" aria-hidden="true"></span>
+      </div>
+      {isGaleriaMultipla && (
+        <div class="ficha__miniaturas" role="group" aria-label="Vistas do produto">
+          {produto.imagens.map((imagem, indice) => (
+            <button class="ficha__miniatura" type="button" data-mostrar-vista={imagem.vista} aria-controls={`vista-${imagem.vista}`} aria-pressed={indice === 0 ? 'true' : 'false'}>
+              <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} vista={imagem.vista} class="ficha__miniatura-arte" />
+              <span class="t-mono-xs ficha__miniatura-rotulo">{imagem.rotulo}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <div class="ficha__info">
+      <p class="t-body ficha__descricao">{produto.descricao}</p>
+
+      {produto.cores.length > 0 && (
+        <div class="ficha__grupo">
+          <p class="t-mono-xs ficha__grupo-titulo" id="titulo-cores">Cor: <span class="ficha__cor-atual" data-cor-atual>{corPrincipal.nome}</span></p>
+          <div class="ficha__cores" role="group" aria-labelledby="titulo-cores">
+            {produto.cores.map((cor, indice) => (
+              <button
+                class="ficha__cor"
+                type="button"
+                style={`--cor-amostra:${cor.base}`}
+                data-cor-nome={cor.nome}
+                data-cor-base={cor.base}
+                data-cor-estampa={cor.estampa}
+                aria-pressed={indice === 0 ? 'true' : 'false'}
+                aria-label={cor.nome}
+              ></button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {produto.tamanhos.length > 0 && (
+        <div class="ficha__grupo">
+          <h2 class="t-mono-xs ficha__grupo-titulo">Tamanhos</h2>
+          <ul class="ficha__tamanhos" role="list">
+            {produto.tamanhos.map((tamanho) => <li class="ficha__tamanho">{tamanho}</li>)}
+          </ul>
+          <p class="t-body-s ficha__nota">A grade disponível muda a cada reposição. Confirme na loja.</p>
+        </div>
+      )}
+
+      <div class="ficha__retirada">
+        <Simbolo class="ficha__retirada-olho" />
+        <div class="ficha__retirada-texto">
+          <p class="t-body"><strong>Disponível na Surreal Store, no parque.</strong> Retire no local.</p>
+          <a class="link-texto t-body-s" href="/contato#como-chegar">Como chegar ao parque</a>
+        </div>
+      </div>
+
+      <div class="ficha__acoes">
+        <a class="btn btn--primario btn--bloco" href={linkWhatsApp} target="_blank" rel="noopener" aria-label={`Perguntar pelo WhatsApp sobre ${produto.nome} ${SUFIXO_NOVA_ABA}`}>
+          <Icone nome="whatsapp" class="btn__icone" />
+          <span class="btn__texto">Perguntar pelo WhatsApp</span>
+        </a>
+        <p class="t-body-s ficha__nota">O site não vende on-line. Pagamento e retirada na loja.</p>
+      </div>
+    </div>
+  </article>
+
+  {relacionados.length > 0 && (
+    <section class="relacionados container" aria-labelledby="titulo-relacionados">
+      <div class="relacionados__cabeca">
+        <h2 class="t-h3" id="titulo-relacionados">Mais da Surreal Store</h2>
+        <a class="link-texto" href="/loja#produtos">Ver todos os produtos</a>
+      </div>
+      <ul class="catalogo__grade relacionados__grade" role="list" data-relacionados>
+        {relacionados.map((item, indice) => <CartaoDeProduto produto={item} ordem={indice} isDestaqueAmpliado={false} />)}
+      </ul>
+    </section>
+  )}
+</Base>
+
+<script>
+  import { iniciarFichaDoProduto } from '@/scripts/loja/produto';
+  iniciarFichaDoProduto();
+</script>

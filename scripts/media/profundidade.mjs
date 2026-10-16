@@ -23,7 +23,11 @@ const CENAS = [
   'nomad-diego-0733',
   'church-2',
   'jardim-ebraim-2132',
+  'jet-lateral',
+  'parque-lua-no-lago',
+  'jardim-olho-gigante',
 ];
+const CENAS_PEDIDAS = process.argv.slice(2).length ? process.argv.slice(2) : CENAS;
 
 env.cacheDir = CACHE;
 
@@ -76,7 +80,7 @@ async function main() {
   const porId = new Map(manifesto.map((e) => [e.id, e]));
   const detector = await pipeline('depth-estimation', MODELO, { dtype: 'fp32' });
   const resultados = [];
-  for (const id of CENAS) {
+  for (const id of CENAS_PEDIDAS) {
     const entrada = porId.get(id);
     if (!entrada) throw new Error(`id ausente no manifest: ${id}`);
     const caminho = join(RAIZ, 'src', 'assets', entrada.arquivo);
@@ -87,7 +91,7 @@ async function main() {
     resultados.push(info);
     console.log(JSON.stringify(info));
   }
-  const tamanhos = await Promise.all(CENAS.map((id) => stat(join(SAIDA, `${id}-depth.webp`))));
+  const tamanhos = await Promise.all(CENAS_PEDIDAS.map((id) => stat(join(SAIDA, `${id}-depth.webp`))));
   console.log('total bytes', tamanhos.reduce((s, t) => s + t.size, 0));
 }
 

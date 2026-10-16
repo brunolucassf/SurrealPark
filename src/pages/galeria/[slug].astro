@@ -1,0 +1,82 @@
+---
+import Base from '@/layouts/Base.astro';
+import Icone from '@/components/ui/Icone.astro';
+import GradeDoEvento from '@/components/galeria/GradeDoEvento.astro';
+import FechoDaGaleria from '@/components/galeria/FechoDaGaleria.astro';
+import { carregarEventosResolvidos, carregarFotosDoEvento, type EventoResolvido } from '@/components/galeria/acervoDaGaleria';
+import '@/styles/galeria.css';
+
+export async function getStaticPaths() {
+  const eventos = await carregarEventosResolvidos();
+  return eventos.map((evento, indice) => ({
+    params: { slug: evento.slug },
+    props: {
+      evento,
+      posicao: indice + 1,
+      total: eventos.length,
+      anterior: eventos[(indice - 1 + eventos.length) % eventos.length],
+      proximo: eventos[(indice + 1) % eventos.length],
+    },
+  }));
+}
+
+interface Props {
+  evento: EventoResolvido;
+  posicao: number;
+  total: number;
+  anterior: EventoResolvido | undefined;
+  proximo: EventoResolvido | undefined;
+}
+
+const { evento, posicao, total, anterior, proximo } = Astro.props;
+const fotos = await carregarFotosDoEvento(evento);
+const formatarNumero = (valor: number): string => String(valor).padStart(2, '0');
+const temOutrosEventos = total > 1 && anterior && proximo;
+---
+<Base
+  titulo={`${evento.titulo}: fotos | Surreal Park`}
+  descricao={`Fotos de ${evento.titulo} no Surreal Park, em ${evento.dataPorExtenso}: ${evento.nomesDosAmbientes.join(', ')}.`}
+>
+  <header class="evento-topo container" data-humor="luar">
+    <a class="evento-topo__voltar t-mono-xs" href="/galeria">
+      <Icone nome="piramide" class="evento-topo__seta" />
+      Todos os eventos
+    </a>
+    <p class="t-mono-xs evento-topo__rotulo">
+      Galeria · {formatarNumero(posicao)} / {formatarNumero(total)}
+      {import.meta.env.DEV && evento.isExemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
+    </p>
+    <h1 class="t-h1 evento-topo__titulo">{evento.titulo}</h1>
+    <dl class="evento-topo__fatos">
+      <div>
+        <dt class="t-mono-xs">Data</dt>
+        <dd><time datetime={evento.data}>{evento.dataPorExtenso}</time></dd>
+      </div>
+      <div>
+        <dt class="t-mono-xs">Ambientes</dt>
+        <dd>{evento.nomesDosAmbientes.join(' · ')}</dd>
+      </div>
+      <div>
+        <dt class="t-mono-xs">Fotos</dt>
+        <dd>{fotos.length}</dd>
+      </div>
+    </dl>
+  </header>
+
+  <GradeDoEvento fotos={fotos} tituloDoEvento={evento.titulo} />
+
+  {temOutrosEventos && (
+    <nav class="outros-eventos container" aria-label="Outros eventos">
+      <a class="outros-eventos__link" href={`/galeria/${anterior.slug}`} rel="prev">
+        <span class="t-mono-xs outros-eventos__rotulo">Evento anterior</span>
+        <span class="t-h3 outros-eventos__titulo">{anterior.titulo}</span>
+      </a>
+      <a class="outros-eventos__link outros-eventos__link--proximo" href={`/galeria/${proximo.slug}`} rel="next">
+        <span class="t-mono-xs outros-eventos__rotulo">Próximo evento</span>
+        <span class="t-h3 outros-eventos__titulo">{proximo.titulo}</span>
+      </a>
+    </nav>
+  )}
+
+  <FechoDaGaleria />
+</Base>

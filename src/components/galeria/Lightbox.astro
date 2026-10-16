@@ -1,0 +1,24 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+---
+<dialog class="lightbox" data-lightbox aria-label="Foto ampliada">
+  <div class="lightbox__moldura">
+    <button class="lightbox__fechar" type="button" data-fechar aria-label="Fechar">
+      <Icone nome="fechar" />
+    </button>
+    <div class="lightbox__palco" data-palco>
+      <img class="lightbox__imagem" data-imagem alt="" decoding="async" />
+    </div>
+    <button class="lightbox__seta lightbox__seta--anterior" type="button" data-anterior aria-label="Foto anterior">
+      <Icone nome="piramide" />
+    </button>
+    <button class="lightbox__seta lightbox__seta--proxima" type="button" data-proxima aria-label="Próxima foto">
+      <Icone nome="piramide" />
+    </button>
+    <div class="lightbox__rodape" aria-live="polite">
+      <p class="t-mono-xs lightbox__contador" data-contador></p>
+      <p class="t-body-s lightbox__legenda" data-legenda></p>
+      <p class="t-mono-xs lightbox__credito" data-credito hidden></p>
+    </div>
+  </div>
+</dialog>
