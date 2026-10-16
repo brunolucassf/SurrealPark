@@ -1,0 +1,98 @@
+---
+import '@/styles/tokens.css';
+import '@/styles/global.css';
+import Cabecalho from '@/components/layout/Cabecalho.astro';
+import BarraMobile from '@/components/layout/BarraMobile.astro';
+import Rodape from '@/components/layout/Rodape.astro';
+import FundoVivo from '@/components/layout/FundoVivo.astro';
+import Loader from '@/components/layout/Loader.astro';
+import Formas from '@/components/marca/Formas.astro';
+
+interface Props {
+  titulo: string;
+  descricao: string;
+  luz?: 'noite' | 'amanhecer';
+  isBarraMobileVisivel?: boolean;
+  imagemDeCompartilhamento?: string;
+  descricaoDeCompartilhamento?: string;
+}
+
+const {
+  titulo,
+  descricao,
+  luz = 'noite',
+  isBarraMobileVisivel = true,
+  imagemDeCompartilhamento = '/og/compartilhamento-1200x630.jpg',
+  descricaoDeCompartilhamento = descricao,
+} = Astro.props;
+
+const caminhoAtual = Astro.url.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
+const urlCanonica = new URL(caminhoAtual, Astro.site).href;
+const urlDaImagem = new URL(imagemDeCompartilhamento, Astro.site).href;
+---
+<!doctype html>
+<html lang="pt-BR" data-luz={luz === 'amanhecer' ? 'amanhecer' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>(function(){try{var r=document.documentElement,m=matchMedia("(prefers-reduced-motion: reduce)").matches,c=navigator.connection;if(m)return;if(innerWidth>=1024)r.classList.add("pin-ok");if(sessionStorage.getItem("surreal:abertura")||(c&&c.saveData))return;r.classList.add("tem-loader")}catch(e){}})();</script>
+    <title>{titulo}</title>
+    <meta name="description" content={descricao} />
+    <link rel="canonical" href={urlCanonica} />
+    <meta name="theme-color" content={luz === 'amanhecer' ? '#F4EEE3' : '#131215'} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/kalnia-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/instrument-sans-var-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/fonts/fonts.css" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Surreal Park" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descricaoDeCompartilhamento} />
+    <meta property="og:url" content={urlCanonica} />
+    <meta property="og:image" content={urlDaImagem} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+    <Loader />
+    <Formas />
+    <FundoVivo />
+    <Cabecalho caminhoAtual={caminhoAtual} />
+    <main id="conteudo" tabindex="-1" class:list={['principal', { 'principal--com-barra': isBarraMobileVisivel }]}>
+      <slot />
+    </main>
+    <Rodape />
+    {isBarraMobileVisivel && <BarraMobile />}
+    <script>
+      import '@/scripts/global';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @font-face {
+    font-family: "Kalnia Fallback";
+    src: local("Georgia");
+    size-adjust: 115.8%;
+    ascent-override: 90.7%;
+    descent-override: 25.9%;
+    line-gap-override: 0%;
+  }
+  @font-face {
+    font-family: "Instrument Sans Fallback";
+    src: local("Arial");
+    size-adjust: 101.2%;
+    ascent-override: 95.8%;
+    descent-override: 24.7%;
+    line-gap-override: 0%;
+  }
+  .principal { position: relative; z-index: var(--z-raised); display: block; }
+  .principal:focus { outline: none; }
+  .principal--com-barra { padding-bottom: calc(var(--barra-h) + var(--sp-4)); }
+  @media (min-width: 1024px) { .principal--com-barra { padding-bottom: 0; } }
+</style>

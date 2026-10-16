@@ -1,0 +1,51 @@
+<canvas class="fundo-vivo" aria-hidden="true" data-fundo-vivo></canvas>
+<div class="eclipse" aria-hidden="true">
+  <div class="eclipse__trilho"></div>
+  <div class="eclipse__disco"></div>
+  <div class="eclipse__sombra"></div>
+</div>
+
+<style>
+  .fundo-vivo {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-fundo-gl);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease-ui);
+  }
+  :global(html.fundo-gl[data-fundo-pronto="true"]) .fundo-vivo { opacity: 1; }
+  :global(html.fundo-css) .fundo-vivo { display: none; }
+
+  .eclipse { display: none; }
+  @supports (animation-timeline: scroll()) {
+    @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+      .eclipse {
+        display: block;
+        position: fixed;
+        right: calc(var(--margem) / 2 - 5px);
+        top: 50%;
+        z-index: var(--z-sticky);
+        width: 10px;
+        height: 120px;
+        translate: 0 -50%;
+        pointer-events: none;
+      }
+      .eclipse__trilho { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgb(242 236 226 / .14); }
+      .eclipse__disco, .eclipse__sombra { position: absolute; left: 0; top: 0; width: 10px; height: 10px; border-radius: 50%; }
+      .eclipse__disco { background: var(--gold-400); animation: disco-desce linear both; animation-timeline: scroll(root); }
+      .eclipse__sombra { background: var(--ink-900); box-shadow: 0 0 0 1px var(--ink-900); opacity: 0; animation: sombra-cruza linear both; animation-timeline: scroll(root); }
+      @keyframes disco-desce {
+        from { transform: translateY(0); background: var(--gold-400); }
+        to { transform: translateY(110px); background: var(--moon-200); }
+      }
+      @keyframes sombra-cruza {
+        0%, 88% { transform: translate(-14px, 110px); opacity: 0; }
+        90% { opacity: 1; }
+        100% { transform: translate(0, 110px); opacity: 1; }
+      }
+    }
+  }
+</style>

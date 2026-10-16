@@ -1,0 +1,9 @@
+{
+  "titulo": "Réveillon Surreal 2027",
+  "data_inicio": "2026-12-31T22:00:00-03:00",
+  "data_fim": "2027-01-01T10:00:00-03:00",
+  "artistas": [{ "nome": "Line-up a anunciar", "destaque": true }],
+  "palcos": ["ritual", "bells", "raw-room", "nomad", "church"],
+  "status": "em_breve",
+  "exemplo": true
+}

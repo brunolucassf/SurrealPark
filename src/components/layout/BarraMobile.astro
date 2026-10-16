@@ -1,0 +1,44 @@
+---
+import Icone from '@/components/ui/Icone.astro';
+import { LINK_WHATSAPP_MESAS } from '@/data/site';
+---
+<nav class="barra-mobile" aria-label="Atalhos" data-barra-mobile>
+  <a class="btn btn--primario barra-mobile__botao" href="/programacao#agenda" data-pulso>Ingressos</a>
+  <a
+    class="btn btn--secundario barra-mobile__botao"
+    href={LINK_WHATSAPP_MESAS}
+    target="_blank"
+    rel="noopener"
+    aria-label="Reservar mesa ou camarote pelo WhatsApp (abre o WhatsApp)"
+  >
+    <Icone nome="whatsapp" class="btn__icone barra-mobile__whatsapp" />
+    Mesas
+  </a>
+</nav>
+
+<style>
+  .barra-mobile {
+    --bg: var(--ink-950);
+    --focus: var(--gold-200);
+    position: fixed;
+    inset: auto 0 0;
+    z-index: var(--z-bottombar);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 8px var(--margem) calc(8px + env(safe-area-inset-bottom));
+    background: var(--ink-950);
+    border-top: 1px solid rgb(230 189 110 / .3);
+    transition: transform var(--dur-1-2) var(--ease-ui);
+    view-transition-name: barra-mobile;
+  }
+  .barra-mobile[data-oculta="true"] { transform: translateY(100%); }
+  .barra-mobile__botao {
+    --btn-h: 40px;
+    padding-inline: var(--sp-3);
+    position: relative;
+  }
+  .barra-mobile__botao::after { content: ""; position: absolute; inset: -4px 0; }
+  .barra-mobile__whatsapp { width: 18px; height: 18px; }
+  @media (min-width: 1024px) { .barra-mobile { display: none; } }
+</style>

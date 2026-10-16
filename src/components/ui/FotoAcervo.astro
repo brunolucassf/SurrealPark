@@ -1,0 +1,36 @@
+---
+import { Picture } from 'astro:assets';
+import { buscarFotoPorSlot, buscarImagemPorArquivo, filtrarLarguras } from '@/lib/fotos';
+
+interface Props {
+  slot: string;
+  arquivo?: string | undefined;
+  alt?: string;
+  sizes: string;
+  class?: string;
+  isPrioritaria?: boolean;
+  larguraMaxima?: number;
+  larguras?: number[];
+}
+
+const { slot, arquivo, alt, sizes, class: className, isPrioritaria = false, larguraMaxima, larguras: largurasFixas } = Astro.props;
+const imagemDoArquivo = arquivo ? buscarImagemPorArquivo(arquivo) : undefined;
+const fotoDoSlot = buscarFotoPorSlot(slot);
+const foto = imagemDoArquivo ? { imagem: imagemDoArquivo, alt: fotoDoSlot?.alt ?? '' } : fotoDoSlot;
+const larguras = largurasFixas ?? (foto ? filtrarLarguras(foto.imagem.width).filter((largura) => !larguraMaxima || largura <= larguraMaxima) : []);
+---
+{foto ? (
+  <Picture
+    class={className}
+    src={foto.imagem}
+    alt={alt ?? foto.alt}
+    formats={['avif', 'webp']}
+    widths={larguras}
+    sizes={sizes}
+    quality={55}
+    loading={isPrioritaria ? 'eager' : 'lazy'}
+    decoding="async"
+  />
+) : (
+  <span class:list={[className, 'foto-ausente']} role="img" aria-label={alt ?? ''}></span>
+)}

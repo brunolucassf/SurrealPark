@@ -1,0 +1,15 @@
+---
+interface Props { class?: string }
+const { class: className } = Astro.props;
+const CENTROS_DOS_ARCOS = [73.3, 97.3, 121.3];
+const desenharAmendoa = (centro: number) => {
+  const alca = 51.5 / 0.75;
+  return `M149 ${centro}C193 ${centro - alca} 307 ${centro - alca} 351 ${centro}C307 ${centro + alca} 193 ${centro + alca} 149 ${centro}Z`;
+};
+---
+<svg class={className} xmlns="http://www.w3.org/2000/svg" viewBox="142 15 215 164" aria-hidden="true" focusable="false">
+  <g class="simbolo-traco__arcos" fill="none" stroke="currentColor" stroke-width="12" stroke-linejoin="bevel">
+    {CENTROS_DOS_ARCOS.map((centro) => <path class="simbolo-traco__arco" pathLength="1" d={desenharAmendoa(centro)} />)}
+  </g>
+  <polygon class="simbolo-traco__piramide" fill="currentColor" points="250.1,75.3 226,119 274.5,119" />
+</svg>

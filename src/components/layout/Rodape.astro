@@ -1,0 +1,169 @@
+---
+import Simbolo from '@/components/marca/Simbolo.astro';
+import Wordmark from '@/components/marca/Wordmark.astro';
+import { NAVEGACAO, REDES, ENDERECO, CONTATOS, LINK_WHATSAPP_MESAS, SUFIXO_NOVA_ABA, CREDITO_FONTE_DEV } from '@/data/site';
+
+const ano = new Date().getFullYear();
+---
+<footer class="rodape" data-rodape>
+  <div class="rodape__conteudo container">
+    <div class="rodape__assinatura">
+      <Simbolo class="rodape__simbolo" />
+      <p class="t-h3 rodape__frase"><span>Surreal Park<span class="sr-only">,</span></span> <span>Camboriú, SC<span class="sr-only">,</span></span> <span>desde 2021</span></p>
+    </div>
+
+    <nav class="rodape__coluna" aria-label="Mapa do site">
+      <h2 class="t-mono-xs rodape__rotulo">Mapa do site</h2>
+      <ul role="list">
+        <li><a class="link-nav" href="/">Início</a></li>
+        {NAVEGACAO.map((item) => <li><a class="link-nav" href={item.href}>{item.rotulo}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="rodape__coluna">
+      <h2 class="t-mono-xs rodape__rotulo">Onde fica</h2>
+      <address>
+        <p>{ENDERECO.logradouro}<br />{ENDERECO.bairro}, {ENDERECO.cidade}-{ENDERECO.estado}<br />{ENDERECO.cep}</p>
+      </address>
+    </div>
+
+    <div class="rodape__coluna">
+      <h2 class="t-mono-xs rodape__rotulo">Fale com a gente</h2>
+      <ul role="list">
+        <li><a class="link-nav" href={LINK_WHATSAPP_MESAS} target="_blank" rel="noopener">Mesas e camarotes: {CONTATOS.telefoneMesas}<span class="sr-only"> (abre o WhatsApp)</span></a></li>
+        <li><a class="link-nav" href={`mailto:${CONTATOS.email}`}>{CONTATOS.email}</a></li>
+        <li><a class="link-nav" href="/contato#locacao">Locação do parque</a></li>
+      </ul>
+    </div>
+
+    <div class="rodape__coluna">
+      <h2 class="t-mono-xs rodape__rotulo">Redes</h2>
+      <ul role="list">
+        {REDES.map((rede) => (
+          <li><a class="link-nav" href={rede.href} target="_blank" rel="noopener">{rede.nome}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a></li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="rodape__avisos t-body-s">
+      <p>Ingressos vendidos pela Ingresse e pela Blueticket, conforme o evento.</p>
+      <p><strong class="rodape__18">18+</strong> Entrada somente para maiores de 18 anos, com documento oficial com foto.</p>
+    </div>
+
+    <div class="rodape__base t-mono-xs">
+      <p>© {ano} Surreal Park</p>
+      <p>
+        <a class="link-nav" href={CREDITO_FONTE_DEV.href} target="_blank" rel="noopener">{CREDITO_FONTE_DEV.texto}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a>
+      </p>
+    </div>
+  </div>
+
+  <div class="rodape__horizonte" aria-hidden="true">
+    <svg class="rodape__arcos" viewBox="0 0 200 40" preserveAspectRatio="none" focusable="false">
+      <path d="M0 20C44 6.7 156 6.7 200 20 156 33.3 44 33.3 0 20Z" />
+      <path d="M0 20C44 0 156 0 200 20 156 40 44 40 0 20Z" />
+      <path d="M0 20C44 13.3 156 13.3 200 20 156 26.7 44 26.7 0 20Z" />
+    </svg>
+    <div class="rodape__sol"><Wordmark class="rodape__wordmark" /></div>
+  </div>
+</footer>
+
+<style>
+  .rodape {
+    --bg: var(--ink-900);
+    --text: var(--bone-50);
+    --divider: var(--ink-600);
+    --focus: var(--gold-200);
+    color-scheme: dark;
+    position: relative;
+    overflow: clip;
+    color: var(--bone-50);
+    background: linear-gradient(to bottom, var(--ink-900) 0%, #1E1A22 30%, #2A2230 55%, #5A3E36 88%, #8A5E34 100%);
+    padding-block-start: var(--s-section);
+  }
+  .rodape__conteudo {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-7) var(--gutter);
+  }
+  .rodape__assinatura { display: grid; gap: var(--sp-5); }
+  .rodape__frase > span { display: block; }
+  .rodape__simbolo { width: 64px; height: auto; color: var(--gold-400); }
+  .rodape__rotulo { color: var(--ash-400); margin-block-end: var(--sp-4); }
+  .rodape__coluna ul { display: grid; gap: var(--sp-2); }
+  .rodape__coluna a, .rodape__coluna address p { font-size: var(--fs-body-s); }
+  .rodape__coluna ul { gap: 0; }
+  .rodape__coluna a { min-height: 44px; }
+  address { font-style: normal; color: var(--bone-300); }
+  .rodape__avisos { display: grid; gap: var(--sp-2); color: var(--bone-300); max-width: 68ch; }
+  .rodape__18 {
+    display: inline-block;
+    margin-right: var(--sp-2);
+    padding: 1px 8px;
+    border: 1px solid var(--gold-500);
+    border-radius: var(--r-pill);
+    font: 500 var(--fs-mono-xs) / 1.4 var(--font-mono);
+    color: var(--gold-300);
+  }
+  .rodape__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-3) var(--sp-6);
+    padding-block-start: var(--sp-5);
+    border-top: 1px solid rgb(242 236 226 / .16);
+    color: var(--bone-300);
+  }
+  .rodape__base a { min-height: 44px; }
+
+  .rodape__horizonte {
+    position: relative;
+    height: calc(19vw * .7);
+    margin-block-start: var(--sp-8);
+    overflow: hidden;
+  }
+  .rodape__arcos {
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%;
+    height: 12vw;
+    translate: 0 -50%;
+    fill: none;
+    stroke: var(--gold-400);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    transform-origin: 50% 50%;
+    transform: scaleY(.02);
+    opacity: .7;
+  }
+  .rodape__arcos path { vector-effect: non-scaling-stroke; }
+  .rodape__sol {
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    padding-inline: 1vw;
+    transform: translateY(18%);
+  }
+  .rodape__wordmark { width: 100%; height: auto; color: var(--gold-400); }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+      .rodape__sol { animation: sol-nasce linear both; animation-timeline: view(); animation-range: entry 0% entry 100%; }
+      .rodape__arcos { animation: arcos-fecham linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
+    }
+  }
+  @keyframes sol-nasce { from { transform: translateY(100%); } to { transform: translateY(18%); } }
+  @keyframes arcos-fecham { from { transform: scaleY(1); opacity: .9; } to { transform: scaleY(.02); opacity: .7; } }
+
+  @media (min-width: 768px) {
+    .rodape__conteudo { grid-template-columns: repeat(3, 1fr); }
+    .rodape__assinatura, .rodape__avisos, .rodape__base { grid-column: 1 / -1; }
+  }
+  @media (min-width: 1024px) {
+    .rodape__conteudo { grid-template-columns: 5fr repeat(3, 2fr) 2fr; }
+    .rodape__assinatura { grid-column: 1; }
+    .rodape__avisos { grid-column: 1 / -1; }
+  }
+</style>

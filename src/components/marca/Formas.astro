@@ -1,0 +1,13 @@
+---
+import { FORMAS, FORMAS_DA_PREVIA } from '@/data/formas';
+---
+<svg class="formas" width="0" height="0" aria-hidden="true" focusable="false">
+  {Object.entries(FORMAS).map(([id, caminho]) => (
+    <clipPath id={id} clipPathUnits="objectBoundingBox"><path d={caminho} /></clipPath>
+  ))}
+  <clipPath id="f-previa" clipPathUnits="objectBoundingBox"><path d={FORMAS_DA_PREVIA.ritual} data-cartaz-mascara /></clipPath>
+</svg>
+
+<style>
+  .formas { position: absolute; width: 0; height: 0; overflow: hidden; }
+</style>

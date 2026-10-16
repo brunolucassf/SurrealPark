@@ -1,0 +1,34 @@
+---
+import Icone from './Icone.astro';
+import { SUFIXO_NOVA_ABA } from '@/data/site';
+import { formatarDataCurta, formatarDataPorExtenso, nomearPlataforma, isIngressoAberto, type Evento } from '@/lib/eventos';
+
+interface Props {
+  evento: Evento | undefined;
+  class?: string;
+  isBloco?: boolean;
+}
+
+const { evento, class: className, isBloco = false } = Astro.props;
+const isAberto = evento ? isIngressoAberto(evento) : false;
+const classes = ['btn', 'btn--primario', isBloco && 'btn--bloco', className].filter(Boolean).join(' ');
+---
+{evento && isAberto ? (
+  <a
+    class={classes}
+    href={evento.data.ingresso_url}
+    target="_blank"
+    rel="noopener"
+    data-pulso
+    data-evento={evento.id}
+    aria-label={`Comprar ingresso para ${evento.data.titulo}, ${formatarDataPorExtenso(evento.data.data_inicio)}, na ${nomearPlataforma(evento)} ${SUFIXO_NOVA_ABA}`}
+  >
+    <span class="btn__texto">Ingressos · {evento.data.titulo} · {formatarDataCurta(evento.data.data_inicio)}</span>
+    <Icone nome="externo" class="btn__icone" />
+  </a>
+) : (
+  <a class={classes} href="/programacao#agenda" data-pulso>
+    <span class="btn__texto">Ver programação</span>
+    <Icone nome="piramide" class="btn__seta" />
+  </a>
+)}

@@ -1,0 +1,18 @@
+---
+import Base from '@/layouts/Base.astro';
+import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
+---
+<Base titulo="Página não encontrada | Surreal Park" descricao="O endereço que você abriu não existe ou mudou de lugar.">
+  <TopoDePagina rotulo="fig. 1: um olho" titulo="Isto não é uma página." apoio="O endereço que você abriu não existe ou mudou de lugar. O parque continua aqui.">
+    <ul class="links-404" role="list">
+      <li><a class="link-texto" href="/programacao">Ver programação</a></li>
+      <li><a class="link-texto" href="/o-parque">Conhecer o parque</a></li>
+      <li><a class="link-texto" href="/">Voltar ao início</a></li>
+    </ul>
+  </TopoDePagina>
+</Base>
+
+<style>
+  .links-404 { display: flex; flex-wrap: wrap; gap: var(--sp-5); }
+  .links-404 a { display: inline-flex; min-height: 44px; align-items: center; }
+</style>

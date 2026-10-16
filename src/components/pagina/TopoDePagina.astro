@@ -1,0 +1,27 @@
+---
+interface Props {
+  rotulo: string;
+  titulo: string;
+  apoio?: string;
+  humor?: string;
+}
+
+const { rotulo, titulo, apoio, humor } = Astro.props;
+---
+<header class="topo container" data-humor={humor}>
+  <p class="t-mono-xs topo__rotulo">{rotulo}</p>
+  <h1 class="t-h1 topo__titulo">{titulo}</h1>
+  {apoio && <p class="t-lead topo__apoio">{apoio}</p>}
+  <slot />
+</header>
+
+<style>
+  .topo {
+    display: grid;
+    gap: var(--sp-5);
+    padding-block: calc(var(--header-h) + var(--s-block)) var(--s-block);
+  }
+  .topo__rotulo { color: var(--text-3); }
+  .topo__titulo { max-width: 16ch; }
+  .topo__apoio { color: var(--text-2); max-width: 52ch; }
+</style>

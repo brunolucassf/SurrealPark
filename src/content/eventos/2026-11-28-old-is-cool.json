@@ -1,0 +1,11 @@
+{
+  "titulo": "Old Is Cool",
+  "data_inicio": "2026-11-28T23:00:00-03:00",
+  "data_fim": "2026-11-29T07:00:00-03:00",
+  "artistas": [{ "nome": "Ratier", "destaque": true }, { "nome": "Line-up completo em breve", "destaque": false }],
+  "palcos": ["ritual", "bells"],
+  "plataforma": "ingresse",
+  "ingresso_url": "https://www.ingresse.com/",
+  "status": "aberto",
+  "exemplo": true
+}

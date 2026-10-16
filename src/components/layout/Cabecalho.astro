@@ -1,0 +1,229 @@
+---
+import Simbolo from '@/components/marca/Simbolo.astro';
+import Wordmark from '@/components/marca/Wordmark.astro';
+import Icone from '@/components/ui/Icone.astro';
+import CtaIngresso from '@/components/ui/CtaIngresso.astro';
+import { NAVEGACAO, REDES, SUFIXO_NOVA_ABA, ENDERECO } from '@/data/site';
+import { buscarProximoEventoAberto, listarProximosEventos, formatarDataDoCard, formatarHora, derivarStatus } from '@/lib/eventos';
+
+interface Props {
+  caminhoAtual: string;
+}
+
+const { caminhoAtual } = Astro.props;
+const proximoEvento = await buscarProximoEventoAberto();
+const [proximaData] = await listarProximosEventos();
+const ROTULO_DO_STATUS = { aberto: 'Ingressos à venda', esgotado: 'Esgotado', em_breve: 'Ingressos em breve', encerrado: 'Encerrado' } as const;
+const isAtual = (href: string) => caminhoAtual === href || caminhoAtual.startsWith(`${href}/`);
+---
+<header class="cabecalho" data-cabecalho data-topo="true">
+  <div class="cabecalho__barra">
+    <a class="cabecalho__marca" href="/" aria-label="Surreal Park, página inicial" data-marca>
+      <span class="cabecalho__olho"><Simbolo class="cabecalho__simbolo" /></span>
+      <Wordmark class="cabecalho__wordmark" />
+    </a>
+    <nav class="cabecalho__nav" aria-label="Principal">
+      <ul role="list">
+        {NAVEGACAO.map((item) => (
+          <li>
+            <a class="link-nav t-label" href={item.href} aria-current={isAtual(item.href) ? 'page' : undefined}>{item.rotulo}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <a class="btn btn--primario cabecalho__cta" href="/programacao#agenda" data-pulso>Ingressos</a>
+    <button class="cabecalho__abrir t-label" type="button" aria-expanded="false" aria-controls="menu-mobile" data-menu-abrir>
+      <Icone nome="menu" class="cabecalho__icone" />
+      <span>Menu</span>
+    </button>
+  </div>
+</header>
+
+<div class="menu" id="menu-mobile" role="dialog" aria-modal="true" aria-label="Menu" hidden data-menu>
+  <div class="menu__topo">
+    <a class="cabecalho__marca" href="/" aria-label="Surreal Park, página inicial">
+      <span class="cabecalho__olho"><Simbolo class="cabecalho__simbolo" /></span>
+      <Wordmark class="cabecalho__wordmark" />
+    </a>
+    <button class="cabecalho__abrir t-label" type="button" data-menu-fechar>
+      <Icone nome="fechar" class="cabecalho__icone" />
+      <span>Fechar menu</span>
+    </button>
+  </div>
+  <div class="menu__corpo">
+    <CtaIngresso evento={proximoEvento} isBloco class="menu__cta" />
+    <nav aria-label="Menu">
+      <ol class="menu__lista" role="list">
+        {NAVEGACAO.map((item, indice) => (
+          <li class="menu__item">
+            <a class="menu__link" href={item.href} aria-current={isAtual(item.href) ? 'page' : undefined}>
+              <span class="menu__indice t-mono-xs" aria-hidden="true">{String(indice + 1).padStart(2, '0')}</span>
+              <span class="t-h1">{item.rotulo}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+    <div class="menu__rodape">
+      {proximaData && (
+        <a class="menu__data" href="/programacao#agenda">
+          <span class="t-mono-xs menu__rotulo">Próxima data</span>
+          <span class="t-mono-xs menu__quando">{formatarDataDoCard(proximaData.data.data_inicio)} · {formatarHora(proximaData.data.data_inicio)}</span>
+          <span class="t-h3 menu__titulo">{proximaData.data.titulo}</span>
+          <span class="t-mono-xs menu__status">{ROTULO_DO_STATUS[derivarStatus(proximaData)]}</span>
+        </a>
+      )}
+      <a class="menu__onde" href="/contato#como-chegar">
+        <span class="t-mono-xs menu__rotulo">Onde fica</span>
+        <span class="t-body-s">{ENDERECO.logradouro}<br />{ENDERECO.bairro}, {ENDERECO.cidade}-{ENDERECO.estado}</span>
+        <span class="t-label menu__como-chegar">Como chegar <Icone nome="piramide" class="btn__seta" /></span>
+      </a>
+    </div>
+    <ul class="menu__redes" role="list">
+      {REDES.map((rede) => (
+        <li><a class="link-nav t-label" href={rede.href} target="_blank" rel="noopener">{rede.nome}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a></li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .cabecalho {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: var(--z-header);
+    height: var(--header-h);
+    color: var(--bone-50);
+    transition: transform var(--dur-1-2) var(--ease-ui), background-color var(--dur-1-2) var(--ease-ui), border-color var(--dur-1-2) var(--ease-ui);
+    border-bottom: 1px solid transparent;
+    view-transition-name: cabecalho;
+  }
+  .cabecalho[data-topo="false"] { background: var(--bg); border-bottom-color: var(--divider); }
+  :global([data-luz="amanhecer"]) .cabecalho { color: var(--ink-900); }
+  :global([data-luz="amanhecer"]) .cabecalho::before { display: none; }
+  :global([data-luz="amanhecer"]) .cabecalho .cabecalho__simbolo { color: var(--gold-700); }
+  .cabecalho[data-escondido="true"] { transform: translateY(-100%); }
+  .cabecalho::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 -40px;
+    z-index: -1;
+    background: linear-gradient(to bottom, rgb(12 11 13 / .55), rgb(12 11 13 / 0));
+    pointer-events: none;
+    transition: opacity var(--dur-1-2) var(--ease-ui);
+  }
+  .cabecalho[data-topo="false"]::before { opacity: 0; }
+
+  .cabecalho__barra, .menu__topo {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-6);
+    width: 100%;
+    height: var(--header-h);
+    max-width: calc(var(--container) + 2 * var(--margem));
+    margin-inline: auto;
+    padding-inline: var(--margem);
+  }
+  .cabecalho__marca { display: inline-flex; align-items: center; gap: 12px; margin-right: auto; min-height: 44px; }
+  .cabecalho__olho { display: block; }
+  .cabecalho__simbolo { height: 2rem; width: auto; color: var(--gold-400); transform-origin: 50% 50%; }
+  .cabecalho__wordmark { display: none; width: auto; height: 1.5rem; color: currentColor; }
+  @media (min-width: 414px) { .cabecalho__wordmark { display: block; } }
+  @media (min-width: 1024px) { .cabecalho__wordmark { height: 1.625rem; } }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .cabecalho__marca:hover .cabecalho__simbolo { animation: piscar var(--dur-1-2) var(--ease-olho); }
+  }
+  @keyframes piscar { 50% { transform: scaleY(.08); } }
+
+  .cabecalho__nav, .cabecalho__cta { display: none; }
+  .cabecalho__abrir {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+    min-height: 44px;
+    min-width: 44px;
+    padding-inline: var(--sp-2);
+    margin-right: calc(var(--sp-2) * -1);
+  }
+  .cabecalho__icone { width: 1.5rem; height: 1.5rem; }
+
+  @media (min-width: 1024px) {
+    .cabecalho__nav { display: block; }
+    .cabecalho__nav ul { display: flex; gap: 2rem; }
+    .cabecalho__nav a { min-height: 44px; }
+    .cabecalho__nav a[aria-current="page"]::before {
+      content: "";
+      position: absolute;
+      left: 50%; bottom: 2px;
+      border: 3px solid transparent;
+      border-bottom: 5px solid var(--gold-400);
+      border-top: 0;
+      translate: -50% 0;
+    }
+    .cabecalho__cta { display: inline-flex; }
+    .cabecalho__abrir { display: none; }
+  }
+
+  .menu {
+    --bg: var(--ink-950);
+    --text: var(--bone-50);
+    --divider: var(--ink-600);
+    --focus: var(--gold-200);
+    color-scheme: dark;
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-menu);
+    display: flex;
+    flex-direction: column;
+    background: var(--ink-950);
+    color: var(--bone-50);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    clip-path: inset(50% 0 50% 0);
+    transition: clip-path var(--dur-1-2) var(--ease-olho);
+  }
+  .menu[hidden] { display: none; }
+  .menu[data-aberto="true"] { clip-path: inset(0); }
+  .menu__corpo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    flex: 1;
+    padding: var(--sp-5) var(--margem) calc(var(--sp-6) + env(safe-area-inset-bottom));
+  }
+  .menu__lista { display: grid; }
+  .menu__link {
+    display: flex;
+    align-items: baseline;
+    gap: var(--sp-4);
+    min-height: 56px;
+    padding-block: var(--sp-2);
+    border-bottom: var(--borda-1);
+  }
+  .menu__link[aria-current="page"] .t-h1 { color: var(--gold-300); }
+  .menu__indice { color: var(--ash-400); min-width: 2ch; }
+  .menu__link .t-h1 { font-size: clamp(2.25rem, 9vw, 3.5rem); }
+  .menu__item { opacity: 0; transform: translateY(12px); transition: opacity var(--dur-1-2) var(--ease-saida), transform var(--dur-1-2) var(--ease-saida); }
+  .menu[data-aberto="true"] .menu__item { opacity: 1; transform: none; }
+  .menu__item:nth-child(2) { transition-delay: 60ms; }
+  .menu__item:nth-child(3) { transition-delay: 120ms; }
+  .menu__item:nth-child(4) { transition-delay: 180ms; }
+  .menu__item:nth-child(5) { transition-delay: 240ms; }
+  .menu__rodape {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-5);
+    margin-top: auto;
+    padding-top: var(--sp-5);
+    border-top: 1px solid rgb(230 189 110 / .3);
+  }
+  @media (min-width: 414px) { .menu__rodape { grid-template-columns: 1.3fr 1fr; } }
+  .menu__data, .menu__onde { display: grid; align-content: start; gap: var(--sp-2); color: var(--bone-50); }
+  .menu__rotulo { color: var(--ash-400); }
+  .menu__quando, .menu__status { color: var(--gold-300); }
+  .menu__onde .t-body-s { color: var(--bone-300); }
+  .menu__como-chegar { display: inline-flex; align-items: center; gap: var(--sp-2); min-height: 44px; }
+  .menu__redes { display: flex; flex-wrap: wrap; gap: var(--sp-5); }
+  .menu__redes a { min-height: 44px; }
+  @media (min-width: 1024px) { .menu { display: none !important; } }
+</style>

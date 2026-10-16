@@ -1,0 +1,11 @@
+{
+  "titulo": "Boma",
+  "data_inicio": "2027-01-16T22:00:00-03:00",
+  "data_fim": "2027-01-17T08:00:00-03:00",
+  "artistas": [{ "nome": "Line-up a anunciar", "destaque": true }],
+  "palcos": ["raw-room"],
+  "plataforma": "ingresse",
+  "ingresso_url": "https://www.ingresse.com/",
+  "status": "aberto",
+  "exemplo": true
+}

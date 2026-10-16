@@ -1,0 +1,64 @@
+<div class="loader" aria-hidden="true" data-loader>
+  <svg class="loader__simbolo" viewBox="-130 -100 260 200" focusable="false" data-loader-simbolo>
+    <g class="loader__ecos" data-loader-ecos></g>
+    <g class="loader__arcos" fill="none" stroke="currentColor" stroke-width="12" stroke-linejoin="bevel">
+      <path pathLength="1" data-loader-arco />
+      <path pathLength="1" data-loader-arco />
+      <path pathLength="1" data-loader-arco />
+    </g>
+    <polygon class="loader__piramide" fill="currentColor" points="0,-22 -24,21.7 24,21.7" data-loader-piramide />
+  </svg>
+  <p class="t-mono-xs loader__local">Surreal Park · Camboriú SC</p>
+  <p class="loader__carga">
+    <span class="t-mono-xs loader__rotulo">carregando</span>
+    <span class="loader__contador" data-loader-contador>000</span>
+  </p>
+</div>
+
+<style>
+  .loader {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-intro);
+    display: none;
+    background: var(--ink-950);
+    color: var(--bone-50);
+    pointer-events: auto;
+    -webkit-mask: linear-gradient(#000 0 0), var(--mascara-olho) center / var(--furo, 0px 0px) no-repeat;
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0), var(--mascara-olho) center / var(--furo, 0px 0px) no-repeat;
+    mask-composite: exclude;
+  }
+  :global(html.tem-loader) .loader { display: block; animation: loader-failsafe 1ms 3s forwards; }
+  @keyframes loader-failsafe { to { opacity: 0; visibility: hidden; } }
+  .loader__simbolo {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: var(--loader-simbolo);
+    height: auto;
+    overflow: visible;
+    translate: -50% -50%;
+    color: var(--gold-400);
+  }
+  .loader__ecos path { fill: none; stroke: var(--gold-400); stroke-width: 6; }
+  .loader__piramide { opacity: 0; }
+  .loader__local { position: absolute; left: var(--margem); bottom: calc(var(--sp-6) + env(safe-area-inset-bottom)); color: var(--ash-400); }
+  .loader__carga {
+    position: absolute;
+    right: var(--margem);
+    bottom: calc(var(--sp-5) + env(safe-area-inset-bottom));
+    display: grid;
+    justify-items: end;
+    gap: var(--sp-2);
+  }
+  .loader__rotulo { color: var(--ash-400); }
+  .loader__contador {
+    font-family: var(--font-display);
+    font-size: var(--fs-display);
+    font-weight: 200;
+    line-height: .85;
+    font-variant-numeric: lining-nums tabular-nums;
+    color: var(--bone-50);
+    padding-block-start: .08em;
+  }
+</style>
