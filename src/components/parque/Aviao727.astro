@@ -1,0 +1,19 @@
+---
+import { AVIAO_727 } from '@/data/formas';
+
+interface Props {
+  class?: string;
+}
+
+const { class: classe } = Astro.props;
+const ALTURA_DAS_JANELAS = 70;
+const RAIO_DA_JANELA = 2.2;
+---
+<svg class:list={['aviao', classe]} viewBox={AVIAO_727.viewBox} aria-hidden="true" focusable="false">
+  <g class="aviao__tracos">
+    {AVIAO_727.tracos.map((traco) => <path d={traco} pathLength="1" />)}
+  </g>
+  <g class="aviao__janelas">
+    {AVIAO_727.janelas.map((x, indice) => <circle cx={x} cy={ALTURA_DAS_JANELAS} r={RAIO_DA_JANELA} style={`--i:${indice}`} />)}
+  </g>
+</svg>

@@ -1,0 +1,17 @@
+---
+import Base from '@/layouts/Base.astro';
+import Tour from '@/components/parque/Tour.astro';
+import RankingDoParque from '@/components/parque/RankingDoParque.astro';
+import '@/styles/parque.css';
+---
+<Base
+  titulo="O Parque | Palcos, arte e história | Surreal Park"
+  descricao="Ritual, Bells, Raw Room, Nomad e Church: cinco palcos e um jardim de esculturas em 135 mil m². O parque criado por Renato Ratier em Camboriú."
+>
+  <Fragment slot="head">
+    <script is:inline>(function(){try{var r=document.documentElement,n=navigator,c=n.connection;if(innerWidth<1024||!matchMedia("(pointer: fine)").matches||matchMedia("(prefers-reduced-motion: reduce)").matches||(c&&c.saveData)||(n.deviceMemory&&n.deviceMemory<4)||!window.WebGL2RenderingContext)return;r.classList.add("tour-gl")}catch(e){}})();</script>
+  </Fragment>
+  <Tour alvosDepoisDoTour={['ranking']}>
+    <RankingDoParque />
+  </Tour>
+</Base>

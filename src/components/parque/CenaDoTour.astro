@@ -1,0 +1,126 @@
+---
+import type { CenaPreparada } from './preparar-tour';
+import Aviao727 from './Aviao727.astro';
+import { COPY_DO_TOUR } from '@/data/tour';
+import { TOUR } from '@/scripts/parque/constantes';
+
+interface Props {
+  preparada: CenaPreparada;
+}
+
+const { preparada } = Astro.props;
+const { cena, indice, isUltima, desktop, mobile, mascaraMobile, foco } = preparada;
+const copy = COPY_DO_TOUR[cena.copy];
+const isPrimeira = indice === 0;
+const lado = isPrimeira || foco[0] > 0.5 ? 'esquerda' : 'direita';
+const idDoTitulo = `titulo-cena-${cena.id}`;
+const entrada = isPrimeira ? 0 : TOUR.entradaVh;
+const estilo = [
+  `--vh:${cena.vh.desktop}`,
+  `--vh-m:${cena.vh.mobile}`,
+  `--entrada:${entrada}`,
+  `--ancora-hold:${TOUR.ancoraNoHold}`,
+  mascaraMobile ? `--mascara:${mascaraMobile}` : '',
+].filter(Boolean).join(';');
+const dividirPalavras = (texto: string) => texto.split(' ');
+const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.startsWith(',');
+---
+<section
+  class:list={['cena', `cena--${cena.tipo}`, { 'cena--primeira': isPrimeira, 'cena--ultima': isUltima, 'cena--com-mascara': Boolean(mascaraMobile) }]}
+  data-cena={cena.id}
+  data-humor-da-cena={cena.humor}
+  data-lado={lado}
+  aria-labelledby={idDoTitulo}
+  style={estilo}
+>
+  {cena.ancora && <span class="cena__ancora" id={cena.ancora}></span>}
+  <span class="cena__humor" data-humor={cena.humor} aria-hidden="true"></span>
+  <div class="cena__carta">
+    {cena.tipo === 'jet' && (
+      <div class="cena__ceu" role="img" aria-label={cena.alt}>
+        <Aviao727 class="cena__aviao" />
+      </div>
+    )}
+    {desktop && (
+      <picture>
+        {mobile && <source media="(max-width: 1023.98px)" type="image/avif" srcset={mobile.avif} sizes="100vw" />}
+        {mobile && <source media="(max-width: 1023.98px)" type="image/webp" srcset={mobile.webp} sizes="100vw" />}
+        <source type="image/avif" srcset={desktop.avif} sizes="100vw" />
+        <source type="image/webp" srcset={desktop.webp} sizes="100vw" />
+        <img
+          class="cena__img"
+          src={desktop.src}
+          width={desktop.largura}
+          height={desktop.altura}
+          alt={cena.alt}
+          loading={isPrimeira ? 'eager' : 'lazy'}
+          fetchpriority={isPrimeira ? 'high' : 'auto'}
+          decoding="async"
+        />
+      </picture>
+    )}
+  </div>
+  <div class="cena__trilho">
+    <div class="cena__painel">
+      <div class:list={['cena__conteudo', `cena__conteudo--${copy?.tipo ?? 'vazio'}`]}>
+        {copy?.tipo === 'ceu' && (
+          <>
+            <p class="t-mono-xs cena__rotulo">{copy.rotulo}</p>
+            <h1 class="t-h1 cena__titulo-principal" id={idDoTitulo}>{copy.titulo}</h1>
+          </>
+        )}
+        {copy?.tipo === 'historia' && (
+          <>
+            <h2 class="t-h2 cena__titulo" id={idDoTitulo}>{copy.titulo}</h2>
+            {copy.paragrafos.map((paragrafo) => <p class="t-body cena__corpo">{paragrafo}</p>)}
+            <dl class="cena__numeros">
+              {copy.numeros.map((numero) => (
+                <div class="cena__numero">
+                  <dt class="t-mono-xs">{numero.rotulo}</dt>
+                  <dd>{numero.valor}</dd>
+                </div>
+              ))}
+            </dl>
+          </>
+        )}
+        {copy?.tipo === 'manifesto' && (
+          <>
+            <h2 class="sr-only" id={idDoTitulo}>{copy.tituloAcessivel}</h2>
+            <blockquote class="manifesto">
+              {copy.linhas.map((linha, posicao) => (
+                <p class:list={['manifesto__linha', { 'manifesto__linha--final': posicao === copy.linhas.length - 1 }]} data-linha>{linha}</p>
+              ))}
+            </blockquote>
+          </>
+        )}
+        {copy?.tipo === 'palco' && (
+          <>
+            <p class="t-mono-xs cena__rotulo">{copy.rotulo}</p>
+            <h2 class="cena__palco" id={idDoTitulo}>
+              <span class="cena__nome">
+                {dividirPalavras(copy.nome).map((palavra, posicao) => (
+                  <>{posicao > 0 && ' '}<span class="cena__palavra"><span style={`--i:${posicao}`}>{palavra}</span></span></>
+                ))}
+              </span>
+              <span class="cena__complemento">{isComplementoComVirgula && <span class="sr-only">,</span>}{copy.complemento.replace(/^,\s*/, '')}</span>
+            </h2>
+            {copy.selo && <p class="t-mono-xs cena__selo">{copy.selo}</p>}
+            <h3 class="t-h3 cena__assinatura">{copy.assinatura}</h3>
+            <p class="t-body cena__corpo">{copy.corpo}</p>
+            {copy.ficha.length > 0 && (
+              <dl class="ficha">
+                {copy.ficha.map((linha) => (
+                  <div class="ficha__linha">
+                    <dt class="t-mono-xs">{linha.rotulo}</dt>
+                    <dd class="t-mono">{linha.valor}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+            {copy.link && <a class="link-texto cena__link t-label" href={copy.link.href}>{copy.link.texto}</a>}
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

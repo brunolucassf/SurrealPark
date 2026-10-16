@@ -1,0 +1,118 @@
+---
+const ALT_DA_ESCULTURA = 'Escultura de rinoceronte do Jardim de Esculturas do Surreal Park';
+---
+<figure class="rino-jardim" data-rino data-rino-jardim data-modo="imagem" data-humor="noite">
+  <div class="rino-jardim__visual">
+    <svg class="rino-jardim__arcos" viewBox="142 15 215 164" aria-hidden="true" focusable="false">
+      <path d="M149 73.3C193 4.6 307 4.6 351 73.3 307 142 193 142 149 73.3Z" />
+      <path d="M149 97.3C193 28.6 307 28.6 351 97.3 307 166 193 166 149 97.3Z" />
+      <path d="M149 121.3C193 52.6 307 52.6 351 121.3 307 190 193 190 149 121.3Z" />
+    </svg>
+    <div class="rino-jardim__lanterna" aria-hidden="true" data-rino-lanterna></div>
+    <div class="rino-jardim__objeto">
+      <img
+        class="rino-jardim__poster"
+        src="/models/rino-poster.webp"
+        alt={ALT_DA_ESCULTURA}
+        width="1200"
+        height="1200"
+        loading="lazy"
+        decoding="async"
+        data-rino-poster
+      />
+      <div class="rino-jardim__canvas" aria-hidden="true" data-rino-canvas></div>
+      <div class="rino-jardim__sombra" aria-hidden="true"></div>
+    </div>
+  </div>
+  <figcaption class="rino-jardim__legenda">
+    <span class="t-mono-xs rino-jardim__rotulo">Jardim de Esculturas · rinoceronte</span>
+    <span class="rino-jardim__controles">
+      <button class="btn btn--secundario" type="button" hidden data-rino-alternar>Ver em 3D</button>
+      <span class="t-mono-xs rino-jardim__dica" hidden data-rino-dica>
+        <span class="rino-jardim__dica-fino">Arraste para girar</span>
+        <span class="rino-jardim__dica-toque">Toque e arraste para girar</span>
+      </span>
+    </span>
+  </figcaption>
+  <p class="sr-only" role="status" data-rino-status></p>
+</figure>
+
+<style>
+  .rino-jardim {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: var(--sp-5);
+    margin: 0;
+    padding: var(--s-block) var(--margem) var(--s-section);
+    background: var(--ink-950);
+    overflow: clip;
+    isolation: isolate;
+  }
+  .rino-jardim__visual { position: relative; display: grid; place-items: center; width: 100%; min-height: min(78svh, 118vw); }
+  .rino-jardim__arcos {
+    position: absolute;
+    left: 50%; top: 48%;
+    width: min(86vmin, 118vw);
+    translate: -50% -50%;
+    fill: none;
+    stroke: var(--gold-400);
+    stroke-width: .6;
+    opacity: .55;
+    overflow: visible;
+    z-index: -1;
+    transition: opacity var(--dur-1) var(--ease-ui);
+  }
+  .rino-jardim__lanterna {
+    position: absolute;
+    left: 50%; top: 42%;
+    width: 72vmin; height: 72vmin;
+    translate: -50% -50%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(255 194 122 / .16), rgb(255 194 122 / 0));
+    z-index: -1;
+    pointer-events: none;
+  }
+  .rino-jardim__objeto { position: relative; width: min(66vmin, 92vw, 720px); aspect-ratio: 1; }
+  .rino-jardim__poster, .rino-jardim__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .rino-jardim__poster { object-fit: contain; mix-blend-mode: lighten; transition: opacity var(--dur-1) var(--ease-ui); }
+  .rino-jardim__canvas { opacity: 0; transition: opacity var(--dur-1) var(--ease-ui); touch-action: pan-y; cursor: grab; }
+  .rino-jardim__canvas:active { cursor: grabbing; }
+  .rino-jardim__canvas :global(canvas) { width: 100% !important; height: 100% !important; display: block; }
+  .rino-jardim[data-modo="3d"] .rino-jardim__canvas { opacity: 1; }
+  .rino-jardim[data-modo="3d"] .rino-jardim__poster { opacity: 0; }
+  .rino-jardim[data-modo="3d"][data-arcos="3d"] .rino-jardim__arcos { opacity: 0; }
+  .rino-jardim__sombra {
+    position: absolute;
+    left: 20%; right: 20%; bottom: 2%;
+    height: 6%;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(0 0 0 / .7), rgb(0 0 0 / 0));
+    z-index: -1;
+  }
+  .rino-jardim__legenda { display: grid; justify-items: center; gap: var(--sp-4); text-align: center; }
+  .rino-jardim__rotulo { color: var(--gold-300); }
+  .rino-jardim__controles { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--sp-4); }
+  .rino-jardim__dica { color: var(--ash-400); }
+  .rino-jardim__dica-fino { display: none; }
+  @media (pointer: fine) {
+    .rino-jardim__dica-fino { display: inline; }
+    .rino-jardim__dica-toque { display: none; }
+  }
+
+  @media (min-width: 1024px) {
+    .rino-jardim { min-height: 100vh; align-content: center; padding-block: var(--sp-8); }
+    .rino-jardim__visual { min-height: 76vh; }
+    .rino-jardim__objeto { width: min(118vh, 92vw); aspect-ratio: 16 / 10; }
+    .rino-jardim__arcos { width: min(110vh, 70vw); }
+  }
+</style>
+
+<script>
+  import { prepararRinoceronte } from '@/scripts/rino-controle';
+  const secao = document.querySelector<HTMLElement>('[data-rino-jardim]');
+  if (secao) {
+    const isDesktop = window.matchMedia('(min-width: 1024px) and (pointer: fine)').matches;
+    prepararRinoceronte({ secao, isAutomatico: isDesktop, isArcosOrbitais: isDesktop, isDescartavel: true });
+  }
+</script>

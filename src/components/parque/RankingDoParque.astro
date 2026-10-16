@@ -1,0 +1,23 @@
+---
+import { TRAJETORIA_NO_RANKING } from '@/data/ranking';
+
+const ultima = TRAJETORIA_NO_RANKING[TRAJETORIA_NO_RANKING.length - 1];
+---
+<section class="ranking-parque container" id="ranking" aria-labelledby="titulo-ranking-parque" data-humor="ascensao">
+  <div class="ranking-parque__texto">
+    <h2 class="t-h2" id="titulo-ranking-parque">Cinco edições no DJ Mag Top 100 Clubs</h2>
+    <p class="t-body ranking-parque__corpo">O Surreal entrou na lista da DJ Mag em 2022, no primeiro ano completo de operação, em 79º lugar. Em 2026, chegou ao 10º.</p>
+    <p class="t-body-s ranking-parque__fonte">
+      Fonte: <a class="link-texto" href="https://djmag.com/top100clubs" target="_blank" rel="noopener">DJ Mag Top 100 Clubs<span class="sr-only"> (abre em nova aba)</span></a>
+    </p>
+  </div>
+  <ol class="ranking-parque__lista" role="list">
+    {TRAJETORIA_NO_RANKING.map((edicao, indice) => (
+      <li class:list={['ranking-parque__edicao', { 'ranking-parque__edicao--atual': edicao === ultima }]}>
+        <span class="t-mono-xs ranking-parque__ano">{edicao.ano}</span>
+        <span class="ranking-parque__posicao">#{edicao.posicao}</span>
+        {indice === 0 && <span class="t-mono-xs ranking-parque__nota">estreia</span>}
+      </li>
+    ))}
+  </ol>
+</section>
