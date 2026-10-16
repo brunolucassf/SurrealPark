@@ -1,6 +1,7 @@
 ---
 import IlustracaoDeProduto from '@/components/loja/IlustracaoDeProduto.astro';
 import Icone from '@/components/ui/Icone.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import Preco from '@/components/loja/Preco.astro';
 import type { Produto } from '@/data/loja';
 
@@ -29,7 +30,7 @@ const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
       <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} class="produto__ilustracao" />
       <span class="produto__brilho" aria-hidden="true"></span>
       {produto.isDestaque && <span class="produto__selo t-mono-xs">Destaque</span>}
-      {import.meta.env.DEV && produto.isExemplo && <span class="produto__exemplo selo-exemplo t-mono-xs">exemplo</span>}
+      {IS_DEMONSTRACAO && produto.isExemplo && <span class="produto__exemplo selo-exemplo t-mono-xs">exemplo</span>}
     </div>
     <div class="produto__info">
       <span class="produto__tipo t-mono-xs">{produto.tipo}</span>

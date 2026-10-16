@@ -4,10 +4,11 @@ import DefinicoesDaLoja from '@/components/loja/DefinicoesDaLoja.astro';
 import TopoDaLoja from '@/components/loja/TopoDaLoja.astro';
 import CatalogoDaLoja from '@/components/loja/CatalogoDaLoja.astro';
 import RetireNoParque from '@/components/loja/RetireNoParque.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import { PRODUTOS, isLojaAtiva } from '@/data/loja';
 import '@/styles/loja.css';
 
-const isCatalogoReal = isLojaAtiva && PRODUTOS.length > 0 && PRODUTOS.every((produto) => !produto.isExemplo);
+const isCatalogoReal = !IS_DEMONSTRACAO && isLojaAtiva && PRODUTOS.length > 0 && PRODUTOS.every((produto) => !produto.isExemplo);
 const urlDaLoja = new URL('/loja', Astro.site).href;
 const catalogoEstruturado = isCatalogoReal
   ? {
@@ -28,7 +29,7 @@ const catalogoEstruturado = isCatalogoReal
 ---
 <Base
   titulo="Surreal Store, a loja do parque | Surreal Park"
-  descricao="Camisetas, bonés, jaquetas e outros produtos com a marca Surreal. Veja o catálogo e compre na Surreal Store, dentro do parque."
+  descricao="Surreal Store, a loja do Surreal Park em Camboriú: produtos com a marca Surreal. Compra e retirada apenas na loja, dentro do parque."
 >
   {catalogoEstruturado && <script slot="head" type="application/ld+json" set:html={JSON.stringify(catalogoEstruturado)} />}
   <DefinicoesDaLoja />

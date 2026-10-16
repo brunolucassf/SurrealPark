@@ -15,7 +15,7 @@ const eventos = defineCollection({
       palcos: z.array(z.enum(PALCOS)).default([]),
       imagem: z.object({ src: z.string(), alt: z.string(), foco: z.string().default('50% 50%') }).optional(),
       plataforma: z.enum(['ingresse', 'blueticket', 'outra']).optional(),
-      ingresso_url: z.url().optional(),
+      ingresso_url: z.url().refine((url) => url.startsWith('https://'), { message: 'ingresso_url precisa ser https' }).optional(),
       status: z.enum(['aberto', 'esgotado', 'em_breve', 'encerrado']),
       lotes_info: z.string().optional(),
       mesas_disponiveis: z.boolean().optional(),

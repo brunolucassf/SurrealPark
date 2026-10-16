@@ -182,6 +182,9 @@ html:has([data-cabecalho][data-escondido="true"]) .mapa { translate: 0 calc(-1 *
 .cena__selo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2) var(--sp-4); }
 .cena__selo-marca { display: inline-flex; align-items: center; min-height: 28px; padding-inline: 12px; border: 1px solid var(--gold-300); border-radius: var(--r-pill); color: var(--gold-300); }
 .cena__credito { color: var(--bone-300); }
+.cena__foto-credito { margin-top: var(--sp-5); color: var(--bone-300); font-size: .6875rem; letter-spacing: .06em; }
+.loja-parque { display: grid; gap: var(--sp-4); padding-block: var(--s-section); max-width: 40rem; }
+.loja-parque__corpo { color: var(--bone-300); }
 .cena__nome--interludio { font-size: min(var(--fs-display), 14vw); }
 .cena__nome--longo { font-size: min(var(--fs-display), 15vw); }
 .cena__apoio { display: grid; gap: var(--sp-2); width: min(100%, 20rem); margin: 0; }

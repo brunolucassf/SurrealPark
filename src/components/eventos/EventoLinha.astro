@@ -1,5 +1,6 @@
 ---
 import Icone from '@/components/ui/Icone.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import { NOME_DO_PALCO } from '@/data/palcos';
 import { CONTATOS, SUFIXO_NOVA_ABA, criarLinkWhatsApp } from '@/data/site';
 import { derivarStatus, formatarDataDoCard, formatarDataPorExtenso, formatarHora, nomearPlataforma, extrairPartesDaData, type Evento } from '@/lib/eventos';
@@ -12,7 +13,8 @@ interface Props {
 
 const { evento, urlDaLente, nivelDoTitulo = 'h3' } = Astro.props;
 const { titulo, data_inicio: inicio, artistas, palcos, lotes_info: lotesInfo, exemplo } = evento.data;
-const status = derivarStatus(evento);
+const statusReal = derivarStatus(evento);
+const status = exemplo && statusReal === 'aberto' ? 'em_breve' : statusReal;
 const partes = extrairPartesDaData(inicio);
 const plataforma = nomearPlataforma(evento);
 const destaques = artistas.filter((artista) => artista.destaque).map((artista) => artista.nome);
@@ -40,7 +42,7 @@ const Titulo = nivelDoTitulo;
         {demais.length > 0 && <span class="evento__demais"> · com {demais.join(', ')}</span>}
       </p>
     )}
-    {import.meta.env.DEV && exemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
+    {IS_DEMONSTRACAO && exemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
   </div>
   <div class="evento__palcos">
     {palcos.length > 0 ? (

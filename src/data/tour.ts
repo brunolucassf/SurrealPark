@@ -444,8 +444,5 @@ export const INDICE_DO_PARQUE: ItemDoIndice[] = [
   { rotulo: 'Jardim', alvo: 'jardim' },
   { rotulo: 'Esculturas', alvo: 'esculturas' },
   { rotulo: 'Ranking', alvo: 'ranking' },
-  { rotulo: 'Juistreet', alvo: 'juistreet' },
-  { rotulo: 'Serviços', alvo: 'servicos' },
   { rotulo: 'Loja', alvo: 'loja' },
-  { rotulo: 'Artistas', alvo: 'artistas' },
 ];

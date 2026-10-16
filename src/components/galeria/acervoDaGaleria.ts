@@ -98,15 +98,18 @@ export async function carregarEventosResolvidos(): Promise<EventoResolvido[]> {
 }
 
 export async function carregarFotosDoEvento(evento: EventoDaGaleria): Promise<FotoDaGaleria[]> {
-  const entradas = evento.fotos.map(buscarEntrada).filter((entrada): entrada is EntradaDoAcervo => Boolean(entrada));
+  const disponiveis = evento.fotos
+    .map(buscarEntrada)
+    .filter((entrada): entrada is EntradaDoAcervo => Boolean(entrada))
+    .flatMap((entrada) => {
+      const imagem = buscarImagemPorArquivo(entrada.arquivo);
+      return imagem ? [{ entrada, imagem }] : [];
+    });
   const totalDisponivel = contarFotosDisponiveis(evento.fotos);
-  let ordem = 0;
 
   const fotos = await Promise.all(
-    entradas.map(async (entrada): Promise<FotoDaGaleria | null> => {
-      const imagem = buscarImagemPorArquivo(entrada.arquivo);
-      if (!imagem) return null;
-      ordem += 1;
+    disponiveis.map(async ({ entrada, imagem }, indice): Promise<FotoDaGaleria> => {
+      const ordem = indice + 1;
       const nomeDoAmbiente = nomearAmbiente(entrada.ambiente);
       const isAltRascunho = /rascunho/i.test(entrada.alt);
       const grande = await getImage({ src: imagem, width: Math.min(LARGURA_DO_LIGHTBOX, imagem.width), format: 'avif', quality: 60 });
@@ -124,5 +127,5 @@ export async function carregarFotosDoEvento(evento: EventoDaGaleria): Promise<Fo
       };
     }),
   );
-  return fotos.filter((foto): foto is FotoDaGaleria => foto !== null);
+  return fotos;
 }

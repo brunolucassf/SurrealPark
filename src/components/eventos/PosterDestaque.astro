@@ -1,5 +1,6 @@
 ---
 import Icone from '@/components/ui/Icone.astro';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import { NOME_DO_PALCO } from '@/data/palcos';
 import { CONTATOS, SUFIXO_NOVA_ABA, criarLinkWhatsApp } from '@/data/site';
 import { derivarStatus, extrairPartesDaData, formatarDataDoCard, formatarDataPorExtenso, formatarHora, nomearPlataforma, type Evento } from '@/lib/eventos';
@@ -8,7 +9,8 @@ interface Props { evento: Evento }
 
 const { evento } = Astro.props;
 const { titulo, data_inicio: inicio, artistas, palcos, lotes_info: lotesInfo, exemplo } = evento.data;
-const status = derivarStatus(evento);
+const statusReal = derivarStatus(evento);
+const status = exemplo && statusReal === 'aberto' ? 'em_breve' : statusReal;
 const partes = extrairPartesDaData(inicio);
 const plataforma = nomearPlataforma(evento);
 const dataCurta = formatarDataDoCard(inicio);
@@ -43,7 +45,7 @@ const linkDeMesas = criarLinkWhatsApp(
           {palcos.map((palco) => <li style={`--luz: var(--luz-${palco})`}>{NOME_DO_PALCO[palco]}</li>)}
         </ul>
       )}
-      {import.meta.env.DEV && exemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
+      {IS_DEMONSTRACAO && exemplo && <span class="selo-exemplo t-mono-xs">exemplo</span>}
     </div>
     <div class="poster__acao">
       {status === 'aberto' && (

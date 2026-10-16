@@ -1,4 +1,5 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 
 export type Evento = CollectionEntry<'eventos'>;
 export type StatusDoEvento = Evento['data']['status'];
@@ -57,11 +58,16 @@ export function derivarStatus(evento: Evento, agora = new Date()): StatusDoEvent
 }
 
 export function isIngressoAberto(evento: Evento): boolean {
-  return derivarStatus(evento) === 'aberto' && Boolean(evento.data.ingresso_url);
+  return derivarStatus(evento) === 'aberto' && !evento.data.exemplo && Boolean(evento.data.ingresso_url);
+}
+
+export async function listarEventos(): Promise<Evento[]> {
+  const eventos = await getCollection('eventos');
+  return IS_DEMONSTRACAO ? eventos : eventos.filter((evento) => !evento.data.exemplo);
 }
 
 export async function listarProximosEventos(): Promise<Evento[]> {
-  const eventos = await getCollection('eventos');
+  const eventos = await listarEventos();
   return eventos
     .filter((evento) => derivarStatus(evento) !== 'encerrado')
     .sort((a, b) => Date.parse(a.data.data_inicio) - Date.parse(b.data.data_inicio));

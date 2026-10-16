@@ -7,6 +7,9 @@ const DESLOCAMENTOS = [-24, 0, 24];
 const MEIA_LARGURA = 101;
 const MEIA_ALTURA = 51.5;
 const MAXIMO_DE_ECOS = 3;
+const BATIDAS_MINIMAS_DE_CARGA = 1;
+const BATIDAS_MAXIMAS_DE_CARGA = 2.5;
+const BATIDAS_DA_ABERTURA = 1;
 
 type Fase = 'carga' | 'drop' | 'abertura' | 'fim';
 
@@ -72,7 +75,7 @@ export function iniciarLoader(): void {
     inicioDaFase = agora;
     if (proxima === 'abertura') {
       loader.style.pointerEvents = 'none';
-      const detalhe: DetalheDaAbertura = { duracao: beat * 2 * velocidade };
+      const detalhe: DetalheDaAbertura = { duracao: beat * BATIDAS_DA_ABERTURA * velocidade };
       window.dispatchEvent(new CustomEvent(EVENTO_DE_ABERTURA, { detail: detalhe }));
     }
   };
@@ -141,7 +144,7 @@ export function iniciarLoader(): void {
       const alvo = real * 100;
       const passo = Math.min((alvo - valor) * 0.15, 12);
       valor = Math.max(valor, Math.min(100, valor + Math.max(passo, alvo > valor ? 0.4 : 0)));
-      if ((segundos >= beat * 2 && valor >= 99.5) || segundos >= beat * 3.5) {
+      if ((segundos >= beat * BATIDAS_MINIMAS_DE_CARGA && valor >= 99.5) || segundos >= beat * BATIDAS_MAXIMAS_DE_CARGA) {
         valorNoForcar = valor;
         mudarFase('drop', agora);
       }
@@ -151,7 +154,7 @@ export function iniciarLoader(): void {
       }
       desenharArcos(segundos, 0.1 + 0.12 * real, 1, desenho);
     } else if (fase === 'drop') {
-      const duracao = (beat / 2) * velocidade;
+      const duracao = (beat / 4) * velocidade;
       const progresso = limitar(naFase / duracao);
       valor = valorNoForcar + (100 - valorNoForcar) * CURVA_DE_SAIDA(limitar(progresso * 2));
       const suave = CURVA_DO_OLHO(progresso);
@@ -164,7 +167,7 @@ export function iniciarLoader(): void {
       piramide.setAttribute('transform', `translate(0 ${-40 * (1 - queda)})`);
       if (progresso >= 1) mudarFase('abertura', agora);
     } else if (fase === 'abertura') {
-      const duracao = beat * 2 * velocidade;
+      const duracao = beat * BATIDAS_DA_ABERTURA * velocidade;
       const progresso = limitar(naFase / duracao);
       const suave = CURVA_DO_OLHO(progresso);
       const vmin = Math.min(window.innerWidth, window.innerHeight) / 100;
@@ -186,7 +189,7 @@ export function iniciarLoader(): void {
     requestAnimationFrame(laco);
   };
 
-  if (performance.now() / 1000 >= beat * 3.5) {
+  if (performance.now() / 1000 >= beat * BATIDAS_MAXIMAS_DE_CARGA) {
     velocidade = 0.5;
     valor = 100;
     valorNoForcar = 100;

@@ -1,3 +1,5 @@
+import { IS_DEMONSTRACAO } from './demonstracao';
+
 export interface EventoDaGaleria {
   slug: string;
   titulo: string;
@@ -159,5 +161,5 @@ const EVENTOS: EventoDaGaleria[] = [
 ];
 
 export async function lerEventosDaGaleria(): Promise<EventoDaGaleria[]> {
-  return [...EVENTOS].sort((a, b) => b.data.localeCompare(a.data));
+  return EVENTOS.filter((evento) => IS_DEMONSTRACAO || !evento.isExemplo).sort((a, b) => b.data.localeCompare(a.data));
 }
