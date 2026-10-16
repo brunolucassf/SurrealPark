@@ -1,0 +1,1151 @@
+[
+  {
+    "id": "bells-sino",
+    "arquivo": "fotos/bells/bells-sino.jpg",
+    "ambiente": "bells",
+    "largura": 1920,
+    "altura": 2880,
+    "alt": "Sino do Bells em retrato",
+    "slot": "bells-sino",
+    "fotografo": null
+  },
+  {
+    "id": "bells-artz0419205218",
+    "arquivo": "fotos/bells/bells-artz0419205218.jpg",
+    "ambiente": "bells",
+    "largura": 2000,
+    "altura": 1334,
+    "alt": "Foto do ambiente Bells no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "bells-artz0419205223",
+    "arquivo": "fotos/bells/bells-artz0419205223.jpg",
+    "ambiente": "bells",
+    "largura": 1334,
+    "altura": 2000,
+    "alt": "Foto do ambiente Bells no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "bells-3",
+    "arquivo": "fotos/bells/bells-3.jpg",
+    "ambiente": "bells",
+    "largura": 2880,
+    "altura": 2160,
+    "alt": "Foto do ambiente Bells no Surreal Park (rascunho)",
+    "slot": "bells-3",
+    "fotografo": null
+  },
+  {
+    "id": "bells-ebraim-0210",
+    "arquivo": "fotos/bells/bells-ebraim-0210.jpg",
+    "ambiente": "bells",
+    "largura": 2880,
+    "altura": 2160,
+    "alt": "Foto do ambiente Bells no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "bells-ebraim-0220",
+    "arquivo": "fotos/bells/bells-ebraim-0220.jpg",
+    "ambiente": "bells",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Bells no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "bells-2",
+    "arquivo": "fotos/bells/bells-2.jpg",
+    "ambiente": "bells",
+    "largura": 2880,
+    "altura": 2880,
+    "alt": "Foto do ambiente Bells no Surreal Park (rascunho)",
+    "slot": "bells-2",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "bells-sino-desktop",
+    "arquivo": "fotos/bells/bells-sino-desktop.jpg",
+    "ambiente": "bells",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Sino do Bells em paisagem",
+    "slot": "bells-sino-desktop",
+    "fotografo": null,
+    "mobile": "bells-sino-desktop-m"
+  },
+  {
+    "id": "bells-sino-desktop-m",
+    "arquivo": "fotos/bells/bells-sino-desktop-m.jpg",
+    "ambiente": "bells",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Sino do Bells em paisagem",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "church-oxgn-14",
+    "arquivo": "fotos/church/church-oxgn-14.jpg",
+    "ambiente": "church",
+    "largura": 1365,
+    "altura": 2048,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "church-oxgn-15",
+    "arquivo": "fotos/church/church-oxgn-15.jpg",
+    "ambiente": "church",
+    "largura": 1365,
+    "altura": 2048,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "church-3",
+    "arquivo": "fotos/church/church-3.jpg",
+    "ambiente": "church",
+    "largura": 2048,
+    "altura": 1365,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": "church-3",
+    "fotografo": null
+  },
+  {
+    "id": "church-victor-7406",
+    "arquivo": "fotos/church/church-victor-7406.jpg",
+    "ambiente": "church",
+    "largura": 1360,
+    "altura": 2040,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "church-2",
+    "arquivo": "fotos/church/church-2.jpg",
+    "ambiente": "church",
+    "largura": 2040,
+    "altura": 1360,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": "church-2",
+    "fotografo": null,
+    "mobile": "church-2-m"
+  },
+  {
+    "id": "church-2-m",
+    "arquivo": "fotos/church/church-2-m.jpg",
+    "ambiente": "church",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "church-diego-0899",
+    "arquivo": "fotos/church/church-diego-0899.jpg",
+    "ambiente": "church",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "church-diego-0973",
+    "arquivo": "fotos/church/church-diego-0973.jpg",
+    "ambiente": "church",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "church-ogiva",
+    "arquivo": "fotos/church/church-ogiva.jpg",
+    "ambiente": "church",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Fachada em ogiva da Igreja, em retrato",
+    "slot": "church-ogiva",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "church-ebraim-0587",
+    "arquivo": "fotos/church/church-ebraim-0587.jpg",
+    "ambiente": "church",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "church-ebraim-0589",
+    "arquivo": "fotos/church/church-ebraim-0589.jpg",
+    "ambiente": "church",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "church-ebraim-3186",
+    "arquivo": "fotos/church/church-ebraim-3186.jpg",
+    "ambiente": "church",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Igreja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "juistreet-2",
+    "arquivo": "fotos/juistreet/juistreet-2.jpg",
+    "ambiente": "juistreet",
+    "largura": 2160,
+    "altura": 2880,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": "juistreet-2",
+    "fotografo": null
+  },
+  {
+    "id": "juistreet-1",
+    "arquivo": "fotos/juistreet/juistreet-1.jpg",
+    "ambiente": "juistreet",
+    "largura": 2880,
+    "altura": 2160,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": "juistreet",
+    "fotografo": null
+  },
+  {
+    "id": "juistreet-oxgn-8",
+    "arquivo": "fotos/juistreet/juistreet-oxgn-8.jpg",
+    "ambiente": "juistreet",
+    "largura": 1365,
+    "altura": 2048,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "juistreet-2025-12-29-surreal-4years-diego-0333",
+    "arquivo": "fotos/juistreet/juistreet-2025-12-29-surreal-4years-diego-0333.jpg",
+    "ambiente": "juistreet",
+    "largura": 2880,
+    "altura": 1980,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "juistreet-carnaval-diego-0052",
+    "arquivo": "fotos/juistreet/juistreet-carnaval-diego-0052.jpg",
+    "ambiente": "juistreet",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "juistreet-carnaval-diego-0058",
+    "arquivo": "fotos/juistreet/juistreet-carnaval-diego-0058.jpg",
+    "ambiente": "juistreet",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "juistreet-diego-0732",
+    "arquivo": "fotos/juistreet/juistreet-diego-0732.jpg",
+    "ambiente": "juistreet",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "juistreet-artz0419205422",
+    "arquivo": "fotos/juistreet/juistreet-artz0419205422.jpg",
+    "ambiente": "juistreet",
+    "largura": 2000,
+    "altura": 1334,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "juistreet-artz0419232758",
+    "arquivo": "fotos/juistreet/juistreet-artz0419232758.jpg",
+    "ambiente": "juistreet",
+    "largura": 2000,
+    "altura": 1334,
+    "alt": "Foto do ambiente Juistreet no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "loja-carnaval-diego-0047",
+    "arquivo": "fotos/loja/loja-carnaval-diego-0047.jpg",
+    "ambiente": "loja",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Loja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "loja-1",
+    "arquivo": "fotos/loja/loja-1.jpg",
+    "ambiente": "loja",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Foto do ambiente Loja no Surreal Park (rascunho)",
+    "slot": "loja",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "loja-diego-0054",
+    "arquivo": "fotos/loja/loja-diego-0054.jpg",
+    "ambiente": "loja",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Loja no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "loja-2",
+    "arquivo": "fotos/loja/loja-2.jpg",
+    "ambiente": "loja",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Loja no Surreal Park (rascunho)",
+    "slot": "loja-2",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-foto",
+    "arquivo": "fotos/nomad/nomad-foto.jpg",
+    "ambiente": "nomad",
+    "largura": 2048,
+    "altura": 1365,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "nomad-oxgn-329",
+    "arquivo": "fotos/nomad/nomad-oxgn-329.jpg",
+    "ambiente": "nomad",
+    "largura": 2048,
+    "altura": 1365,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "nomad-diego-0739",
+    "arquivo": "fotos/nomad/nomad-diego-0739.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "nomad-home-hero",
+    "arquivo": "fotos/nomad/nomad-home-hero.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Tendas listradas iluminadas ao entardecer, com público na pista e skyline ao fundo",
+    "slot": "home-hero",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "nomad-diego-0761",
+    "arquivo": "fotos/nomad/nomad-diego-0761.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "nomad-diego-0767",
+    "arquivo": "fotos/nomad/nomad-diego-0767.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "nomad-lona",
+    "arquivo": "fotos/nomad/nomad-lona.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Lona do Nomad com listras",
+    "slot": "nomad-lona",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "nomad-diego-0733",
+    "arquivo": "fotos/nomad/nomad-diego-0733.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel",
+    "mobile": "nomad-diego-0733-m"
+  },
+  {
+    "id": "nomad-diego-0733-m",
+    "arquivo": "fotos/nomad/nomad-diego-0733-m.jpg",
+    "ambiente": "nomad",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "nomad-artz0419205656",
+    "arquivo": "fotos/nomad/nomad-artz0419205656.jpg",
+    "ambiente": "nomad",
+    "largura": 2000,
+    "altura": 1334,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "nomad-artz0419205940",
+    "arquivo": "fotos/nomad/nomad-artz0419205940.jpg",
+    "ambiente": "nomad",
+    "largura": 2000,
+    "altura": 1334,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "nomad-3",
+    "arquivo": "fotos/nomad/nomad-3.jpg",
+    "ambiente": "nomad",
+    "largura": 2000,
+    "altura": 1333,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": "nomad-3",
+    "fotografo": null
+  },
+  {
+    "id": "nomad-artz0420070544",
+    "arquivo": "fotos/nomad/nomad-artz0420070544.jpg",
+    "ambiente": "nomad",
+    "largura": 2736,
+    "altura": 1824,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "nomad-ebraim-2602",
+    "arquivo": "fotos/nomad/nomad-ebraim-2602.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-ebraim-2669",
+    "arquivo": "fotos/nomad/nomad-ebraim-2669.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-ebraim-3264",
+    "arquivo": "fotos/nomad/nomad-ebraim-3264.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-2",
+    "arquivo": "fotos/nomad/nomad-2.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": "nomad-2",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-ebraim-5808",
+    "arquivo": "fotos/nomad/nomad-ebraim-5808.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-ebraim-8317",
+    "arquivo": "fotos/nomad/nomad-ebraim-8317.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-ebraim-0143",
+    "arquivo": "fotos/nomad/nomad-ebraim-0143.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-ebraim-2237",
+    "arquivo": "fotos/nomad/nomad-ebraim-2237.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "nomad-ebraim-2469",
+    "arquivo": "fotos/nomad/nomad-ebraim-2469.jpg",
+    "ambiente": "nomad",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Nomad no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "raw-room-2",
+    "arquivo": "fotos/raw-room/raw-room-2.jpg",
+    "ambiente": "raw-room",
+    "largura": 1824,
+    "altura": 2736,
+    "alt": "Foto do ambiente Raw Room no Surreal Park (rascunho)",
+    "slot": "raw-room-2",
+    "fotografo": null
+  },
+  {
+    "id": "raw-room-artz0419225010",
+    "arquivo": "fotos/raw-room/raw-room-artz0419225010.jpg",
+    "ambiente": "raw-room",
+    "largura": 2736,
+    "altura": 1824,
+    "alt": "Foto do ambiente Raw Room no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "raw-room-recorte",
+    "arquivo": "fotos/raw-room/raw-room-recorte.jpg",
+    "ambiente": "raw-room",
+    "largura": 2736,
+    "altura": 1824,
+    "alt": "Foto do ambiente Raw Room no Surreal Park (rascunho)",
+    "slot": "raw-room-recorte",
+    "fotografo": null,
+    "mobile": "raw-room-recorte-m"
+  },
+  {
+    "id": "raw-room-recorte-m",
+    "arquivo": "fotos/raw-room/raw-room-recorte-m.jpg",
+    "ambiente": "raw-room",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Foto do ambiente Raw Room no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "raw-room-3",
+    "arquivo": "fotos/raw-room/raw-room-3.jpg",
+    "ambiente": "raw-room",
+    "largura": 2736,
+    "altura": 1824,
+    "alt": "Foto do ambiente Raw Room no Surreal Park (rascunho)",
+    "slot": "raw-room-3",
+    "fotografo": null
+  },
+  {
+    "id": "raw-room-artz0420060930",
+    "arquivo": "fotos/raw-room/raw-room-artz0420060930.jpg",
+    "ambiente": "raw-room",
+    "largura": 2736,
+    "altura": 1824,
+    "alt": "Foto do ambiente Raw Room no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "ritual-azul",
+    "arquivo": "fotos/ritual/ritual-azul.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Palco do Ritual em tons de azul",
+    "slot": "ritual-2",
+    "fotografo": null
+  },
+  {
+    "id": "ritual-vermelho",
+    "arquivo": "fotos/ritual/ritual-vermelho.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": "home-hero-alternativa-4k",
+    "fotografo": null
+  },
+  {
+    "id": "ritual-carnaval-diego-0050",
+    "arquivo": "fotos/ritual/ritual-carnaval-diego-0050.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-carnaval-diego-0062",
+    "arquivo": "fotos/ritual/ritual-carnaval-diego-0062.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-carnaval-diego-0197",
+    "arquivo": "fotos/ritual/ritual-carnaval-diego-0197.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-carnaval-diego-0201",
+    "arquivo": "fotos/ritual/ritual-carnaval-diego-0201.jpg",
+    "ambiente": "ritual",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-carnaval-diego-0263",
+    "arquivo": "fotos/ritual/ritual-carnaval-diego-0263.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-mesas-programacao",
+    "arquivo": "fotos/ritual/ritual-mesas-programacao.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": "programacao-mesas",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-arco-dourado",
+    "arquivo": "fotos/ritual/ritual-arco-dourado.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Arco dourado com pista cheia",
+    "slot": "home-mesas",
+    "fotografo": "Diego Jarschel",
+    "mobile": "ritual-arco-dourado-m"
+  },
+  {
+    "id": "ritual-arco-dourado-m",
+    "arquivo": "fotos/ritual/ritual-arco-dourado-m.jpg",
+    "ambiente": "ritual",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Arco dourado com pista cheia",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-carnaval-diego-0667",
+    "arquivo": "fotos/ritual/ritual-carnaval-diego-0667.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-carnaval-diego-0956",
+    "arquivo": "fotos/ritual/ritual-carnaval-diego-0956.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente Ritual no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "ritual-concha-interior",
+    "arquivo": "fotos/ritual/ritual-concha-interior.jpg",
+    "ambiente": "ritual",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Vista de dentro da concha para fora",
+    "slot": "ritual-mascara-concha",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "contato-aurora",
+    "arquivo": "fotos/jardim/contato-aurora.jpg",
+    "ambiente": "jardim",
+    "largura": 2048,
+    "altura": 1367,
+    "alt": "Aurora sobre o céu do parque",
+    "slot": "contato-topo",
+    "fotografo": null
+  },
+  {
+    "id": "jardim-4",
+    "arquivo": "fotos/jardim/jardim-4.jpg",
+    "ambiente": "jardim",
+    "largura": 1367,
+    "altura": 2048,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "jardim-5",
+    "arquivo": "fotos/jardim/jardim-5.jpg",
+    "ambiente": "jardim",
+    "largura": 2048,
+    "altura": 1367,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "jardim-trota-12",
+    "arquivo": "fotos/jardim/jardim-trota-12.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 2160,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "jardim-trota-125",
+    "arquivo": "fotos/jardim/jardim-trota-125.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 2160,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "jardim-carnaval-diego-0096",
+    "arquivo": "fotos/jardim/jardim-carnaval-diego-0096.jpg",
+    "ambiente": "jardim",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "jardim-olho-gigante",
+    "arquivo": "fotos/jardim/jardim-olho-gigante.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Olho gigante no jardim",
+    "slot": "jardim-olho",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "jardim-diego-0729",
+    "arquivo": "fotos/jardim/jardim-diego-0729.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "jardim-diego-0769",
+    "arquivo": "fotos/jardim/jardim-diego-0769.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "parque-lua-no-lago",
+    "arquivo": "fotos/jardim/parque-lua-no-lago.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1979,
+    "alt": "Lua sobre o lago ao pôr do sol",
+    "slot": "o-parque-topo",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "galeria-varios-0810",
+    "arquivo": "fotos/jardim/galeria-varios-0810.jpg",
+    "ambiente": "jardim",
+    "largura": 1862,
+    "altura": 2880,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": "galeria-amostra",
+    "fotografo": "Diego Jarschel"
+  },
+  {
+    "id": "contato-skyline-aerea",
+    "arquivo": "fotos/jardim/contato-skyline-aerea.jpg",
+    "ambiente": "jardim",
+    "largura": 2000,
+    "altura": 1333,
+    "alt": "Vista aérea com skyline ao fundo",
+    "slot": "contato-como-chegar",
+    "fotografo": null,
+    "mobile": "contato-skyline-aerea-m"
+  },
+  {
+    "id": "contato-skyline-aerea-m",
+    "arquivo": "fotos/jardim/contato-skyline-aerea-m.jpg",
+    "ambiente": "jardim",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Vista aérea com skyline ao fundo",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "locacao-aerea-noturna",
+    "arquivo": "fotos/jardim/locacao-aerea-noturna.jpg",
+    "ambiente": "jardim",
+    "largura": 2000,
+    "altura": 1333,
+    "alt": "Vista aérea noturna do Surreal Park com estacionamento",
+    "slot": "home-locacao",
+    "fotografo": null,
+    "mobile": "locacao-aerea-noturna-m"
+  },
+  {
+    "id": "locacao-aerea-noturna-m",
+    "arquivo": "fotos/jardim/locacao-aerea-noturna-m.jpg",
+    "ambiente": "jardim",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Vista aérea noturna do Surreal Park com estacionamento",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "jardim-artz0420063515",
+    "arquivo": "fotos/jardim/jardim-artz0420063515.jpg",
+    "ambiente": "jardim",
+    "largura": 1334,
+    "altura": 2000,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "jardim-ebraim-1064",
+    "arquivo": "fotos/jardim/jardim-ebraim-1064.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-2",
+    "arquivo": "fotos/jardim/jardim-2.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": "jardim-2",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-2983",
+    "arquivo": "fotos/jardim/jardim-ebraim-2983.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-0223",
+    "arquivo": "fotos/jardim/jardim-ebraim-0223.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini",
+    "mobile": "jardim-ebraim-0223-m"
+  },
+  {
+    "id": "jardim-ebraim-0223-m",
+    "arquivo": "fotos/jardim/jardim-ebraim-0223-m.jpg",
+    "ambiente": "jardim",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-0383",
+    "arquivo": "fotos/jardim/jardim-ebraim-0383.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "servicos-postes-globo",
+    "arquivo": "fotos/jardim/servicos-postes-globo.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Postes-globo, bancos e lonas à noite",
+    "slot": "servicos",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-3",
+    "arquivo": "fotos/jardim/jardim-3.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": "jardim-3",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-0623",
+    "arquivo": "fotos/jardim/jardim-ebraim-0623.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-0633",
+    "arquivo": "fotos/jardim/jardim-ebraim-0633.jpg",
+    "ambiente": "jardim",
+    "largura": 1920,
+    "altura": 2880,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-1812",
+    "arquivo": "fotos/jardim/jardim-ebraim-1812.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-1814",
+    "arquivo": "fotos/jardim/jardim-ebraim-1814.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-0142",
+    "arquivo": "fotos/jardim/jardim-ebraim-0142.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-1622",
+    "arquivo": "fotos/jardim/jardim-ebraim-1622.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-2132",
+    "arquivo": "fotos/jardim/jardim-ebraim-2132.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini",
+    "mobile": "jardim-ebraim-2132-m"
+  },
+  {
+    "id": "jardim-ebraim-2132-m",
+    "arquivo": "fotos/jardim/jardim-ebraim-2132-m.jpg",
+    "ambiente": "jardim",
+    "largura": 1200,
+    "altura": 1500,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "rino-poster-provisorio",
+    "arquivo": "fotos/jardim/rino-poster-provisorio.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Rinoceronte de bronze do Surreal Park",
+    "slot": "home-rino-poster",
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-2409",
+    "arquivo": "fotos/jardim/jardim-ebraim-2409.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-3181",
+    "arquivo": "fotos/jardim/jardim-ebraim-3181.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-3184",
+    "arquivo": "fotos/jardim/jardim-ebraim-3184.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "jardim-ebraim-3187",
+    "arquivo": "fotos/jardim/jardim-ebraim-3187.jpg",
+    "ambiente": "jardim",
+    "largura": 2880,
+    "altura": 1920,
+    "alt": "Foto do ambiente jardim no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": "Ebraim Martini"
+  },
+  {
+    "id": "crepusculo-whatsapp-image-2026-10-15-at-00-03-36-3",
+    "arquivo": "fotos/crepusculo/crepusculo-whatsapp-image-2026-10-15-at-00-03-36-3.jpg",
+    "ambiente": "crepusculo",
+    "largura": 1200,
+    "altura": 1600,
+    "alt": "Foto do ambiente crepúsculo no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  },
+  {
+    "id": "crepusculo-whatsapp-image-2026-10-15-at-00-03-37",
+    "arquivo": "fotos/crepusculo/crepusculo-whatsapp-image-2026-10-15-at-00-03-37.jpg",
+    "ambiente": "crepusculo",
+    "largura": 1200,
+    "altura": 1600,
+    "alt": "Foto do ambiente crepúsculo no Surreal Park (rascunho)",
+    "slot": null,
+    "fotografo": null
+  }
+]
