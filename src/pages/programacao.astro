@@ -1,0 +1,29 @@
+---
+import Base from '@/layouts/Base.astro';
+import TopoDePagina from '@/components/pagina/TopoDePagina.astro';
+import EventoLinha from '@/components/eventos/EventoLinha.astro';
+import { listarProximosEventos } from '@/lib/eventos';
+
+const eventos = await listarProximosEventos();
+---
+<Base
+  titulo="Programação e ingressos | Surreal Park Camboriú"
+  descricao="Datas, line-ups e ingressos do Surreal Park, com compra nas plataformas oficiais. Reserve mesas e camarotes pelo WhatsApp."
+  isBarraMobileVisivel={false}
+>
+  <TopoDePagina humor="datas"
+    rotulo="Programação"
+    titulo="Quem toca no Surreal Park"
+    apoio="Datas, line-ups e ingressos. A compra é feita na plataforma de cada evento, Ingresse ou Blueticket, em nova aba. 18+."
+  />
+  <section class="agenda container" id="agenda" aria-label="Próximas datas" data-humor="datas">
+    <ol class="agenda__lista" role="list">
+      {eventos.map((evento) => <li><EventoLinha evento={evento} nivelDoTitulo="h2" /></li>)}
+    </ol>
+  </section>
+</Base>
+
+<style>
+  .agenda { padding-block-end: var(--s-section); }
+  .agenda__lista { border-bottom: var(--borda-1); }
+</style>
