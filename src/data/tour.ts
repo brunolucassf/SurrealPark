@@ -2,7 +2,7 @@ import type { IdDaForma } from './formas';
 
 export type TipoDaCena = 'aereo' | 'caminho' | 'palco' | 'lago' | 'jardim' | 'jet';
 export type TipoDeParticula = 'nevoa-densa' | 'nevoa-rala' | 'vaga-lumes' | 'po-dourado' | 'fumaca' | 'bokeh' | 'po-feixe' | 'estrelas';
-export type HumorDoTour = 'luar' | 'ouro' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'lago' | 'jardim';
+export type HumorDoTour = 'luar' | 'ouro' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'lago' | 'juistreet' | 'jardim';
 
 export interface FotoDaCena {
   desktop: string;
@@ -12,6 +12,11 @@ export interface FotoDaCena {
 export interface ApoioDaCena {
   foto: string;
   legenda: string;
+}
+
+export interface FotoDoMosaico {
+  foto: string;
+  alt: string;
 }
 
 export interface CenaDoTour {
@@ -29,6 +34,7 @@ export interface CenaDoTour {
   copy: ChaveDeCopy;
   alt: string;
   apoio?: ApoioDaCena;
+  mosaico?: FotoDoMosaico[];
   isVarredura?: boolean;
   relevo?: number;
   isRenderizada: boolean;
@@ -48,7 +54,7 @@ export interface CenaParaOMotor {
   relevo: number;
 }
 
-export type ChaveDeCopy = 'ceu' | 'historia' | 'manifesto' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'lago' | 'jardim';
+export type ChaveDeCopy = 'ceu' | 'historia' | 'manifesto' | 'ritual' | 'bells' | 'raw-room' | 'nomad' | 'church' | 'jet-set' | 'lago' | 'juistreet' | 'jardim';
 
 const profundidadeDe = (id: string) => `/img/parque/${id}-depth.webp`;
 
@@ -219,6 +225,32 @@ export const CENAS_DO_TOUR: CenaDoTour[] = [
     isRenderizada: true,
   },
   {
+    id: 'juistreet',
+    ancora: 'juistreet',
+    tipo: 'jardim',
+    foto: { desktop: 'juistreet-carnaval-diego-0052', mobile: 'juistreet-2' },
+    profundidade: profundidadeDe('juistreet-carnaval-diego-0052'),
+    portal: 'nuvem',
+    formaMobile: null,
+    foco: [0.6, 0.45],
+    humor: 'juistreet',
+    particulas: { tipo: 'bokeh', n: 60 },
+    vh: { desktop: 150, mobile: 170 },
+    copy: 'juistreet',
+    alt: 'Juistreet à noite: o quiosque de sucos com o letreiro iluminado em lilás, sobre o piso de pedra do parque',
+    mosaico: [
+      { foto: 'juistreet-1', alt: 'A frase “o suco que é um espetáculo” em neon lilás na fachada do Juistreet' },
+      { foto: 'juistreet-carnaval-diego-0058', alt: 'Mão segurando um copo de suco do Juistreet diante do letreiro lilás' },
+      { foto: 'juistreet-oxgn-8', alt: 'Juistreet em luz verde e vermelha, com o balcão decorado e uma escultura suspensa acima' },
+      { foto: 'juistreet-2', alt: 'Fachada do Juistreet à noite, com o letreiro iluminado no alto' },
+      { foto: 'juistreet-diego-0732', alt: 'O quiosque do Juistreet ao entardecer, entre palmeiras e luzes penduradas' },
+      { foto: 'juistreet-2025-12-29-surreal-4years-diego-0333', alt: 'Caminho com luzes penduradas e público à noite, com o letreiro lilás do Juistreet ao fundo' },
+      { foto: 'juistreet-artz0419205422', alt: 'Vista noturna do parque com o letreiro do Juistreet entre as lonas iluminadas' },
+      { foto: 'juistreet-artz0419232758', alt: 'Lua sobre as lonas acesas do parque, com o letreiro do Juistreet aceso embaixo' },
+    ],
+    isRenderizada: true,
+  },
+  {
     id: 'jardim',
     ancora: 'jardim',
     tipo: 'jardim',
@@ -246,6 +278,7 @@ export const COR_DO_HUMOR: Record<HumorDoTour, string> = {
   church: '#7FA6FF',
   'jet-set': '#C3CEDC',
   lago: '#E9C27A',
+  juistreet: '#E58AE5',
   jardim: '#A9CF74',
 };
 
@@ -408,6 +441,16 @@ export const COPY_DO_TOUR: Partial<Record<ChaveDeCopy, CopyDaCena>> = {
     titulo: 'O lago e a lua',
     corpo: 'O Nomad arma suas lonas à beira do lago, e a Church fica entre ele e o Jardim de Esculturas. Do gramado, a vista vai até a serra e o skyline de Balneário Camboriú.',
   },
+  juistreet: {
+    tipo: 'palco',
+    rotulo: 'Entre os palcos · Bar de sucos',
+    nome: 'Juistreet',
+    complemento: ', o bar de sucos do Surreal Park',
+    assinatura: 'O suco que é um espetáculo.',
+    corpo: 'Não é palco, mas faz parte da noite. Entre um set e outro, o Juistreet serve sucos num quiosque aceso em neon, com a frase da casa escrita na fachada.',
+    ficha: [],
+    link: { texto: 'Ver fotos do Juistreet', href: '/galeria?amb=juistreet' },
+  },
   jardim: {
     tipo: 'palco',
     rotulo: '07 / 07 · Esculturas',
@@ -441,8 +484,9 @@ export const INDICE_DO_PARQUE: ItemDoIndice[] = [
   { rotulo: 'Church', alvo: 'church' },
   { rotulo: 'Jet Set', alvo: 'jet-set' },
   { rotulo: 'Lago', alvo: 'lago' },
+  { rotulo: 'Juistreet', alvo: 'juistreet' },
   { rotulo: 'Jardim', alvo: 'jardim' },
   { rotulo: 'Esculturas', alvo: 'esculturas' },
-  { rotulo: 'Ranking', alvo: 'ranking' },
+  { rotulo: 'Artistas', alvo: 'artistas' },
   { rotulo: 'Loja', alvo: 'loja' },
 ];

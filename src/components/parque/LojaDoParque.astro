@@ -1,7 +1,43 @@
 ---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import Icone from '@/components/ui/Icone.astro';
+import manifesto from '@/assets/manifest.json';
+
+const FACHADA = 'loja-2';
+const LETREIRO = 'loja-1';
+const entradas = manifesto as { id: string; arquivo: string }[];
+const buscarArquivo = (id: string) => entradas.find((entrada) => entrada.id === id)?.arquivo;
 ---
-<section class="loja-parque container" id="loja" aria-labelledby="titulo-loja-parque">
-  <h2 class="t-h2" id="titulo-loja-parque">A Surreal Store</h2>
-  <p class="t-body loja-parque__corpo">A Surreal Store fica dentro do parque e tem catálogo em /loja.</p>
-  <a class="link-texto t-label" href="/loja">Ver o catálogo</a>
+<section class="loja-parque" id="loja" aria-labelledby="titulo-loja-parque">
+  <div class="loja-parque__palco">
+    <figure class="loja-parque__fachada">
+      <FotoAcervo
+        slot={FACHADA}
+        arquivo={buscarArquivo(FACHADA)}
+        alt="A Surreal Store à noite: vitrines acesas sob a cobertura, com letreiros em neon verde e vermelho e pessoas passando pela calçada"
+        sizes="100vw"
+        larguraMaxima={2880}
+        class="loja-parque__foto"
+      />
+    </figure>
+    <figure class="loja-parque__letreiro">
+      <FotoAcervo
+        slot={LETREIRO}
+        arquivo={buscarArquivo(LETREIRO)}
+        alt="Letreiro em neon verde em forma de olho na entrada da Surreal Store, com as vitrines iluminadas embaixo"
+        sizes="(min-width: 1024px) 22vw, 100vw"
+        larguraMaxima={1680}
+        class="loja-parque__foto"
+      />
+    </figure>
+    <div class="loja-parque__texto">
+      <p class="t-mono-xs loja-parque__rotulo">Dentro do parque</p>
+      <h2 class="t-h1 loja-parque__titulo" id="titulo-loja-parque">Surreal Store</h2>
+      <p class="t-body loja-parque__corpo">A loja do Surreal fica dentro do parque. O catálogo também está aqui, no site.</p>
+      <a class="btn btn--primario loja-parque__acao" href="/loja">
+        Ver o catálogo
+        <Icone nome="piramide" class="btn__seta" />
+      </a>
+    </div>
+  </div>
 </section>

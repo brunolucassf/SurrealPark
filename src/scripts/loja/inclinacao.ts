@@ -4,6 +4,11 @@ export function podeAnimar(): boolean {
   return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+export function habilitarEstadoAtivoNoToque(raiz: HTMLElement): void {
+  // O Safari do iOS só aplica :active quando há um ouvinte de toque no ancestral.
+  raiz.addEventListener('touchstart', () => {}, { passive: true });
+}
+
 export function ativarInclinacao(raiz: HTMLElement, seletor: string, grausMaximos = INCLINACAO_MAXIMA_GRAUS): void {
   if (!podeAnimar() || !window.matchMedia('(pointer: fine)').matches) return;
 

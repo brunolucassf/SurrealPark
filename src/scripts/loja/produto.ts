@@ -1,4 +1,4 @@
-import { ativarInclinacao, podeAnimar } from '@/scripts/loja/inclinacao';
+import { ativarInclinacao, habilitarEstadoAtivoNoToque, podeAnimar } from '@/scripts/loja/inclinacao';
 
 const DURACAO_DA_TROCA_MS = 242;
 
@@ -49,5 +49,7 @@ export function iniciarFichaDoProduto(): void {
 
   ativarInclinacao(palco, '[data-inclinavel]', 4);
   const relacionados = document.querySelector<HTMLElement>('[data-relacionados]');
-  if (relacionados) ativarInclinacao(relacionados, '[data-inclinavel]');
+  if (!relacionados) return;
+  ativarInclinacao(relacionados, '[data-inclinavel]');
+  habilitarEstadoAtivoNoToque(relacionados);
 }

@@ -159,7 +159,7 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
         <a class="link-texto" href="/loja#produtos">Ver todos os produtos</a>
       </div>
       <ul class="catalogo__grade relacionados__grade" role="list" data-relacionados>
-        {relacionados.map((item, indice) => <CartaoDeProduto produto={item} ordem={indice} isDestaqueAmpliado={false} />)}
+        {relacionados.map((item, indice) => <CartaoDeProduto produto={item} ordem={indice} />)}
       </ul>
     </section>
   )}

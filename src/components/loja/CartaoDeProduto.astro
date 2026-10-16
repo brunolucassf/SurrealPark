@@ -1,6 +1,5 @@
 ---
 import IlustracaoDeProduto from '@/components/loja/IlustracaoDeProduto.astro';
-import Icone from '@/components/ui/Icone.astro';
 import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import Preco from '@/components/loja/Preco.astro';
 import type { Produto } from '@/data/loja';
@@ -8,17 +7,14 @@ import type { Produto } from '@/data/loja';
 interface Props {
   produto: Produto;
   ordem: number;
-  isDestaqueAmpliado?: boolean;
 }
 
-const { produto, ordem, isDestaqueAmpliado = true } = Astro.props;
+const { produto, ordem } = Astro.props;
 const [corPrincipal] = produto.cores;
-const palavraFantasma = produto.nome.split(' ').at(-1);
-const isAmpliado = produto.isDestaque && isDestaqueAmpliado;
 const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
 ---
 <li
-  class:list={['produto', { 'produto--destaque': isAmpliado }]}
+  class="produto"
   data-produto
   data-categoria={produto.categoria}
   data-preco={produto.precoEmCentavos}
@@ -26,14 +22,12 @@ const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
 >
   <a class="produto__link" href={`/loja/${produto.slug}`} data-inclinavel>
     <div class="produto__vitrine" style={`--cor-vitrine:${corPrincipal.base};view-transition-name:produto-${produto.slug}`}>
-      <span class="produto__fantasma" aria-hidden="true">{palavraFantasma}</span>
       <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} class="produto__ilustracao" />
       <span class="produto__brilho" aria-hidden="true"></span>
       {produto.isDestaque && <span class="produto__selo t-mono-xs">Destaque</span>}
       {IS_DEMONSTRACAO && produto.isExemplo && <span class="produto__exemplo selo-exemplo t-mono-xs">exemplo</span>}
     </div>
     <div class="produto__info">
-      <span class="produto__tipo t-mono-xs">{produto.tipo}</span>
       <h3 class="produto__nome">{produto.nome}</h3>
       <span class="produto__rodape">
         <Preco precoEmCentavos={produto.precoEmCentavos} class="produto__preco" />
@@ -44,7 +38,7 @@ const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
           </span>
         )}
       </span>
-      <span class="produto__seta" aria-hidden="true"><Icone nome="piramide" /></span>
     </div>
+    <span class="produto__neon" aria-hidden="true"><span class="produto__neon-faixa"></span></span>
   </a>
 </li>

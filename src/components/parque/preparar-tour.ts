@@ -10,6 +10,7 @@ const QUALIDADE_WEBP = 65;
 const LARGURAS_DESKTOP = [1200, 1680, 2400];
 const LARGURAS_MOBILE = [480, 828, 1200];
 const LARGURAS_DO_APOIO = [480, 700, 960];
+const LARGURAS_DO_MOSAICO = [160, 320, 480];
 const FRACAO_MAIS_DISTANTE = 0.05;
 
 interface EntradaDoManifesto {
@@ -35,6 +36,11 @@ export interface ApoioPreparado {
   legenda: string;
 }
 
+export interface FotoDoMosaicoPreparada {
+  fonte: FonteDaFoto;
+  alt: string;
+}
+
 export interface CenaPreparada {
   cena: CenaDoTour;
   indice: number;
@@ -44,6 +50,7 @@ export interface CenaPreparada {
   mascaraMobile: string | null;
   foco: [number, number];
   apoio: ApoioPreparado | null;
+  mosaico: FotoDoMosaicoPreparada[];
 }
 
 const entradas = manifesto as EntradaDoManifesto[];
@@ -97,6 +104,14 @@ async function carregarApoio(cena: CenaDoTour): Promise<ApoioPreparado | null> {
   return entrada && fonte ? { fonte, alt: entrada.alt, legenda: cena.apoio.legenda } : null;
 }
 
+async function carregarMosaico(cena: CenaDoTour): Promise<FotoDoMosaicoPreparada[]> {
+  const fotos = await Promise.all((cena.mosaico ?? []).map(async ({ foto, alt }) => {
+    const fonte = await carregarFoto(foto, LARGURAS_DO_MOSAICO);
+    return fonte ? { fonte, alt } : null;
+  }));
+  return fotos.filter((foto): foto is FotoDoMosaicoPreparada => foto !== null);
+}
+
 function proporcaoDaFormaMobile(forma: IdDaForma): [number, number] {
   if (forma === 'f-olho') return [2, 1];
   if (forma === 'f-raw-room') return [1, 1];
@@ -120,10 +135,11 @@ export async function prepararTour(): Promise<{ cenas: CenaPreparada[]; motor: C
   const cenas = await Promise.all(CENAS_RENDERIZADAS.map(async (cena, indice): Promise<CenaPreparada> => {
     const entradaDesktop = cena.foto ? buscarEntrada(cena.foto.desktop) : undefined;
     const idMobile = cena.foto ? (buscarEntrada(cena.foto.mobile) ? cena.foto.mobile : entradaDesktop?.mobile ?? cena.foto.desktop) : null;
-    const [desktop, mobile, apoio] = await Promise.all([
+    const [desktop, mobile, apoio, mosaico] = await Promise.all([
       cena.foto ? carregarFoto(cena.foto.desktop, LARGURAS_DESKTOP) : Promise.resolve(null),
       idMobile ? carregarFoto(idMobile, LARGURAS_MOBILE) : Promise.resolve(null),
       carregarApoio(cena),
+      carregarMosaico(cena),
     ]);
     const foco = cena.foco ?? (cena.profundidade ? await calcularFocoPeloDepth(cena.profundidade) : [0.5, 0.5]);
     return {
@@ -135,6 +151,7 @@ export async function prepararTour(): Promise<{ cenas: CenaPreparada[]; motor: C
       mascaraMobile: cena.formaMobile ? gerarMascaraSvg(cena.formaMobile) : null,
       foco,
       apoio,
+      mosaico,
     };
   }));
 

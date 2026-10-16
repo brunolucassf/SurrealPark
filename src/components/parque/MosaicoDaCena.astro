@@ -1,0 +1,21 @@
+---
+import type { FotoDoMosaicoPreparada } from './preparar-tour';
+
+interface Props {
+  fotos: FotoDoMosaicoPreparada[];
+}
+
+const { fotos } = Astro.props;
+const TAMANHOS = '(min-width: 1024px) 5rem, (min-width: 768px) 4.5rem, 22vw';
+---
+<ul class="cena__mosaico" role="list">
+  {fotos.map((foto) => (
+    <li class="cena__mosaico-item">
+      <picture>
+        <source type="image/avif" srcset={foto.fonte.avif} sizes={TAMANHOS} />
+        <source type="image/webp" srcset={foto.fonte.webp} sizes={TAMANHOS} />
+        <img class="cena__mosaico-img" src={foto.fonte.src} width={foto.fonte.largura} height={foto.fonte.altura} alt={foto.alt} loading="lazy" decoding="async" />
+      </picture>
+    </li>
+  ))}
+</ul>

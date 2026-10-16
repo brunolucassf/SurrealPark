@@ -1,16 +1,18 @@
 ---
 import type { CenaPreparada } from './preparar-tour';
 import ApoioDaCena from './ApoioDaCena.astro';
+import MosaicoDaCena from './MosaicoDaCena.astro';
 import { COPY_DO_TOUR } from '@/data/tour';
 import manifesto from '@/assets/manifest.json';
 import { TOUR } from '@/scripts/parque/constantes';
+import { medirMaiorPalavraEmEm } from './medida-do-titulo';
 
 interface Props {
   preparada: CenaPreparada;
 }
 
 const { preparada } = Astro.props;
-const { cena, indice, isUltima, desktop, mobile, mascaraMobile, foco, apoio } = preparada;
+const { cena, indice, isUltima, desktop, mobile, mascaraMobile, foco, apoio, mosaico } = preparada;
 const fotografo = (manifesto as { id: string; fotografo?: string | null }[]).find((entrada) => entrada.id === preparada.cena.foto?.desktop)?.fotografo ?? null;
 const copy = COPY_DO_TOUR[cena.copy];
 const isPrimeira = indice === 0;
@@ -25,8 +27,6 @@ const estilo = [
   mascaraMobile ? `--mascara:${mascaraMobile}` : '',
 ].filter(Boolean).join(';');
 const dividirPalavras = (texto: string) => texto.split(' ');
-const LIMITE_DA_PALAVRA_LONGA = 8;
-const isNomeLongo = copy?.tipo === 'palco' && dividirPalavras(copy.nome).some((palavra) => palavra.length > LIMITE_DA_PALAVRA_LONGA);
 const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.startsWith(',');
 ---
 <section
@@ -96,7 +96,7 @@ const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.start
           <>
             <p class="t-mono-xs cena__rotulo">{copy.rotulo}</p>
             <h2 class="cena__palco" id={idDoTitulo}>
-              <span class:list={['cena__nome', { 'cena__nome--longo': isNomeLongo }]}>
+              <span class="cena__nome" style={`--largura-em:${medirMaiorPalavraEmEm(copy.nome)}`}>
                 {dividirPalavras(copy.nome).map((palavra, posicao) => (
                   <>{posicao > 0 && ' '}<span class="cena__palavra"><span style={`--i:${posicao}`}>{palavra}</span></span></>
                 ))}
@@ -122,6 +122,7 @@ const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.start
               </dl>
             )}
             {copy.link && <a class="link-texto cena__link t-label" href={copy.link.href}>{copy.link.texto}</a>}
+            {mosaico.length > 0 && <MosaicoDaCena fotos={mosaico} />}
             {apoio && <ApoioDaCena apoio={apoio} />}
           </>
         )}
@@ -129,7 +130,7 @@ const isComplementoComVirgula = copy?.tipo === 'palco' && copy.complemento.start
           <>
             <p class="t-mono-xs cena__rotulo">{copy.rotulo}</p>
             <h2 class="cena__palco" id={idDoTitulo}>
-              <span class="cena__nome cena__nome--interludio">
+              <span class="cena__nome cena__nome--interludio" style={`--largura-em:${medirMaiorPalavraEmEm(copy.titulo)}`}>
                 {dividirPalavras(copy.titulo).map((palavra, posicao) => (
                   <>{posicao > 0 && ' '}<span class="cena__palavra"><span style={`--i:${posicao}`}>{palavra}</span></span></>
                 ))}

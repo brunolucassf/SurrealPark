@@ -1,7 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import Tour from '@/components/parque/Tour.astro';
-import RankingDoParque from '@/components/parque/RankingDoParque.astro';
+import ArtistasDoParque from '@/components/parque/ArtistasDoParque.astro';
 import JardimDeEsculturas from '@/components/parque/JardimDeEsculturas.astro';
 import '@/styles/parque.css';
 ---
@@ -12,8 +12,8 @@ import '@/styles/parque.css';
   <Fragment slot="head">
     <script is:inline>(function(){try{var r=document.documentElement,n=navigator,c=n.connection;if(innerWidth<1024||!matchMedia("(pointer: fine)").matches||matchMedia("(prefers-reduced-motion: reduce)").matches||(c&&c.saveData)||(n.deviceMemory&&n.deviceMemory<4)||!window.WebGL2RenderingContext)return;r.classList.add("tour-gl")}catch(e){}})();</script>
   </Fragment>
-  <Tour alvosDepoisDoTour={['esculturas', 'ranking']}>
+  <Tour alvosDepoisDoTour={['esculturas', 'artistas']}>
     <JardimDeEsculturas />
-    <RankingDoParque />
+    <ArtistasDoParque />
   </Tour>
 </Base>

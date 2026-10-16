@@ -1,0 +1,137 @@
+---
+import FotoAcervo from '@/components/ui/FotoAcervo.astro';
+import manifesto from '@/assets/manifest.json';
+import { ARTISTAS_QUE_TOCARAM, IS_LISTA_PARCIAL } from '@/data/artistas';
+import { lerEventosDaGaleria } from '@/data/eventosDaGaleria';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
+
+type Formato = 'destaque' | 'compacto';
+type Sentido = 'esquerda' | 'direita';
+
+interface CardDoArtista {
+  nome: string;
+  monograma: string;
+  data: string | null;
+  dataIso: string | null;
+  href: string | null;
+  arquivoDaFoto: string | undefined;
+  idDaFoto: string;
+}
+
+const FOTOS_DE_AMBIENTE = ['ritual-arco-dourado', 'nomad-lona', 'jardim-3', 'church-ogiva'];
+const LARGURAS_DA_FOTO = [320, 480, 720];
+
+const entradas = manifesto as { id: string; arquivo: string }[];
+const fotos = FOTOS_DE_AMBIENTE.flatMap((id) => {
+  const entrada = entradas.find((item) => item.id === id);
+  return entrada ? [{ id, arquivo: entrada.arquivo }] : [];
+});
+const slugsDaGaleria = new Set((await lerEventosDaGaleria()).map((evento) => evento.slug));
+
+const formatarData = (iso: string) => iso.slice(0, 10).split('-').reverse().join('.');
+const extrairMonograma = (nome: string) => {
+  const palavras = nome.split(' ').filter(Boolean);
+  const primeira = palavras[0] ?? '';
+  const ultima = palavras[palavras.length - 1] ?? '';
+  return palavras.length > 1 ? `${primeira.charAt(0)}${ultima.charAt(0)}` : primeira.charAt(0);
+};
+
+const cards: CardDoArtista[] = ARTISTAS_QUE_TOCARAM.map((artista, indice) => {
+  const slug = artista.edicao?.slugDaGaleria;
+  const foto = fotos[indice % Math.max(fotos.length, 1)];
+  return {
+    nome: artista.nome,
+    monograma: extrairMonograma(artista.nome),
+    data: artista.edicao ? formatarData(artista.edicao.data) : null,
+    dataIso: artista.edicao?.data ?? null,
+    href: slug && slugsDaGaleria.has(slug) ? `/galeria/${slug}` : null,
+    arquivoDaFoto: foto?.arquivo,
+    idDaFoto: foto?.id ?? '',
+  };
+});
+
+const fileiras: { formato: Formato; sentido: Sentido; cards: CardDoArtista[] }[] = [
+  { formato: 'destaque', sentido: 'esquerda', cards },
+  { formato: 'compacto', sentido: 'direita', cards: [...cards].reverse() },
+  { formato: 'compacto', sentido: 'esquerda', cards },
+];
+---
+<section class="artistas" id="artistas" aria-labelledby="titulo-artistas" data-artistas>
+  <script is:inline>(function(s){try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches)s.setAttribute('data-movimento','')}catch(e){}})(document.currentScript.parentElement);</script>
+  <header class="container artistas__topo">
+    <div class="artistas__titulos">
+      <p class="t-mono-xs artistas__rotulo">
+        Line-up
+        {IS_DEMONSTRACAO && IS_LISTA_PARCIAL && <span class="selo-exemplo t-mono-xs">lista parcial</span>}
+      </p>
+      <h2 class="t-h2 artistas__titulo" id="titulo-artistas">Quem já tocou no Surreal</h2>
+      <p class="t-body artistas__corpo">Nomes que já passaram pelas pistas do parque, de Carl Cox a Black Coffee.</p>
+    </div>
+    <button class="artistas__pausa t-mono-xs" type="button" aria-pressed="false" data-pausar hidden>
+      <svg class="artistas__pausa-icone" viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false">
+        <path class="artistas__icone-pausa" d="M3 2h2v8H3zM7 2h2v8H7z" fill="currentColor" />
+        <path class="artistas__icone-tocar" d="M3 1.5v9l7.5-4.5z" fill="currentColor" />
+      </svg>
+      Pausar
+    </button>
+  </header>
+
+  <div class="artistas__fileiras" data-fileiras>
+    {fileiras.map((fileira, indiceDaFileira) => {
+      const isAcessivel = indiceDaFileira === 0;
+      return (
+        <div
+          class:list={['fileira', `fileira--${fileira.formato}`]}
+          data-fileira
+          data-sentido={fileira.sentido}
+          aria-hidden={isAcessivel ? undefined : 'true'}
+        >
+          <div class="fileira__trilho" data-trilho>
+            <ul class="fileira__sequencia" role="list" aria-label={isAcessivel ? 'Artistas que já tocaram no Surreal' : undefined} data-sequencia>
+              {fileira.cards.map((card) => {
+                const Elemento = card.href ? 'a' : 'div';
+                return (
+                  <li class="fileira__item">
+                    <Elemento
+                      class:list={['artista', `artista--${fileira.formato}`, { 'artista--link': card.href }]}
+                      href={card.href ?? undefined}
+                      tabindex={card.href && !isAcessivel ? -1 : undefined}
+                      draggable={card.href ? 'false' : undefined}
+                    >
+                      {fileira.formato === 'destaque' ? (
+                        <>
+                          <span class="artista__fundo" aria-hidden="true">
+                            <FotoAcervo
+                              slot={card.idDaFoto}
+                              arquivo={card.arquivoDaFoto}
+                              alt=""
+                              sizes="(min-width: 1024px) 16vw, 46vw"
+                              larguras={LARGURAS_DA_FOTO}
+                              class="artista__foto"
+                            />
+                          </span>
+                          <span class="artista__monograma" aria-hidden="true">{card.monograma}</span>
+                        </>
+                      ) : (
+                        <span class="artista__selo" aria-hidden="true">{card.monograma}</span>
+                      )}
+                      <span class="artista__texto">
+                        <span class="artista__nome">{card.nome}</span>
+                        {card.data && card.dataIso && <time class="t-mono-xs artista__data" datetime={card.dataIso}>{card.data}</time>}
+                      </span>
+                    </Elemento>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<script>
+  import { iniciarFilaDeArtistas } from '@/scripts/parque/artistas';
+  iniciarFilaDeArtistas();
+</script>

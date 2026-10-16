@@ -1,4 +1,4 @@
-import { ativarInclinacao, podeAnimar } from '@/scripts/loja/inclinacao';
+import { ativarInclinacao, habilitarEstadoAtivoNoToque, podeAnimar } from '@/scripts/loja/inclinacao';
 
 type Ordem = 'destaques' | 'menor-preco' | 'maior-preco';
 
@@ -134,4 +134,5 @@ export function iniciarCatalogo(): void {
 
   revelarAoEntrar(catalogo, cartoes);
   ativarInclinacao(grade, '[data-inclinavel]');
+  habilitarEstadoAtivoNoToque(grade);
 }
