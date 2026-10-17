@@ -8,3 +8,4 @@ dist/
 .DS_Store
 /shots/
 .deploy/
+/painel/db/.logs/
