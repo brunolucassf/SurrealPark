@@ -18,7 +18,8 @@
 .cookies__titulo { margin: 0; }
 .cookies__titulo:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
 .cookies__texto { margin: 0; color: var(--bone-300); }
-.cookies__acoes { display: grid; gap: var(--sp-2); }
+.cookies__acoes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-2); }
+.cookies__personalizar { grid-column: 1 / -1; }
 .cookies__personalizar { justify-self: start; min-height: 44px; padding: 0; background: none; border: 0; color: var(--bone-50); cursor: pointer; }
 .cookies__painel { display: grid; gap: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--divider); }
 .cookies__painel[hidden] { display: none; }
@@ -34,7 +35,8 @@
 
 @media (min-width: 640px) {
   .cookies { inset-inline: auto; left: var(--margem); width: min(40rem, calc(100% - 2 * var(--margem))); }
-  .cookies__acoes { grid-template-columns: auto auto 1fr; align-items: center; }
+  .cookies__acoes { grid-template-columns: 1fr 1fr auto; align-items: center; }
+  .cookies__personalizar { grid-column: auto; }
 }
 
 @media (prefers-reduced-motion: no-preference) {

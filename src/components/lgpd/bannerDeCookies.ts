@@ -104,8 +104,8 @@ function montarBanner(dados: ConfiguracaoDeCookies): HTMLElement {
 
   const acoes = criar('div', 'cookies__acoes');
   acoes.append(
-    criarBotao('btn btn--primario', 'Aceitar todos', () => void decidir(todasAceitas(dados.categorias), dados.versaoTexto)),
-    criarBotao('btn btn--secundario', 'Recusar opcionais', () => void decidir({ ...SEM_CONSENTIMENTO }, dados.versaoTexto)),
+    criarBotao('btn btn--primario cookies__decisao', 'Aceitar', () => void decidir(todasAceitas(dados.categorias), dados.versaoTexto)),
+    criarBotao('btn btn--primario cookies__decisao', 'Recusar', () => void decidir({ ...SEM_CONSENTIMENTO }, dados.versaoTexto)),
     personalizar,
   );
 

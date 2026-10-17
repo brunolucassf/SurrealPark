@@ -53,6 +53,7 @@ const ano = new Date().getFullYear();
     <div class="rodape__base t-mono-xs">
       <p>© {ano} Surreal Park</p>
       <p><a class="link-nav" href="/privacidade">Privacidade</a></p>
+      <p><button type="button" class="link-nav rodape__preferencias" data-abrir-preferencias-cookies>Preferências de cookies</button></p>
       <p>
         <a class="link-nav" href={CREDITO_FONTE_DEV.href} target="_blank" rel="noopener">{CREDITO_FONTE_DEV.texto}<span class="sr-only"> {SUFIXO_NOVA_ABA}</span></a>
       </p>
@@ -118,7 +119,8 @@ const ano = new Date().getFullYear();
     border-top: 1px solid rgb(242 236 226 / .16);
     color: var(--bone-300);
   }
-  .rodape__base a { min-height: 44px; }
+  .rodape__base a, .rodape__preferencias { min-height: 44px; }
+  .rodape__preferencias { padding: 0; background: none; border: 0; color: inherit; font: inherit; cursor: pointer; }
 
   .rodape__horizonte {
     position: relative;
