@@ -14,6 +14,8 @@ const LIMITE_PARA_FILTRO = 6;
 const proximos = await listarProximosEventos();
 const [destaque, ...demais] = proximos;
 const isFiltroVisivel = proximos.length > LIMITE_PARA_FILTRO;
+const assinaturaDoSnapshot = proximos.map((evento) => evento.assinatura ?? '').join('|');
+const temExemplo = proximos.some((evento) => evento.data.exemplo);
 const instagram = REDES.find((rede) => rede.nome === 'Instagram');
 
 const passados = (await listarEventos())
@@ -43,28 +45,27 @@ const mesesDoFiltro = [...new Map(
     apoio="Datas, line-ups e ingressos. A compra é feita na plataforma de cada evento, Ingresse ou Blueticket, em nova aba. 18+."
   />
 
-  {destaque ? (
-    <div class="container"><PosterDestaque evento={destaque} /></div>
-  ) : (
-    <section class="container vazio" aria-labelledby="titulo-vazio">
-      <h2 class="t-h2" id="titulo-vazio">Novas datas em breve</h2>
-      <p class="t-lead vazio__texto">As próximas datas saem primeiro no Instagram.</p>
-      <div class="vazio__acoes">
-        {instagram && (
-          <a class="btn btn--primario" href={instagram.href} target="_blank" rel="noopener">
-            Seguir no Instagram<span class="sr-only"> (abre em nova aba)</span>
-          </a>
-        )}
-        <a class="btn btn--secundario" href="#mesas">Falar sobre mesas e camarotes</a>
-      </div>
-    </section>
-  )}
+  <div class="container" data-poster-slot data-assinatura={assinaturaDoSnapshot} data-demo={String(IS_DEMONSTRACAO)} data-limite-filtro={LIMITE_PARA_FILTRO} hidden={!destaque}>
+    {destaque && <PosterDestaque evento={destaque} />}
+  </div>
+  <section class="container vazio" aria-labelledby="titulo-vazio" data-programacao-vazio hidden={Boolean(destaque)}>
+    <h2 class="t-h2" id="titulo-vazio">Novas datas em breve</h2>
+    <p class="t-lead vazio__texto">As próximas datas saem primeiro no Instagram.</p>
+    <div class="vazio__acoes">
+      {instagram && (
+        <a class="btn btn--primario" href={instagram.href} target="_blank" rel="noopener">
+          Seguir no Instagram<span class="sr-only"> (abre em nova aba)</span>
+        </a>
+      )}
+      <a class="btn btn--secundario" href="#mesas">Falar sobre mesas e camarotes</a>
+    </div>
+  </section>
 
-  {demais.length > 0 && (
-    <section class="agenda container" id="agenda" aria-labelledby="titulo-agenda" data-humor="datas">
-      <div class="agenda__cabeca">
-        <h2 class="t-mono-xs agenda__rotulo" id="titulo-agenda">Depois disso</h2>
-        {IS_DEMONSTRACAO && <span class="selo-exemplo t-mono-xs">Eventos de exemplo</span>}
+  <section class="agenda container" id="agenda" aria-labelledby="titulo-agenda" data-humor="datas" data-agenda hidden={demais.length === 0}>
+    <div class="agenda__cabeca">
+      <h2 class="t-mono-xs agenda__rotulo" id="titulo-agenda">Depois disso</h2>
+      {IS_DEMONSTRACAO && temExemplo && <span class="selo-exemplo t-mono-xs" data-selo-exemplo>Eventos de exemplo</span>}
+      <div data-filtro-area>
         {isFiltroVisivel && (
           <div class="filtro" role="group" aria-label="Filtrar por mês" data-filtro>
             <button class="filtro__botao" type="button" data-mes="todas" aria-pressed="true">Todas</button>
@@ -74,16 +75,16 @@ const mesesDoFiltro = [...new Map(
           </div>
         )}
       </div>
-      {isFiltroVisivel && <p class="sr-only" role="status" aria-live="polite" data-filtro-aviso></p>}
-      <ol class="agenda__lista" role="list">
-        {demais.map((evento) => (
-          <li class="evento-linha" data-mes-da-linha={chaveDoMes(evento.data.data_inicio)}>
-            <EventoLinha evento={evento} nivelDoTitulo="h3" />
-          </li>
-        ))}
-      </ol>
-    </section>
-  )}
+    </div>
+    <p class="sr-only" role="status" aria-live="polite" data-filtro-aviso></p>
+    <ol class="agenda__lista" role="list" data-agenda-lista>
+      {demais.map((evento) => (
+        <li class="evento-linha" data-mes-da-linha={chaveDoMes(evento.data.data_inicio)}>
+          <EventoLinha evento={evento} nivelDoTitulo="h3" />
+        </li>
+      ))}
+    </ol>
+  </section>
 
   {passados.length > 0 && (
     <details class="passadas container">
@@ -121,6 +122,8 @@ const mesesDoFiltro = [...new Map(
 </Base>
 
 <script>
-  import { iniciarProgramacao } from '@/scripts/programacao';
+  import { iniciarProgramacao, iniciarPoster, iniciarFiltro } from '@/scripts/programacao';
+  import { iniciarEventosDaProgramacao } from '@/scripts/eventos-api';
   iniciarProgramacao();
+  void iniciarEventosDaProgramacao({ aoRenderizarPoster: iniciarPoster, aoRenderizarFiltro: iniciarFiltro });
 </script>

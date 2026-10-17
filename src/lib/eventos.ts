@@ -1,52 +1,19 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { IS_DEMONSTRACAO } from '@/data/demonstracao';
+import { buscarEventosPassados, buscarEventosProximos, isPainelConfigurado, type EventoDeTela, type ImagemPublica } from './painel';
 
-export type Evento = CollectionEntry<'eventos'>;
+export {
+  extrairPartesDaData,
+  formatarDataCurta,
+  formatarDataDoCard,
+  formatarDataPorExtenso,
+  formatarHora,
+} from './formato-evento';
+
+export type Evento = CollectionEntry<'eventos'> & { assinatura?: string; flyer?: ImagemPublica; flyerHover?: ImagemPublica };
 export type StatusDoEvento = Evento['data']['status'];
 
-const FUSO = 'America/Sao_Paulo';
-
 const NOME_DA_PLATAFORMA = { ingresse: 'Ingresse', blueticket: 'Blueticket', outra: 'plataforma oficial' } as const;
-
-const DIAS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
-const MESES = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
-const MESES_POR_EXTENSO = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
-
-interface PartesDaData { diaDaSemana: number; dia: number; mes: number; ano: number; hora: number; minuto: number }
-
-function extrairPartes(iso: string): PartesDaData {
-  const formatador = new Intl.DateTimeFormat('en-US', {
-    timeZone: FUSO, weekday: 'short', day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', hourCycle: 'h23',
-  });
-  const partes = Object.fromEntries(formatador.formatToParts(new Date(iso)).map((parte) => [parte.type, parte.value]));
-  const semana = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(partes.weekday ?? '');
-  return { diaDaSemana: semana, dia: Number(partes.day), mes: Number(partes.month) - 1, ano: Number(partes.year), hora: Number(partes.hour), minuto: Number(partes.minute) };
-}
-
-export function extrairPartesDaData(iso: string): PartesDaData & { diaDaSemanaCurto: string; mesCurto: string } {
-  const partes = extrairPartes(iso);
-  return { ...partes, diaDaSemanaCurto: DIAS[partes.diaDaSemana] ?? '', mesCurto: MESES[partes.mes] ?? '' };
-}
-
-export function formatarDataDoCard(iso: string): string {
-  const { diaDaSemana, dia, mes, ano } = extrairPartes(iso);
-  return `${DIAS[diaDaSemana]} · ${dia} ${MESES[mes]} ${ano}`;
-}
-
-export function formatarDataCurta(iso: string): string {
-  const { dia, mes } = extrairPartes(iso);
-  return `${dia} ${MESES[mes]}`;
-}
-
-export function formatarDataPorExtenso(iso: string): string {
-  const { dia, mes } = extrairPartes(iso);
-  return `${dia} de ${MESES_POR_EXTENSO[mes]}`;
-}
-
-export function formatarHora(iso: string): string {
-  const { hora, minuto } = extrairPartes(iso);
-  return minuto ? `${hora}h${String(minuto).padStart(2, '0')}` : `${hora}h`;
-}
 
 export function nomearPlataforma(evento: Evento): string {
   return NOME_DA_PLATAFORMA[evento.data.plataforma ?? 'outra'];
@@ -61,7 +28,38 @@ export function isIngressoAberto(evento: Evento): boolean {
   return derivarStatus(evento) === 'aberto' && !evento.data.exemplo && Boolean(evento.data.ingresso_url);
 }
 
+function converterParaEvento(evento: EventoDeTela): Evento {
+  const data: Evento['data'] = {
+    titulo: evento.titulo,
+    data_inicio: evento.inicio,
+    data_fim: evento.fim,
+    artistas: evento.artistas,
+    palcos: evento.palcos,
+    plataforma: evento.plataforma,
+    ingresso_url: evento.ingressoUrl,
+    status: evento.status,
+    exemplo: false,
+  };
+  return { id: evento.chave, collection: 'eventos', data, assinatura: evento.assinatura, flyer: evento.flyer, flyerHover: evento.flyerHover } as unknown as Evento;
+}
+
+async function carregarEventosDoPainel(): Promise<Evento[] | null> {
+  if (!isPainelConfigurado) return null;
+  try {
+    const [proximos, passados] = await Promise.all([buscarEventosProximos(), buscarEventosPassados()]);
+    const eventos = [...proximos, ...passados].map(converterParaEvento);
+    return eventos.length === 0 && IS_DEMONSTRACAO ? null : eventos;
+  } catch {
+    return null;
+  }
+}
+
+let eventosDoPainelEmCache: Promise<Evento[] | null> | undefined;
+
 export async function listarEventos(): Promise<Evento[]> {
+  eventosDoPainelEmCache ??= carregarEventosDoPainel();
+  const doPainel = await eventosDoPainelEmCache;
+  if (doPainel) return doPainel;
   const eventos = await getCollection('eventos');
   return IS_DEMONSTRACAO ? eventos : eventos.filter((evento) => !evento.data.exemplo);
 }

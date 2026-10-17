@@ -6,7 +6,7 @@ function isInclinacaoPermitida(): boolean {
     && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-function iniciarPoster(): void {
+export function iniciarPoster(): void {
   const poster = document.querySelector<HTMLElement>('[data-poster]');
   if (!poster || !isInclinacaoPermitida()) return;
   let alvoX = 0;
@@ -45,7 +45,7 @@ function iniciarPoster(): void {
   });
 }
 
-function iniciarFiltro(): void {
+export function iniciarFiltro(): void {
   const grupo = document.querySelector<HTMLElement>('[data-filtro]');
   if (!grupo) return;
   const botoes = grupo.querySelectorAll<HTMLButtonElement>('[data-mes]');

@@ -2,28 +2,51 @@
 import { getImage } from 'astro:assets';
 import EventoLinha from '@/components/eventos/EventoLinha.astro';
 import Icone from '@/components/ui/Icone.astro';
-import { PALCO_POR_ID } from '@/data/palcos';
+import { PALCO_POR_ID, PALCOS } from '@/data/palcos';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import { REDES, SUFIXO_NOVA_ABA } from '@/data/site';
 import { buscarFotoPorSlot } from '@/lib/fotos';
 import { listarProximosEventos, type Evento } from '@/lib/eventos';
+import { isPainelConfigurado } from '@/lib/painel';
 
 const LIMITE_DE_DATAS = 4;
 const SLOT_NEUTRO_DA_LENTE = 'jardim-olho';
 const eventos = (await listarProximosEventos()).slice(0, LIMITE_DE_DATAS);
 const instagram = REDES.find((rede) => rede.nome === 'Instagram');
 
-async function gerarUrlDaLente(evento: Evento): Promise<string | undefined> {
-  if (evento.data.imagem) return evento.data.imagem.src;
-  const [primeiroPalco] = evento.data.palcos;
-  const foto = buscarFotoPorSlot(primeiroPalco ? PALCO_POR_ID[primeiroPalco].slotDaFoto : SLOT_NEUTRO_DA_LENTE);
+async function gerarUrlDaFoto(slotDaFoto: string): Promise<string | undefined> {
+  const foto = buscarFotoPorSlot(slotDaFoto);
   if (!foto) return undefined;
   const imagem = await getImage({ src: foto.imagem, width: 440, format: 'avif', quality: 50 });
   return imagem.src;
 }
 
+async function gerarUrlDaLente(evento: Evento): Promise<string | undefined> {
+  if (evento.flyerHover) return evento.flyerHover.url;
+  if (evento.flyer) return evento.flyer.url;
+  if (evento.data.imagem) return evento.data.imagem.src;
+  const [primeiroPalco] = evento.data.palcos;
+  return gerarUrlDaFoto(primeiroPalco ? PALCO_POR_ID[primeiroPalco].slotDaFoto : SLOT_NEUTRO_DA_LENTE);
+}
+
+async function gerarLenteDeReserva(chave: string, slotDaFoto: string): Promise<[string, string | undefined]> {
+  return [chave, await gerarUrlDaFoto(slotDaFoto)];
+}
+
+async function gerarLentesDeReserva(): Promise<Record<string, string>> {
+  const entradas = await Promise.all([
+    ...PALCOS.map((id) => gerarLenteDeReserva(id, PALCO_POR_ID[id].slotDaFoto)),
+    gerarLenteDeReserva('neutro', SLOT_NEUTRO_DA_LENTE),
+  ]);
+  const comUrl = entradas.filter((entrada): entrada is [string, string] => entrada[1] !== undefined);
+  return Object.fromEntries(comUrl);
+}
+
 const urlsDasLentes = await Promise.all(eventos.map(gerarUrlDaLente));
+const lentesDeReserva = isPainelConfigurado ? await gerarLentesDeReserva() : {};
+const assinaturaDoSnapshot = eventos.map((evento) => evento.assinatura ?? '').join('|');
 ---
-<section class="datas" id="proximas-datas" aria-labelledby="titulo-datas" data-datas data-humor="datas">
+<section class="datas" id="proximas-datas" aria-labelledby="titulo-datas" data-datas data-humor="datas" data-assinatura={assinaturaDoSnapshot} data-demo={String(IS_DEMONSTRACAO)} data-lentes-de-reserva={JSON.stringify(lentesDeReserva)}>
   <div class="datas__aurora" aria-hidden="true" data-datas-aurora>
     <span class="datas__veu datas__veu--ouro"></span>
     <span class="datas__veu datas__veu--ambar"></span>
@@ -39,25 +62,27 @@ const urlsDasLentes = await Promise.all(eventos.map(gerarUrlDaLente));
         <Icone nome="piramide" class="btn__seta" />
       </a>
     </header>
-    {eventos.length > 0 ? (
-      <ol class="datas__lista" role="list">
-        {eventos.map((evento, indice) => (
-          <li data-revela><EventoLinha evento={evento} urlDaLente={urlsDasLentes[indice]} /></li>
-        ))}
-      </ol>
-    ) : (
-      <div class="datas__vazio">
-        <p class="t-lead">Novas datas em breve. Elas saem primeiro no Instagram.</p>
-        {instagram && (
-          <a class="btn btn--secundario" href={instagram.href} target="_blank" rel="noopener">
-            Seguir no Instagram<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
-          </a>
-        )}
-      </div>
-    )}
+    <ol class="datas__lista" role="list" data-datas-lista hidden={eventos.length === 0}>
+      {eventos.map((evento, indice) => (
+        <li data-revela><EventoLinha evento={evento} urlDaLente={urlsDasLentes[indice]} /></li>
+      ))}
+    </ol>
+    <div class="datas__vazio" data-datas-vazio hidden={eventos.length > 0}>
+      <p class="t-lead">Novas datas em breve. Elas saem primeiro no Instagram.</p>
+      {instagram && (
+        <a class="btn btn--secundario" href={instagram.href} target="_blank" rel="noopener">
+          Seguir no Instagram<span class="sr-only"> {SUFIXO_NOVA_ABA}</span>
+        </a>
+      )}
+    </div>
   </div>
   <div class="lente" aria-hidden="true" data-lente-flutuante><img alt="" width="220" height="275" decoding="async" /></div>
 </section>
+
+<script>
+  import { iniciarEventosDaHome } from '@/scripts/eventos-api';
+  void iniciarEventosDaHome();
+</script>
 
 <style>
   .datas {
@@ -164,7 +189,7 @@ const urlsDasLentes = await Promise.all(eventos.map(gerarUrlDaLente));
 
   .datas__todas { gap: var(--sp-2); min-height: 44px; color: var(--gold-300); }
   .datas__lista { border-bottom: var(--borda-1); }
-  .datas__vazio { display: grid; gap: var(--sp-5); justify-items: start; }
+  .datas__vazio:not([hidden]) { display: grid; gap: var(--sp-5); justify-items: start; }
 
   .lente {
     position: fixed;

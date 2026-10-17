@@ -27,7 +27,7 @@ const linkDeMesas = criarLinkWhatsApp(
 const isLineUpVisivel = artistas.length > 0 && !(artistas.length === 1 && artistas[0]?.nome === titulo);
 const Titulo = nivelDoTitulo;
 ---
-<article class="evento" data-status={status} data-lente={urlDaLente}>
+<article class="evento" data-status={status} data-lente={urlDaLente} data-assinatura={evento.assinatura}>
   <p class="evento__data">
     <span class="t-mono-xs evento__semana">{partes.diaDaSemanaCurto} · {partes.mesCurto}</span>
     <span class="t-h2 evento__dia" aria-hidden="true">{String(partes.dia).padStart(2, '0')}</span>
@@ -81,7 +81,7 @@ const Titulo = nivelDoTitulo;
   </div>
 </article>
 
-<style>
+<style is:global>
   .evento {
     position: relative;
     display: grid;
