@@ -32,15 +32,31 @@ const SIZES_LARGO = '(min-width: 2400px) 38vw, (min-width: 1280px) 48vw, (min-wi
                 data-fotografo={foto.fotografo ?? undefined}
               >
                 <button class="quadro__abrir" type="button" aria-haspopup="dialog" data-abrir>
-                  <FotoAcervo
-                    slot={foto.id}
-                    arquivo={foto.arquivo}
-                    alt={foto.alt}
-                    sizes={foto.isPaisagem || isDestaque ? SIZES_LARGO : SIZES_RETRATO}
-                    larguras={LARGURAS_DA_GRADE.filter((largura) => largura <= foto.imagem.width)}
-                    isPrioritaria={indice < 3}
-                    class="quadro__imagem"
-                  />
+                  {foto.remota ? (
+                    <picture>
+                      <img
+                        class="quadro__imagem"
+                        src={foto.remota.miniatura.url}
+                        srcset={`${foto.remota.miniatura.url} ${foto.remota.miniatura.largura}w, ${foto.remota.imagem.url} ${foto.remota.imagem.largura}w`}
+                        sizes={foto.isPaisagem || isDestaque ? SIZES_LARGO : SIZES_RETRATO}
+                        alt={foto.alt}
+                        width={foto.remota.miniatura.largura}
+                        height={foto.remota.miniatura.altura}
+                        loading={indice < 3 ? 'eager' : 'lazy'}
+                        decoding="async"
+                      />
+                    </picture>
+                  ) : foto.imagem && (
+                    <FotoAcervo
+                      slot={foto.id}
+                      arquivo={foto.arquivo}
+                      alt={foto.alt}
+                      sizes={foto.isPaisagem || isDestaque ? SIZES_LARGO : SIZES_RETRATO}
+                      larguras={LARGURAS_DA_GRADE.filter((largura) => largura <= (foto.imagem?.width ?? 0))}
+                      isPrioritaria={indice < 3}
+                      class="quadro__imagem"
+                    />
+                  )}
                 </button>
                 <div class="quadro__falha" data-falha hidden>
                   <p class="t-mono-xs">Não carregou.</p>

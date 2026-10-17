@@ -43,19 +43,46 @@ const TEMPO_LIMITE_EM_MS = 6000;
 const LIMITE_DE_PAGINAS = 10;
 const BASE_DA_API = (import.meta.env.PUBLIC_PAINEL_API_URL ?? '').trim().replace(/\/+$/, '');
 
+export class ErroDoPainel extends Error {
+  constructor(readonly status: number) {
+    super(`painel respondeu ${status}`);
+  }
+}
+
 export const isPainelConfigurado = BASE_DA_API !== '';
 
 function isPaginaPublica(valor: unknown): valor is PaginaPublica {
   return typeof valor === 'object' && valor !== null && Array.isArray((valor as PaginaPublica).itens);
 }
 
-async function lerJson(caminho: string): Promise<unknown> {
+export async function lerJson(caminho: string): Promise<unknown> {
   const controle = new AbortController();
   const temporizador = setTimeout(() => controle.abort(), TEMPO_LIMITE_EM_MS);
   try {
     const resposta = await fetch(`${BASE_DA_API}/public/v1${caminho}`, { signal: controle.signal, credentials: 'omit', headers: { Accept: 'application/json' } });
-    if (!resposta.ok) throw new Error(`painel respondeu ${resposta.status}`);
+    if (!resposta.ok) throw new ErroDoPainel(resposta.status);
     return await resposta.json();
+  } finally {
+    clearTimeout(temporizador);
+  }
+}
+
+export interface RespostaDeEnvio { ok: boolean; status: number; corpo: unknown; esperarSegundos: number | null }
+
+export async function enviarJson(caminho: string, corpo: unknown, cabecalhos: Record<string, string> = {}): Promise<RespostaDeEnvio> {
+  const controle = new AbortController();
+  const temporizador = setTimeout(() => controle.abort(), TEMPO_LIMITE_EM_MS);
+  try {
+    const resposta = await fetch(`${BASE_DA_API}/public/v1${caminho}`, {
+      method: 'POST',
+      signal: controle.signal,
+      credentials: 'omit',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json', ...cabecalhos },
+      body: JSON.stringify(corpo),
+    });
+    const corpoDaResposta: unknown = await resposta.json().catch(() => null);
+    const espera = Number(resposta.headers.get('Retry-After'));
+    return { ok: resposta.ok, status: resposta.status, corpo: corpoDaResposta, esperarSegundos: Number.isFinite(espera) && espera > 0 ? espera : null };
   } finally {
     clearTimeout(temporizador);
   }

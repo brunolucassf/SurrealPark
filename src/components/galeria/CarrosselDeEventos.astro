@@ -19,7 +19,7 @@ const calcularDistancia = (indice: number): number => {
   return ((((indice + metade) % total) + total) % total) - metade;
 };
 const formatarPosicao = (indice: number): string => `${String(indice + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
-const descreverEvento = (evento: EventoResolvido): string => `${evento.dataCurta} · ${evento.nomesDosAmbientes.join(', ')} · ${evento.totalDeFotos} fotos`;
+const descreverEvento = (evento: EventoResolvido): string => [evento.dataCurta, evento.nomesDosAmbientes.join(', '), `${evento.totalDeFotos} fotos`].filter(Boolean).join(' · ');
 const primeiro = eventos[0];
 ---
 <section class="eventos" data-carrossel aria-labelledby="titulo-eventos">
@@ -47,7 +47,19 @@ const primeiro = eventos[0];
                 <a class="painel__link" href={`/galeria/${evento.slug}`} draggable="false" data-link>
                   <span class="painel__rotulo t-mono-xs">{evento.titulo}</span>
                   <span class="painel__moldura">
-                    {evento.capaResolvida ? (
+                    {evento.capaRemota ? (
+                      <picture>
+                        <img
+                          class="painel__imagem"
+                          src={evento.capaRemota.url}
+                          alt=""
+                          width={evento.capaRemota.largura}
+                          height={evento.capaRemota.altura}
+                          loading={Math.abs(distancia) <= 1 ? 'eager' : 'lazy'}
+                          decoding="async"
+                        />
+                      </picture>
+                    ) : evento.capaResolvida ? (
                       <FotoAcervo
                         slot={evento.capaResolvida.id}
                         arquivo={evento.capaResolvida.arquivo}

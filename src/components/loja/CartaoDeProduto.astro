@@ -2,15 +2,19 @@
 import IlustracaoDeProduto from '@/components/loja/IlustracaoDeProduto.astro';
 import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import Preco from '@/components/loja/Preco.astro';
-import type { Produto } from '@/data/loja';
+import { descreverDisponibilidade, type ProdutoDeTela } from '@/lib/loja';
+import { formatarPreco } from '@/data/loja';
+import './painel.css';
 
 interface Props {
-  produto: Produto;
+  produto: ProdutoDeTela;
   ordem: number;
 }
 
 const { produto, ordem } = Astro.props;
 const [corPrincipal] = produto.cores;
+const [fotoPrincipal] = produto.fotos;
+const avisoDeDisponibilidade = descreverDisponibilidade(produto.disponibilidade);
 const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
 ---
 <li
@@ -19,18 +23,35 @@ const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
   data-categoria={produto.categoria}
   data-preco={produto.precoEmCentavos}
   data-ordem={ordem}
+  data-slug={produto.slug}
+  data-disponibilidade={produto.disponibilidade}
 >
   <a class="produto__link" href={`/loja/${produto.slug}`} data-inclinavel>
-    <div class="produto__vitrine" style={`--cor-vitrine:${corPrincipal.base};view-transition-name:produto-${produto.slug}`}>
-      <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} class="produto__ilustracao" />
+    <div class="produto__vitrine" style={`--cor-vitrine:${corPrincipal?.base ?? 'var(--ink-800)'};view-transition-name:produto-${produto.slug}`}>
+      {fotoPrincipal ? (
+        <picture class="produto__foto-moldura">
+          <img class="produto__foto" src={fotoPrincipal.url} alt={fotoPrincipal.alt} width={fotoPrincipal.largura} height={fotoPrincipal.altura} loading={ordem < 4 ? 'eager' : 'lazy'} decoding="async" />
+        </picture>
+      ) : produto.forma && corPrincipal && (
+        <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} class="produto__ilustracao" />
+      )}
       <span class="produto__brilho" aria-hidden="true"></span>
       {produto.isDestaque && <span class="produto__selo t-mono-xs">Destaque</span>}
+      {avisoDeDisponibilidade && <span class="produto__disponibilidade t-mono-xs" data-disponibilidade-aviso>{avisoDeDisponibilidade}</span>}
       {IS_DEMONSTRACAO && produto.isExemplo && <span class="produto__exemplo selo-exemplo t-mono-xs">exemplo</span>}
     </div>
     <div class="produto__info">
       <h3 class="produto__nome">{produto.nome}</h3>
       <span class="produto__rodape">
-        <Preco precoEmCentavos={produto.precoEmCentavos} class="produto__preco" />
+        <span class="produto__preco-bloco" data-preco-bloco>
+          <Preco precoEmCentavos={produto.precoEmCentavos} class="produto__preco" />
+          {produto.precoDeEmCentavos !== null && (
+            <>
+              <s class="produto__preco-de"><span class="sr-only">Preço anterior </span>{formatarPreco(produto.precoDeEmCentavos)}</s>
+              {produto.percentualDesconto !== null && <span class="produto__promocao t-mono-xs">-{produto.percentualDesconto}%</span>}
+            </>
+          )}
+        </span>
         {produto.cores.length > 1 && (
           <span class="produto__cores">
             {produto.cores.map((cor) => <span class="produto__cor" style={`--cor-amostra:${cor.base}`}></span>)}

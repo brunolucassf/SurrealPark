@@ -1,6 +1,7 @@
 ---
 import Icone from '@/components/ui/Icone.astro';
 import { CONTATOS, REDES, SUFIXO_NOVA_ABA } from '@/data/site';
+import FormularioDeLead from './FormularioDeLead.astro';
 ---
 <section class="ct-secao ct-geral" id="geral" aria-labelledby="titulo-geral">
   <div class="container ct-duas-colunas ct-duas-colunas--equilibrada">
@@ -11,6 +12,14 @@ import { CONTATOS, REDES, SUFIXO_NOVA_ABA } from '@/data/site';
     <div class="ct-bloco">
       <p class="t-body ct-texto">Para tudo o que não é mesa nem locação, escreva para o e-mail geral.</p>
       <a class="ct-email t-h4" href={`mailto:${CONTATOS.email}`}>{CONTATOS.email}</a>
+      <FormularioDeLead
+        tipo="contato"
+        id="lead-contato"
+        origem="site:contato-geral"
+        resumo="Prefere escrever por aqui?"
+        introducao="Imprensa, parcerias ou dúvidas: deixe sua mensagem e a equipe responde por e-mail."
+        rotuloDaMensagem="Mensagem"
+      />
       <ul class="ct-redes" role="list" aria-label="Redes sociais">
         {REDES.map((rede) => (
           <li>

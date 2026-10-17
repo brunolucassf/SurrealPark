@@ -1,0 +1,15 @@
+.produto__foto-moldura { display: contents; }
+.produto__foto { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; }
+.produto__preco-bloco { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-1) var(--sp-2); }
+.produto__preco-de { font-size: var(--fs-body-s); color: var(--text-3); text-decoration: line-through; white-space: nowrap; }
+.produto__promocao { padding: 2px 8px; border-radius: var(--r-pill); background: var(--gold-300); color: var(--ink-900); font-weight: 600; white-space: nowrap; }
+.produto__disponibilidade { position: absolute; right: var(--sp-2); top: var(--sp-2); z-index: 3; padding: 4px 10px; border-radius: var(--r-pill); background: rgb(19 18 21 / .78); color: var(--bone-50); box-shadow: inset 0 0 0 1px var(--border); }
+.produto[data-disponibilidade="esgotado"] .produto__foto { filter: grayscale(.85) brightness(.7); }
+.produto[data-disponibilidade="esgotado"] .produto__disponibilidade { color: var(--alert-300); }
+.produto[data-ausente] { display: none; }
+.ficha__foto { width: 100%; height: 100%; object-fit: cover; }
+.ficha__vista--foto { padding: 0; }
+.ficha__preco-de { margin-inline-start: var(--sp-2); font-size: var(--fs-body); color: var(--text-3); text-decoration: line-through; }
+.ficha__aviso-disponibilidade { margin: 0; color: var(--gold-200); }
+.ficha__aviso-disponibilidade[data-esgotado] { color: var(--alert-300); }
+.ficha__cabeca .produto__promocao { margin-inline-start: var(--sp-2); }

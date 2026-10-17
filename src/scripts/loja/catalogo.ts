@@ -1,4 +1,5 @@
 import { ativarInclinacao, habilitarEstadoAtivoNoToque, podeAnimar } from '@/scripts/loja/inclinacao';
+import { EVENTO_DE_CATALOGO_ATUALIZADO, sincronizarCatalogoComOPainel } from '@/scripts/loja/painel';
 
 type Ordem = 'destaques' | 'menor-preco' | 'maior-preco';
 
@@ -78,11 +79,12 @@ export function iniciarCatalogo(): void {
   if (!catalogo || !grade) return;
   catalogo.dataset.pronto = '1';
 
-  const filtros = [...catalogo.querySelectorAll<HTMLButtonElement>('[data-filtro]')];
+  let filtros = [...catalogo.querySelectorAll<HTMLButtonElement>('[data-filtro]')];
   const seletorDeOrdem = catalogo.querySelector<HTMLSelectElement>('[data-catalogo-ordem]');
   const status = catalogo.querySelector<HTMLElement>('[data-catalogo-status]');
   const vazio = catalogo.querySelector<HTMLElement>('[data-catalogo-vazio]');
-  const cartoes = [...grade.querySelectorAll<HTMLElement>('[data-produto]')];
+  const listarCartoes = () => [...grade.querySelectorAll<HTMLElement>('[data-produto]:not([data-ausente])')];
+  let cartoes = listarCartoes();
   const categoriasValidas = new Set(filtros.map((botao) => botao.dataset.filtro));
 
   let categoriaAtual = 'todos';
@@ -111,14 +113,21 @@ export function iniciarCatalogo(): void {
     history.replaceState(history.state, '', url);
   };
 
-  filtros.forEach((botao) => {
-    botao.addEventListener('click', () => {
-      const proxima = botao.dataset.filtro ?? 'todos';
-      if (proxima === categoriaAtual) return;
-      categoriaAtual = proxima;
-      registrarNaUrl();
-      aplicar(true);
-    });
+  catalogo.querySelector('[data-catalogo-filtros]')?.addEventListener('click', (evento) => {
+    const proxima = (evento.target as HTMLElement).closest<HTMLButtonElement>('[data-filtro]')?.dataset.filtro;
+    if (!proxima || proxima === categoriaAtual) return;
+    categoriaAtual = proxima;
+    registrarNaUrl();
+    aplicar(true);
+  });
+
+  catalogo.addEventListener(EVENTO_DE_CATALOGO_ATUALIZADO, () => {
+    cartoes = listarCartoes();
+    filtros = [...catalogo.querySelectorAll<HTMLButtonElement>('[data-filtro]')];
+    filtros.forEach((botao) => categoriasValidas.add(botao.dataset.filtro));
+    const isCategoriaAtualDisponivel = filtros.some((botao) => botao.dataset.filtro === categoriaAtual && !botao.hidden);
+    if (categoriaAtual !== 'todos' && !isCategoriaAtualDisponivel) categoriaAtual = 'todos';
+    aplicar(false);
   });
 
   seletorDeOrdem?.addEventListener('change', () => {
@@ -135,4 +144,5 @@ export function iniciarCatalogo(): void {
   revelarAoEntrar(catalogo, cartoes);
   ativarInclinacao(grade, '[data-inclinavel]');
   habilitarEstadoAtivoNoToque(grade);
+  void sincronizarCatalogoComOPainel();
 }

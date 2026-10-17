@@ -1,7 +1,9 @@
 ---
 import FotoAcervo from '@/components/ui/FotoAcervo.astro';
 import manifesto from '@/assets/manifest.json';
-import { ARTISTAS_QUE_TOCARAM, IS_LISTA_PARCIAL } from '@/data/artistas';
+import { IS_LISTA_PARCIAL } from '@/data/artistas';
+import { listarArtistas } from '@/lib/artistas';
+import type { ImagemPublica } from '@/lib/painel';
 import { lerEventosDaGaleria } from '@/data/eventosDaGaleria';
 import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 
@@ -16,6 +18,7 @@ interface CardDoArtista {
   href: string | null;
   arquivoDaFoto: string | undefined;
   idDaFoto: string;
+  fotoRemota: ImagemPublica | undefined;
 }
 
 const FOTOS_DE_AMBIENTE = ['ritual-arco-dourado', 'nomad-lona', 'jardim-3', 'church-ogiva'];
@@ -36,7 +39,7 @@ const extrairMonograma = (nome: string) => {
   return palavras.length > 1 ? `${primeira.charAt(0)}${ultima.charAt(0)}` : primeira.charAt(0);
 };
 
-const cards: CardDoArtista[] = ARTISTAS_QUE_TOCARAM.map((artista, indice) => {
+const cards: CardDoArtista[] = (await listarArtistas()).map((artista, indice) => {
   const slug = artista.edicao?.slugDaGaleria;
   const foto = fotos[indice % Math.max(fotos.length, 1)];
   return {
@@ -47,6 +50,7 @@ const cards: CardDoArtista[] = ARTISTAS_QUE_TOCARAM.map((artista, indice) => {
     href: slug && slugsDaGaleria.has(slug) ? `/galeria/${slug}` : null,
     arquivoDaFoto: foto?.arquivo,
     idDaFoto: foto?.id ?? '',
+    fotoRemota: artista.foto,
   };
 });
 
@@ -101,14 +105,20 @@ const fileiras: { formato: Formato; sentido: Sentido; cards: CardDoArtista[] }[]
                       {fileira.formato === 'destaque' ? (
                         <>
                           <span class="artista__fundo" aria-hidden="true">
-                            <FotoAcervo
-                              slot={card.idDaFoto}
-                              arquivo={card.arquivoDaFoto}
-                              alt=""
-                              sizes="(min-width: 1024px) 16vw, 46vw"
-                              larguras={LARGURAS_DA_FOTO}
-                              class="artista__foto"
-                            />
+                            {card.fotoRemota ? (
+                              <picture>
+                                <img class="artista__foto" src={card.fotoRemota.url} alt="" width={card.fotoRemota.largura} height={card.fotoRemota.altura} loading="lazy" decoding="async" />
+                              </picture>
+                            ) : (
+                              <FotoAcervo
+                                slot={card.idDaFoto}
+                                arquivo={card.arquivoDaFoto}
+                                alt=""
+                                sizes="(min-width: 1024px) 16vw, 46vw"
+                                larguras={LARGURAS_DA_FOTO}
+                                class="artista__foto"
+                              />
+                            )}
                           </span>
                           <span class="artista__monograma" aria-hidden="true">{card.monograma}</span>
                         </>

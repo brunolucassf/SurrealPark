@@ -36,7 +36,7 @@ const temOutrosEventos = total > 1 && anterior && proximo;
 ---
 <Base
   titulo={`${evento.titulo}: fotos | Surreal Park`}
-  descricao={`Fotos de ${evento.titulo} no Surreal Park, em ${evento.dataPorExtenso}: ${evento.nomesDosAmbientes.join(', ')}.`}
+  descricao={[`Fotos de ${evento.titulo} no Surreal Park, em ${evento.dataPorExtenso}`, evento.nomesDosAmbientes.join(', ')].filter(Boolean).join(': ') + '.'}
 >
   <header class="evento-topo container" data-humor="luar">
     <a class="evento-topo__voltar t-mono-xs" href="/galeria">
@@ -53,10 +53,12 @@ const temOutrosEventos = total > 1 && anterior && proximo;
         <dt class="t-mono-xs">Data</dt>
         <dd><time datetime={evento.data}>{evento.dataPorExtenso}</time></dd>
       </div>
-      <div>
-        <dt class="t-mono-xs">Ambientes</dt>
-        <dd>{evento.nomesDosAmbientes.join(' · ')}</dd>
-      </div>
+      {evento.nomesDosAmbientes.length > 0 && (
+        <div>
+          <dt class="t-mono-xs">Ambientes</dt>
+          <dd>{evento.nomesDosAmbientes.join(' · ')}</dd>
+        </div>
+      )}
       <div>
         <dt class="t-mono-xs">Fotos</dt>
         <dd>{fotos.length}</dd>
@@ -65,6 +67,12 @@ const temOutrosEventos = total > 1 && anterior && proximo;
   </header>
 
   <GradeDoEvento fotos={fotos} tituloDoEvento={evento.titulo} />
+  {evento.isDoPainel && (
+    <section class="container vazio" data-galeria-indisponivel data-galeria-slug={evento.slug} role="status" hidden>
+      <p class="t-lead">Esta galeria não está mais disponível.</p>
+      <a class="btn btn--secundario" href="/galeria">Ver outros eventos</a>
+    </section>
+  )}
 
   {temOutrosEventos && (
     <nav class="outros-eventos container" aria-label="Outros eventos">
@@ -81,3 +89,10 @@ const temOutrosEventos = total > 1 && anterior && proximo;
 
   <FechoDaGaleria />
 </Base>
+
+{evento.isDoPainel && (
+  <script>
+    import { vigiarDisponibilidadeDaGaleria } from '@/scripts/galeria/painel';
+    vigiarDisponibilidadeDaGaleria();
+  </script>
+)}

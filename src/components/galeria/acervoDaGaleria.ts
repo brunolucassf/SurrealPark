@@ -3,6 +3,11 @@ import type { ImageMetadata } from 'astro';
 import manifesto from '@/assets/manifest.json';
 import { buscarImagemPorArquivo } from '@/lib/fotos';
 import { lerEventosDaGaleria, type EventoDaGaleria } from '@/data/eventosDaGaleria';
+import { IS_DEMONSTRACAO } from '@/data/demonstracao';
+import { isPainelConfigurado, type ImagemPublica } from '@/lib/painel';
+import { buscarFotosDaGaleria, buscarGalerias, type FotoPublica, type GaleriaPublica } from '@/lib/painel-publico';
+
+export interface FotoRemota { imagem: ImagemPublica; miniatura: ImagemPublica }
 
 export interface FotoDaGaleria {
   id: string;
@@ -12,7 +17,8 @@ export interface FotoDaGaleria {
   alt: string;
   legenda: string;
   fotografo: string | null;
-  imagem: ImageMetadata;
+  imagem: ImageMetadata | null;
+  remota: FotoRemota | null;
   isPaisagem: boolean;
   grande: { src: string; largura: number; altura: number };
 }
@@ -22,6 +28,9 @@ export interface EventoResolvido extends EventoDaGaleria {
   dataCurta: string;
   nomesDosAmbientes: string[];
   capaResolvida: { id: string; arquivo: string; imagem: ImageMetadata } | null;
+  capaRemota: ImagemPublica | null;
+  fotosRemotas: FotoPublica[];
+  isDoPainel: boolean;
   totalDeFotos: number;
 }
 
@@ -82,22 +91,88 @@ function resolverCapa(id: string): EventoResolvido['capaResolvida'] {
   return entrada && imagem ? { id: entrada.id, arquivo: entrada.arquivo, imagem } : null;
 }
 
-export async function carregarEventosResolvidos(): Promise<EventoResolvido[]> {
-  const eventos = await lerEventosDaGaleria();
-  return eventos.map((evento) => {
-    const { curta, porExtenso } = formatarData(evento.data);
-    return {
-      ...evento,
-      dataCurta: curta,
-      dataPorExtenso: porExtenso,
-      nomesDosAmbientes: [...new Set(evento.ambientes.map(nomearAmbiente))],
-      capaResolvida: resolverCapa(evento.capa),
-      totalDeFotos: contarFotosDisponiveis(evento.fotos),
-    };
-  });
+function resolverEventoLocal(evento: EventoDaGaleria): EventoResolvido {
+  const { curta, porExtenso } = formatarData(evento.data);
+  return {
+    ...evento,
+    dataCurta: curta,
+    dataPorExtenso: porExtenso,
+    nomesDosAmbientes: [...new Set(evento.ambientes.map(nomearAmbiente))],
+    capaResolvida: resolverCapa(evento.capa),
+    capaRemota: null,
+    fotosRemotas: [],
+    isDoPainel: false,
+    totalDeFotos: contarFotosDisponiveis(evento.fotos),
+  };
 }
 
-export async function carregarFotosDoEvento(evento: EventoDaGaleria): Promise<FotoDaGaleria[]> {
+async function resolverEventoDoPainel(galeria: GaleriaPublica): Promise<EventoResolvido> {
+  const fotosRemotas = await buscarFotosDaGaleria(galeria.slug);
+  const data = galeria.evento?.dataEvento ?? galeria.atualizadoEm.slice(0, 10);
+  const { curta, porExtenso } = formatarData(data);
+  return {
+    slug: galeria.slug,
+    titulo: galeria.titulo,
+    data,
+    ambientes: [],
+    capa: '',
+    fotos: [],
+    isExemplo: false,
+    dataCurta: curta,
+    dataPorExtenso: porExtenso,
+    nomesDosAmbientes: [],
+    capaResolvida: null,
+    capaRemota: galeria.capa ?? fotosRemotas[0]?.imagem ?? null,
+    fotosRemotas,
+    isDoPainel: true,
+    totalDeFotos: fotosRemotas.length,
+  };
+}
+
+async function carregarEventosDoPainel(): Promise<EventoResolvido[] | null> {
+  if (!isPainelConfigurado) return null;
+  try {
+    const galerias = await buscarGalerias();
+    if (galerias.length === 0 && IS_DEMONSTRACAO) return null;
+    const eventos = await Promise.all(galerias.map(resolverEventoDoPainel));
+    return eventos.filter((evento) => evento.totalDeFotos > 0).sort((a, b) => b.data.localeCompare(a.data));
+  } catch {
+    return null;
+  }
+}
+
+let eventosResolvidosEmCache: Promise<EventoResolvido[]> | undefined;
+
+async function resolverEventos(): Promise<EventoResolvido[]> {
+  const doPainel = await carregarEventosDoPainel();
+  if (doPainel) return doPainel;
+  return (await lerEventosDaGaleria()).map(resolverEventoLocal);
+}
+
+export function carregarEventosResolvidos(): Promise<EventoResolvido[]> {
+  eventosResolvidosEmCache ??= resolverEventos();
+  return eventosResolvidosEmCache;
+}
+
+function converterFotoRemota(foto: FotoPublica, indice: number, total: number, evento: EventoResolvido): FotoDaGaleria {
+  const alt = foto.imagem.alt || `${evento.titulo}: foto ${indice + 1} de ${total}`;
+  return {
+    id: foto.id,
+    arquivo: '',
+    ambiente: '',
+    nomeDoAmbiente: '',
+    alt,
+    legenda: alt,
+    fotografo: foto.credito,
+    imagem: null,
+    remota: { imagem: foto.imagem, miniatura: foto.miniatura },
+    isPaisagem: foto.imagem.largura / foto.imagem.altura > PROPORCAO_PAISAGEM,
+    grande: { src: foto.imagem.url, largura: foto.imagem.largura, altura: foto.imagem.altura },
+  };
+}
+
+export async function carregarFotosDoEvento(evento: EventoResolvido): Promise<FotoDaGaleria[]> {
+  if (evento.isDoPainel) return evento.fotosRemotas.map((foto, indice) => converterFotoRemota(foto, indice, evento.fotosRemotas.length, evento));
   const disponiveis = evento.fotos
     .map(buscarEntrada)
     .filter((entrada): entrada is EntradaDoAcervo => Boolean(entrada))
@@ -122,6 +197,7 @@ export async function carregarFotosDoEvento(evento: EventoDaGaleria): Promise<Fo
         legenda: isAltRascunho ? nomeDoAmbiente : `${nomeDoAmbiente}: ${entrada.alt}`,
         fotografo: entrada.fotografo,
         imagem,
+        remota: null,
         isPaisagem: imagem.width / imagem.height > PROPORCAO_PAISAGEM,
         grande: { src: grande.src, largura: Number(grande.attributes.width), altura: Number(grande.attributes.height) },
       };

@@ -2,6 +2,7 @@
 import FotoAcervo from '@/components/ui/FotoAcervo.astro';
 import Icone from '@/components/ui/Icone.astro';
 import { CONTATOS, LINK_WHATSAPP_MESAS, SUFIXO_NOVA_ABA } from '@/data/site';
+import FormularioDeLead from './FormularioDeLead.astro';
 ---
 <section class="ct-secao ct-mesas" id="mesas" aria-labelledby="titulo-mesas">
   <div class="container ct-duas-colunas">
@@ -18,6 +19,14 @@ import { CONTATOS, LINK_WHATSAPP_MESAS, SUFIXO_NOVA_ABA } from '@/data/site';
       </div>
       <p class="t-body-s ct-apoio">Abre o WhatsApp com a mensagem pronta. Você só completa os dados.</p>
       <p class="t-body-s ct-apoio">Sem WhatsApp neste aparelho? Ligue para <a class="link-texto" href={`tel:${CONTATOS.telefoneMesas.replace(/[^\d+]/g, '')}`}>{CONTATOS.telefoneMesas}</a>.</p>
+      <FormularioDeLead
+        tipo="mesa"
+        id="lead-mesa"
+        origem="site:contato-mesas"
+        resumo="Prefere deixar seus dados para a gente retornar?"
+        introducao="Conte o evento e quantas pessoas. A equipe de mesas responde pelo e-mail ou telefone que você informar."
+        rotuloDaMensagem="Evento e detalhes da reserva"
+      />
     </div>
     <div class="ct-moldura ct-mesas__foto">
       <FotoAcervo slot="programacao-mesas" alt="" sizes="(min-width: 1024px) 50vw, 100vw" larguraMaxima={1680} class="ct-moldura__img" />

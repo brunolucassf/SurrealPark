@@ -1,0 +1,43 @@
+.cookies {
+  position: fixed;
+  inset-inline: var(--margem);
+  bottom: calc(var(--barra-h) + var(--sp-3));
+  z-index: var(--z-toast);
+  display: grid;
+  gap: var(--sp-3);
+  max-height: calc(100svh - var(--barra-h) - var(--header-h) - var(--sp-5));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--sp-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-2);
+  background: var(--ink-850);
+  color: var(--bone-50);
+  box-shadow: var(--sombra-overlay);
+}
+.cookies__titulo { margin: 0; }
+.cookies__titulo:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+.cookies__texto { margin: 0; color: var(--bone-300); }
+.cookies__acoes { display: grid; gap: var(--sp-2); }
+.cookies__personalizar { justify-self: start; min-height: 44px; padding: 0; background: none; border: 0; color: var(--bone-50); cursor: pointer; }
+.cookies__painel { display: grid; gap: var(--sp-3); padding-top: var(--sp-3); border-top: 1px solid var(--divider); }
+.cookies__painel[hidden] { display: none; }
+.cookies__categoria { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-3); align-items: start; }
+.cookies__marcacao { width: 1.4rem; height: 1.4rem; margin-top: 0.1rem; accent-color: var(--gold-300); }
+.cookies__marcacao:focus-visible { outline: 2px solid var(--gold-200); outline-offset: 2px; }
+.cookies__categoria-texto { display: grid; gap: var(--sp-1); }
+.cookies__categoria-rotulo { cursor: pointer; }
+.cookies__categoria-descricao { margin: 0; color: var(--bone-300); }
+.cookies__sempre-ativos { margin: 0; color: var(--ash-400); }
+.cookies__salvar { justify-self: start; }
+.cookies :focus-visible { outline-color: var(--gold-200); }
+
+@media (min-width: 640px) {
+  .cookies { inset-inline: auto; left: var(--margem); width: min(40rem, calc(100% - 2 * var(--margem))); }
+  .cookies__acoes { grid-template-columns: auto auto 1fr; align-items: center; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cookies { animation: cookies-entrada var(--dur-1) var(--ease-saida) both; }
+  @keyframes cookies-entrada { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+}

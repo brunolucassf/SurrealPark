@@ -157,8 +157,16 @@ async function iniciarFundoQuandoOcioso(): Promise<void> {
   iniciarFundoVivo();
 }
 
+async function iniciarConsentimentoQuandoOcioso(): Promise<void> {
+  if (!import.meta.env.PUBLIC_PAINEL_API_URL) return;
+  await aguardarLoaderEOciosidade();
+  const { iniciarBannerDeCookies } = await import('@/components/lgpd/bannerDeCookies');
+  await iniciarBannerDeCookies();
+}
+
 iniciarLoader();
 void iniciarFundoQuandoOcioso();
+void iniciarConsentimentoQuandoOcioso();
 controlarCabecalho();
 controlarMenu();
 controlarBarraMobile();

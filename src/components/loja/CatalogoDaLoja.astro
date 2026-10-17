@@ -1,10 +1,12 @@
 ---
 import CartaoDeProduto from '@/components/loja/CartaoDeProduto.astro';
-import { CATEGORIAS_DA_LOJA, PRODUTOS, contarProdutosPorCategoria } from '@/data/loja';
+import { listarCategorias, listarProdutos } from '@/lib/loja';
+import { isPainelConfigurado } from '@/lib/painel';
 
-const categoriasComProdutos = CATEGORIAS_DA_LOJA.filter((categoria) => contarProdutosPorCategoria(categoria.id) > 0);
+const PRODUTOS = await listarProdutos();
+const categoriasComProdutos = listarCategorias(PRODUTOS);
 ---
-<section class="catalogo container" id="produtos" aria-labelledby="titulo-catalogo" data-catalogo>
+<section class="catalogo container" id="produtos" aria-labelledby="titulo-catalogo" data-catalogo data-painel={isPainelConfigurado ? 'ativo' : undefined}>
   <div class="catalogo__cabeca">
     <h2 class="t-h2" id="titulo-catalogo">Na loja</h2>
     <p class="t-body-s catalogo__aviso">Preço e disponibilidade confirmados no balcão. O site não vende on-line.</p>
@@ -18,7 +20,7 @@ const categoriasComProdutos = CATEGORIAS_DA_LOJA.filter((categoria) => contarPro
         </button>
         {categoriasComProdutos.map((categoria) => (
           <button class="chip" type="button" data-filtro={categoria.id} aria-pressed="false">
-            {categoria.rotulo} <span class="chip__contagem">{contarProdutosPorCategoria(categoria.id)}</span>
+            {categoria.rotulo} <span class="chip__contagem">{categoria.total}</span>
           </button>
         ))}
       </div>

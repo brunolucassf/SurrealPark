@@ -5,9 +5,10 @@ import TopoDaLoja from '@/components/loja/TopoDaLoja.astro';
 import CatalogoDaLoja from '@/components/loja/CatalogoDaLoja.astro';
 import RetireNoParque from '@/components/loja/RetireNoParque.astro';
 import { IS_DEMONSTRACAO } from '@/data/demonstracao';
-import { PRODUTOS, isLojaAtiva } from '@/data/loja';
+import { isLojaAtiva, listarProdutos } from '@/lib/loja';
 import '@/styles/loja.css';
 
+const PRODUTOS = await listarProdutos();
 const isCatalogoReal = !IS_DEMONSTRACAO && isLojaAtiva && PRODUTOS.length > 0 && PRODUTOS.every((produto) => !produto.isExemplo);
 const urlDaLoja = new URL('/loja', Astro.site).href;
 const catalogoEstruturado = isCatalogoReal
@@ -21,7 +22,7 @@ const catalogoEstruturado = isCatalogoReal
         url: new URL(`/loja/${produto.slug}`, Astro.site).href,
         price: (produto.precoEmCentavos / 100).toFixed(2),
         priceCurrency: 'BRL',
-        availability: 'https://schema.org/InStoreOnly',
+        availability: produto.disponibilidade === 'esgotado' ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStoreOnly',
         itemOffered: { '@type': 'Product', name: produto.nome },
       })),
     }

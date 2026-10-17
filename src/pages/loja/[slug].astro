@@ -9,29 +9,38 @@ import Simbolo from '@/components/marca/Simbolo.astro';
 import { IS_DEMONSTRACAO } from '@/data/demonstracao';
 import { SUFIXO_NOVA_ABA } from '@/data/site';
 import {
-  PRODUTOS,
   buscarProdutosRelacionados,
-  buscarRotuloDaCategoria,
   criarLinkWhatsAppDoProduto,
+  descreverDisponibilidade,
   isLojaAtiva,
-  type Produto,
-} from '@/data/loja';
+  listarProdutos,
+  type ProdutoDeTela,
+} from '@/lib/loja';
+import { formatarPreco } from '@/data/loja';
+import '@/components/loja/painel.css';
 import '@/styles/loja.css';
 
-export function getStaticPaths() {
+export async function getStaticPaths() {
   if (!isLojaAtiva) return [];
-  return PRODUTOS.map((produto) => ({ params: { slug: produto.slug }, props: { produto } }));
+  const produtos = await listarProdutos();
+  return produtos.map((produto) => ({ params: { slug: produto.slug }, props: { produto, produtos } }));
 }
 
-interface Props { produto: Produto }
+interface Props { produto: ProdutoDeTela; produtos: ProdutoDeTela[] }
 
-const { produto } = Astro.props;
+const { produto, produtos } = Astro.props;
 const [corPrincipal] = produto.cores;
-const rotuloDaCategoria = buscarRotuloDaCategoria(produto.categoria);
-const relacionados = buscarProdutosRelacionados(produto);
+const corDaVitrine = corPrincipal?.base ?? 'var(--ink-800)';
+const rotuloDaCategoria = produto.categoriaRotulo;
+const relacionados = buscarProdutosRelacionados(produto, produtos);
 const linkWhatsApp = criarLinkWhatsAppDoProduto(produto);
+const isComFotos = produto.fotos.length > 0;
 const vistas = produto.imagens.filter((imagem) => imagem.vista !== 'detalhe');
-const isGaleriaMultipla = vistas.length > 1;
+const quantidadeDeVistas = isComFotos ? produto.fotos.length : vistas.length;
+const isGaleriaMultipla = quantidadeDeVistas > 1;
+const avisoDeDisponibilidade = descreverDisponibilidade(produto.disponibilidade);
+const ilustracao = corPrincipal && produto.forma ? { forma: produto.forma, cor: corPrincipal } : null;
+const isEsgotado = produto.disponibilidade === 'esgotado';
 const descreverVista = (rotuloDaVista: string, nomeDaCor: string) => `Ilustração de ${produto.nome}, ${rotuloDaVista.toLowerCase()}, cor ${nomeDaCor.toLowerCase()}`;
 
 const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
@@ -46,7 +55,7 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
         '@type': 'Offer',
         price: (produto.precoEmCentavos / 100).toFixed(2),
         priceCurrency: 'BRL',
-        availability: 'https://schema.org/InStoreOnly',
+        availability: isEsgotado ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStoreOnly',
         url: new URL(`/loja/${produto.slug}`, Astro.site).href,
       },
     };
@@ -58,7 +67,7 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
   {produtoEstruturado && <script slot="head" type="application/ld+json" set:html={JSON.stringify(produtoEstruturado)} />}
   <DefinicoesDaLoja />
 
-  <article class="ficha container" data-ficha>
+  <article class="ficha container" data-ficha data-slug={produto.slug}>
     <nav class="ficha__trilha" aria-label="Trilha">
       <ol class="t-mono-xs" role="list">
         <li><a class="link-nav" href="/loja">Loja</a></li>
@@ -70,20 +79,28 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
     <div class="ficha__cabeca">
       <p class="t-mono-xs ficha__tipo">{produto.tipo}</p>
       <h1 class="t-h2 ficha__nome">{produto.nome}</h1>
-      <p><Preco precoEmCentavos={produto.precoEmCentavos} class="ficha__preco" /></p>
+      <p data-ficha-preco>
+        <Preco precoEmCentavos={produto.precoEmCentavos} class="ficha__preco" />
+        {produto.precoDeEmCentavos !== null && <s class="ficha__preco-de"><span class="sr-only">Preço anterior </span>{formatarPreco(produto.precoDeEmCentavos)}</s>}
+        {produto.percentualDesconto !== null && <span class="produto__promocao t-mono-xs">-{produto.percentualDesconto}%</span>}
+      </p>
       {IS_DEMONSTRACAO && produto.isExemplo && <span class="selo-exemplo t-mono-xs">exemplo: nome e preço fictícios</span>}
     </div>
 
     <div class="ficha__palco" data-ficha-palco>
-      <div class="ficha__vitrine" style={`--cor-vitrine:${corPrincipal.base};view-transition-name:produto-${produto.slug}`} data-inclinavel>
+      <div class="ficha__vitrine" style={`--cor-vitrine:${corDaVitrine};view-transition-name:produto-${produto.slug}`} data-inclinavel>
         <span class="ficha__fantasma" aria-hidden="true">{produto.nome.split(' ').at(-1)}</span>
-        {vistas.map((imagem, indice) => (
+        {isComFotos ? produto.fotos.map((foto, indice) => (
+          <div class="ficha__vista ficha__vista--foto" id={`vista-${indice}`} data-vista={String(indice)} hidden={indice > 0}>
+            <img class="ficha__foto" src={foto.url} alt={foto.alt} width={foto.largura} height={foto.altura} loading={indice === 0 ? 'eager' : 'lazy'} decoding="async" />
+          </div>
+        )) : ilustracao && vistas.map((imagem, indice) => (
           <div class="ficha__vista" id={`vista-${imagem.vista}`} data-vista={imagem.vista} hidden={indice > 0}>
             <IlustracaoDeProduto
-              forma={produto.forma}
-              cor={corPrincipal}
+              forma={ilustracao.forma}
+              cor={ilustracao.cor}
               vista={imagem.vista}
-              rotulo={descreverVista(imagem.rotulo, corPrincipal.nome)}
+              rotulo={descreverVista(imagem.rotulo, ilustracao.cor.nome)}
               class="ficha__ilustracao"
             />
           </div>
@@ -92,9 +109,13 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
       </div>
       {isGaleriaMultipla && (
         <div class="ficha__miniaturas" role="group" aria-label="Vistas do produto">
-          {vistas.map((imagem, indice) => (
+          {isComFotos ? produto.fotos.map((foto, indice) => (
+            <button class="ficha__miniatura" type="button" data-mostrar-vista={String(indice)} aria-controls={`vista-${indice}`} aria-pressed={indice === 0 ? 'true' : 'false'} aria-label={`Foto ${indice + 1} de ${produto.fotos.length}`}>
+              <img class="ficha__miniatura-arte ficha__foto" src={foto.url} alt="" width={foto.largura} height={foto.altura} loading="lazy" decoding="async" />
+            </button>
+          )) : ilustracao && vistas.map((imagem, indice) => (
             <button class="ficha__miniatura" type="button" data-mostrar-vista={imagem.vista} aria-controls={`vista-${imagem.vista}`} aria-pressed={indice === 0 ? 'true' : 'false'}>
-              <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} vista={imagem.vista} class="ficha__miniatura-arte" />
+              <IlustracaoDeProduto forma={ilustracao.forma} cor={ilustracao.cor} vista={imagem.vista} class="ficha__miniatura-arte" />
               <span class="t-mono-xs ficha__miniatura-rotulo">{imagem.rotulo}</span>
             </button>
           ))}
@@ -105,9 +126,15 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
     <div class="ficha__info">
       <p class="t-body ficha__descricao">{produto.descricao}</p>
 
+      {avisoDeDisponibilidade && (
+        <p class="t-body-s ficha__aviso-disponibilidade" data-esgotado={isEsgotado ? '' : undefined}>
+          {isEsgotado ? 'Esgotado no momento. Pergunte pelo WhatsApp sobre reposição.' : 'Poucas unidades. Confirme na loja antes de ir.'}
+        </p>
+      )}
+
       {produto.cores.length > 0 && (
         <div class="ficha__grupo">
-          <p class="t-mono-xs ficha__grupo-titulo" id="titulo-cores">Cor: <span class="ficha__cor-atual" data-cor-atual>{corPrincipal.nome}</span></p>
+          <p class="t-mono-xs ficha__grupo-titulo" id="titulo-cores">Cor: <span class="ficha__cor-atual" data-cor-atual>{corPrincipal?.nome}</span></p>
           <div class="ficha__cores" role="group" aria-labelledby="titulo-cores">
             {produto.cores.map((cor, indice) => (
               <button
@@ -168,5 +195,7 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
 
 <script>
   import { iniciarFichaDoProduto } from '@/scripts/loja/produto';
+  import { sincronizarFichaComOPainel } from '@/scripts/loja/painel';
   iniciarFichaDoProduto();
+  void sincronizarFichaComOPainel();
 </script>

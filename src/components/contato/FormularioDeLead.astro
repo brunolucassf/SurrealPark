@@ -1,0 +1,158 @@
+---
+import { isPainelConfigurado } from '@/lib/painel';
+import { CONTATOS } from '@/data/site';
+import { TIPOS_DE_EVENTO } from './mensagens';
+
+type TipoDeLead = 'mesa' | 'locacao' | 'contato';
+
+interface Props {
+  tipo: TipoDeLead;
+  id: string;
+  resumo: string;
+  introducao: string;
+  rotuloDaMensagem: string;
+  origem: string;
+}
+
+const { tipo, id, resumo, introducao, rotuloDaMensagem, origem } = Astro.props;
+const idDoCampo = (nome: string) => `${id}-${nome}`;
+---
+{isPainelConfigurado && (
+  <details class="lead" data-lead-detalhes>
+    <summary class="lead__resumo t-label">{resumo}</summary>
+    <form class="lead__form" method="post" novalidate data-lead-form data-tipo={tipo} data-origem={origem} aria-label={resumo}>
+      <p class="t-body-s lead__introducao">{introducao}</p>
+
+      <div class="lead__grade">
+        <div class="lead__campo">
+          <label class="t-label" for={idDoCampo('nome')}>Nome</label>
+          <input id={idDoCampo('nome')} name="nome" type="text" autocomplete="name" required minlength="2" maxlength="120" data-campo />
+          <p class="lead__erro t-body-s" id={idDoCampo('nome-erro')} data-erro hidden></p>
+        </div>
+        <div class="lead__campo">
+          <label class="t-label" for={idDoCampo('email')}>E-mail</label>
+          <input id={idDoCampo('email')} name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" data-campo />
+          <p class="lead__erro t-body-s" id={idDoCampo('email-erro')} data-erro hidden></p>
+        </div>
+        <div class="lead__campo">
+          <label class="t-label" for={idDoCampo('telefone')}>Telefone <span class="lead__opcional">(opcional)</span></label>
+          <input id={idDoCampo('telefone')} name="telefone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" data-campo />
+          <p class="lead__erro t-body-s" id={idDoCampo('telefone-erro')} data-erro hidden></p>
+        </div>
+
+        {tipo === 'mesa' && (
+          <div class="lead__campo">
+            <label class="t-label" for={idDoCampo('pessoas')}>Número de pessoas <span class="lead__opcional">(opcional)</span></label>
+            <input id={idDoCampo('pessoas')} name="pessoas" type="number" inputmode="numeric" min="1" max="50" data-campo />
+            <p class="lead__erro t-body-s" id={idDoCampo('pessoas-erro')} data-erro hidden></p>
+          </div>
+        )}
+
+        {tipo === 'locacao' && (
+          <>
+            <div class="lead__campo">
+              <label class="t-label" for={idDoCampo('tipoEvento')}>Tipo de evento <span class="lead__opcional">(opcional)</span></label>
+              <select id={idDoCampo('tipoEvento')} name="tipoEvento" data-campo>
+                <option value="">Escolha</option>
+                {TIPOS_DE_EVENTO.map((tipoDeEvento) => <option value={tipoDeEvento}>{tipoDeEvento}</option>)}
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+            <div class="lead__campo">
+              <label class="t-label" for={idDoCampo('dataPretendida')}>Data prevista <span class="lead__opcional">(opcional)</span></label>
+              <input id={idDoCampo('dataPretendida')} name="dataPretendida" type="date" data-campo />
+            </div>
+            <div class="lead__campo">
+              <label class="t-label" for={idDoCampo('pessoas')}>Público estimado <span class="lead__opcional">(opcional)</span></label>
+              <input id={idDoCampo('pessoas')} name="pessoas" type="number" inputmode="numeric" min="1" max="5000" data-campo />
+              <p class="lead__erro t-body-s" id={idDoCampo('pessoas-erro')} data-erro hidden></p>
+            </div>
+          </>
+        )}
+
+        {tipo === 'contato' && (
+          <div class="lead__campo">
+            <label class="t-label" for={idDoCampo('assunto')}>Assunto <span class="lead__opcional">(opcional)</span></label>
+            <input id={idDoCampo('assunto')} name="assunto" type="text" maxlength="120" data-campo />
+          </div>
+        )}
+
+        <div class="lead__campo lead__campo--largo">
+          <label class="t-label" for={idDoCampo('mensagem')}>{rotuloDaMensagem}</label>
+          <textarea id={idDoCampo('mensagem')} name="mensagem" rows="4" required minlength="5" maxlength="2000" data-campo></textarea>
+          <p class="lead__erro t-body-s" id={idDoCampo('mensagem-erro')} data-erro hidden></p>
+        </div>
+      </div>
+
+      <div class="lead__isca" aria-hidden="true">
+        <label>Deixe este campo em branco<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <fieldset class="lead__consentimento">
+        <legend class="sr-only">Consentimento</legend>
+        <div class="lead__marcacao">
+          <input id={idDoCampo('consentimento')} name="consentimento" type="checkbox" required data-campo />
+          <label for={idDoCampo('consentimento')} class="t-body-s" data-texto-consentimento>Carregando o texto de consentimento…</label>
+        </div>
+        <p class="lead__erro t-body-s" id={idDoCampo('consentimento-erro')} data-erro hidden></p>
+        <div class="lead__marcacao" data-bloco-marketing hidden>
+          <input id={idDoCampo('marketing')} name="marketing" type="checkbox" />
+          <label for={idDoCampo('marketing')} class="t-body-s" data-texto-marketing></label>
+        </div>
+      </fieldset>
+
+      <div class="lead__acoes">
+        <button class="btn btn--primario" type="submit" data-enviar disabled>Enviar mensagem</button>
+        <p class="t-body-s lead__alternativa">Prefere falar agora? O WhatsApp e o e-mail <a class="link-texto" href={`mailto:${CONTATOS.email}`}>{CONTATOS.email}</a> continuam abertos.</p>
+      </div>
+
+      <p class="lead__status t-body-s" role="status" aria-live="polite" data-lead-status></p>
+    </form>
+
+    <div class="lead__sucesso" tabindex="-1" data-lead-sucesso hidden>
+      <p class="t-h4">Mensagem recebida.</p>
+      <p class="t-body-s">A equipe do Surreal Park responde no e-mail que você informou.</p>
+    </div>
+  </details>
+)}
+
+<style>
+  .lead { margin-top: var(--sp-5); border-top: var(--borda-1); padding-top: var(--sp-4); max-width: 44rem; }
+  .lead__resumo { display: inline-flex; align-items: center; gap: var(--sp-2); min-height: 44px; cursor: pointer; color: var(--text); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--border); }
+  .lead__resumo:hover { text-decoration-color: var(--accent-text); }
+  .lead__resumo:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+  .lead__form { display: grid; gap: var(--sp-4); margin-top: var(--sp-3); }
+  .lead__introducao { color: var(--text-2); }
+  .lead__grade { display: grid; gap: var(--sp-4); }
+  .lead__campo { display: grid; gap: var(--sp-1); align-content: start; }
+  .lead__opcional { color: var(--text-3); text-transform: none; letter-spacing: 0; }
+  .lead__campo :is(input:not([type='checkbox']), select, textarea) {
+    width: 100%; min-height: 48px; padding: 0.7rem 0.85rem; border: 1px solid var(--border); border-radius: var(--r-2);
+    background: var(--surface); color: var(--text); font: inherit;
+  }
+  .lead__campo textarea { min-height: 7.5rem; resize: vertical; }
+  .lead__campo :is(input, select, textarea):focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .lead__campo [aria-invalid='true'] { border-color: var(--alert-300); box-shadow: 0 0 0 1px var(--alert-300); }
+  .lead__erro { color: var(--alert-300); }
+  :global([data-luz='amanhecer']) .lead__erro { color: var(--alert-700); }
+  :global([data-luz='amanhecer']) .lead__campo [aria-invalid='true'] { border-color: var(--alert-700); box-shadow: 0 0 0 1px var(--alert-700); }
+  .lead__isca { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+  .lead__consentimento { display: grid; gap: var(--sp-3); margin: 0; padding: 0; border: 0; min-inline-size: 0; }
+  .lead__marcacao { display: grid; grid-template-columns: auto 1fr; gap: var(--sp-3); align-items: start; }
+  .lead__marcacao input { width: 1.4rem; height: 1.4rem; margin-top: 0.1rem; accent-color: var(--accent-text); }
+  .lead__marcacao input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .lead__marcacao label { color: var(--text-2); }
+  .lead__acoes { display: grid; gap: var(--sp-3); justify-items: start; }
+  .lead__alternativa { color: var(--text-2); }
+  .lead__status { min-height: 1.5em; color: var(--text-2); }
+  .lead__status[data-estado='erro'] { color: var(--alert-300); }
+  :global([data-luz='amanhecer']) .lead__status[data-estado='erro'] { color: var(--alert-700); }
+  .lead__form[aria-busy='true'] [data-enviar] { opacity: 0.7; cursor: progress; }
+  .lead__sucesso { display: grid; gap: var(--sp-2); margin-top: var(--sp-3); padding: var(--sp-4); border: 1px solid var(--ok-300); border-radius: var(--r-2); }
+  :global([data-luz='amanhecer']) .lead__sucesso { border-color: var(--ok-700); }
+  .lead__sucesso:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  @media (min-width: 640px) {
+    .lead__grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .lead__campo--largo { grid-column: 1 / -1; }
+  }
+</style>
