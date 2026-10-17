@@ -30,7 +30,8 @@ const [corPrincipal] = produto.cores;
 const rotuloDaCategoria = buscarRotuloDaCategoria(produto.categoria);
 const relacionados = buscarProdutosRelacionados(produto);
 const linkWhatsApp = criarLinkWhatsAppDoProduto(produto);
-const isGaleriaMultipla = produto.imagens.length > 1;
+const vistas = produto.imagens.filter((imagem) => imagem.vista !== 'detalhe');
+const isGaleriaMultipla = vistas.length > 1;
 const descreverVista = (rotuloDaVista: string, nomeDaCor: string) => `Ilustração de ${produto.nome}, ${rotuloDaVista.toLowerCase()}, cor ${nomeDaCor.toLowerCase()}`;
 
 const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
@@ -76,7 +77,7 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
     <div class="ficha__palco" data-ficha-palco>
       <div class="ficha__vitrine" style={`--cor-vitrine:${corPrincipal.base};view-transition-name:produto-${produto.slug}`} data-inclinavel>
         <span class="ficha__fantasma" aria-hidden="true">{produto.nome.split(' ').at(-1)}</span>
-        {produto.imagens.map((imagem, indice) => (
+        {vistas.map((imagem, indice) => (
           <div class="ficha__vista" id={`vista-${imagem.vista}`} data-vista={imagem.vista} hidden={indice > 0}>
             <IlustracaoDeProduto
               forma={produto.forma}
@@ -91,7 +92,7 @@ const produtoEstruturado = produto.isExemplo || IS_DEMONSTRACAO
       </div>
       {isGaleriaMultipla && (
         <div class="ficha__miniaturas" role="group" aria-label="Vistas do produto">
-          {produto.imagens.map((imagem, indice) => (
+          {vistas.map((imagem, indice) => (
             <button class="ficha__miniatura" type="button" data-mostrar-vista={imagem.vista} aria-controls={`vista-${imagem.vista}`} aria-pressed={indice === 0 ? 'true' : 'false'}>
               <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} vista={imagem.vista} class="ficha__miniatura-arte" />
               <span class="t-mono-xs ficha__miniatura-rotulo">{imagem.rotulo}</span>

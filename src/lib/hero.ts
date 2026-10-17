@@ -46,15 +46,15 @@ export async function prepararHero(): Promise<HeroPreparado | null> {
   const realidadeDesktop = buscarImagemPorArquivo('fotos/nomad/nomad-realidade-desktop.jpg');
   const realidadeMobile = buscarImagemPorArquivo('fotos/nomad/nomad-realidade-mobile.jpg');
   const capa = buscarFotoPorSlot('home-hero');
-  const ritual = buscarImagemPorArquivo('fotos/ritual/ritual-azul.jpg');
+  const sinoDoBells = buscarImagemPorArquivo('fotos/bells/bells-sino-desktop.jpg');
   const imagemDesktop = realidadeDesktop ?? capa?.imagem;
-  if (!imagemDesktop || !ritual) return null;
+  if (!imagemDesktop || !sinoDoBells) return null;
 
   return {
     alt: 'Nomad: lonas de circo ao pôr do sol, com o público na pista e o skyline de Balneário Camboriú ao fundo',
     desktop: await gerarVersao(imagemDesktop, TAMANHOS_DESKTOP_DO_HERO, 3200),
     mobile: realidadeMobile ? await gerarVersao(realidadeMobile, '100vw', 1200) : null,
-    reveladaDesktop: await gerarUrlsDaRevelada(ritual, 2400, QUALIDADE_DA_REVELADA_DESKTOP),
-    reveladaMobile: await gerarUrlsDaRevelada(ritual, 1200, QUALIDADE_DA_REVELADA_MOBILE),
+    reveladaDesktop: await gerarUrlsDaRevelada(sinoDoBells, 2400, QUALIDADE_DA_REVELADA_DESKTOP),
+    reveladaMobile: await gerarUrlsDaRevelada(sinoDoBells, 1200, QUALIDADE_DA_REVELADA_MOBILE),
   };
 }
