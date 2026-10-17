@@ -61,9 +61,10 @@ function listarTamanhosUnicos(detalhe: ProdutoPublicoDetalhe): string[] {
 
 function converterProdutoDoPainel(detalhe: ProdutoPublicoDetalhe): ProdutoDeTela {
   const categoria = normalizarCategoria(detalhe.categoria);
-  const fotos: FotoDeProduto[] = detalhe.imagens.length > 0
+  const fotosBrutas: FotoDeProduto[] = detalhe.imagens.length > 0
     ? detalhe.imagens
     : detalhe.imagemPrincipal ? [{ ...detalhe.imagemPrincipal, corNome: null }] : [];
+  const fotos = fotosBrutas.filter((foto) => foto.url.trim() !== '');
   return {
     id: detalhe.slug,
     slug: detalhe.slug,

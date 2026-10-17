@@ -19,7 +19,7 @@ const calcularDistancia = (indice: number): number => {
   return ((((indice + metade) % total) + total) % total) - metade;
 };
 const formatarPosicao = (indice: number): string => `${String(indice + 1).padStart(2, '0')} / ${String(total).padStart(2, '0')}`;
-const descreverEvento = (evento: EventoResolvido): string => [evento.dataCurta, evento.nomesDosAmbientes.join(', '), `${evento.totalDeFotos} fotos`].filter(Boolean).join(' · ');
+const descreverEvento = (evento: EventoResolvido): string => [evento.dataCurta, evento.nomesDosAmbientes.join(', '), `${evento.totalDeFotos} ${evento.totalDeFotos === 1 ? 'foto' : 'fotos'}`].filter(Boolean).join(' · ');
 const primeiro = eventos[0];
 ---
 <section class="eventos" data-carrossel aria-labelledby="titulo-eventos">
@@ -75,7 +75,7 @@ const primeiro = eventos[0];
                     <span class="painel__veu" aria-hidden="true"></span>
                   </span>
                   <span class="painel__meta t-mono-xs">
-                    <span class="sr-only">, </span><time datetime={evento.data}>{evento.dataCurta}</time> · {evento.totalDeFotos} fotos
+                    {evento.dataCurta && <><span class="sr-only">, </span><time datetime={evento.data}>{evento.dataCurta}</time> · </>}{evento.totalDeFotos} {evento.totalDeFotos === 1 ? 'foto' : 'fotos'}
                   </span>
                   {IS_DEMONSTRACAO && evento.isExemplo && <span class="painel__selo selo-exemplo t-mono-xs">exemplo</span>}
                 </a>

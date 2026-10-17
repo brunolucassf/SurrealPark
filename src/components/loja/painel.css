@@ -13,3 +13,11 @@
 .ficha__aviso-disponibilidade { margin: 0; color: var(--gold-200); }
 .ficha__aviso-disponibilidade[data-esgotado] { color: var(--alert-300); }
 .ficha__cabeca .produto__promocao { margin-inline-start: var(--sp-2); }
+
+.produto__reservado {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--text-3, #8a8a8a);
+}

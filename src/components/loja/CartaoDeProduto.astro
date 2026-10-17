@@ -32,8 +32,14 @@ const nomesDasCores = produto.cores.map((cor) => cor.nome).join(', ');
         <picture class="produto__foto-moldura">
           <img class="produto__foto" src={fotoPrincipal.url} alt={fotoPrincipal.alt} width={fotoPrincipal.largura} height={fotoPrincipal.altura} loading={ordem < 4 ? 'eager' : 'lazy'} decoding="async" />
         </picture>
-      ) : produto.forma && corPrincipal && (
+      ) : produto.forma && corPrincipal ? (
         <IlustracaoDeProduto forma={produto.forma} cor={corPrincipal} class="produto__ilustracao" />
+      ) : (
+        <svg class="produto__reservado" viewBox="0 0 120 150" role="img" aria-label={`${produto.nome}, foto em breve`} preserveAspectRatio="xMidYMid slice">
+          <rect width="120" height="150" fill="none" />
+          <path d="M20 112 L48 70 L68 98 L82 80 L100 112 Z" fill="currentColor" opacity="0.18" />
+          <circle cx="86" cy="44" r="9" fill="currentColor" opacity="0.18" />
+        </svg>
       )}
       <span class="produto__brilho" aria-hidden="true"></span>
       {produto.isDestaque && <span class="produto__selo t-mono-xs">Destaque</span>}
