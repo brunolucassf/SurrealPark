@@ -1,0 +1,45 @@
+---
+interface Props {
+  idPrefixo: string;
+}
+
+const { idPrefixo } = Astro.props;
+const idInput = `${idPrefixo}-cupom`;
+const idResposta = `${idPrefixo}-cupom-resposta`;
+---
+
+<div class="cupom" data-cupom-validador>
+  <label class="t-label cupom__rotulo" for={idInput}>Tem cupom? <span class="cupom__opcional">(opcional)</span></label>
+  <div class="cupom__linha">
+    <input id={idInput} name="cupomCodigo" type="text" autocomplete="off" maxlength="40" pattern="[A-Za-z0-9_-]{1,40}" data-cupom-input aria-describedby={idResposta} placeholder="ex.: SURREAL10" />
+    <button class="btn btn--secundario cupom__botao" type="button" aria-label="Validar cupom" data-cupom-validar>Validar</button>
+  </div>
+  <p class="cupom__resposta t-body-s" id={idResposta} role="status" aria-live="polite" data-cupom-resposta></p>
+</div>
+
+<style>
+  .cupom { display: grid; gap: var(--sp-2); }
+  .cupom__rotulo { color: var(--text); }
+  .cupom__opcional { color: var(--text-3); text-transform: none; letter-spacing: 0; }
+  .cupom__linha { display: flex; gap: var(--sp-2); flex-wrap: wrap; align-items: stretch; }
+  .cupom__linha input {
+    flex: 1 1 12rem;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: var(--r-2);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cupom__linha input:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .cupom__botao { flex: 0 0 auto; min-height: 48px; }
+  .cupom__resposta { min-height: 1.4em; color: var(--text-2); }
+  .cupom__resposta[data-estado='ok'] { color: var(--ok-300); }
+  .cupom__resposta[data-estado='erro'] { color: var(--alert-300); }
+  :global([data-luz='amanhecer']) .cupom__resposta[data-estado='ok'] { color: var(--ok-700); }
+  :global([data-luz='amanhecer']) .cupom__resposta[data-estado='erro'] { color: var(--alert-700); }
+</style>

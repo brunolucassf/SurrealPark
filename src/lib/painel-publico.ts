@@ -148,6 +148,8 @@ export interface LeadParaEnvio {
   email: string;
   telefone: string | null;
   mensagem: string;
+  cpf?: string | null;
+  cupomCodigo?: string | null;
   consentimento: { aceito: true; versaoTexto: string };
   marketing: boolean;
   origem: string;

@@ -1,0 +1,88 @@
+---
+import { isPainelConfigurado } from '@/lib/painel';
+import { carregarConfigPublica } from '@/lib/config-publica';
+
+let ativo = false;
+if (isPainelConfigurado) {
+  try {
+    const config = await carregarConfigPublica();
+    ativo = config.scripts.modoDemo || config.demo;
+  } catch {
+    ativo = false;
+  }
+}
+---
+
+{ativo && (
+  <div class="demo-banner" role="status" aria-live="polite" data-demo-banner hidden>
+    <p class="demo-banner__texto t-body-s">
+      <strong>Site em modo demonstração</strong>
+      <span aria-hidden="true"> · </span>
+      <span>cookies não são enviados para terceiros</span>
+    </p>
+    <button class="demo-banner__fechar" type="button" aria-label="Dispensar aviso" data-demo-fechar>
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+)}
+
+<script is:inline>
+  (function () {
+    var CHAVE = 'surreal:demo-banner-fechado';
+    var banner = document.querySelector('[data-demo-banner]');
+    if (!banner) return;
+    try { if (window.sessionStorage.getItem(CHAVE)) return; } catch (e) { return; }
+    banner.hidden = false;
+    var botao = banner.querySelector('[data-demo-fechar]');
+    function fechar() {
+      banner.hidden = true;
+      try { window.sessionStorage.setItem(CHAVE, '1'); } catch (e) { return; }
+    }
+    if (botao) botao.addEventListener('click', fechar);
+  })();
+</script>
+
+<style>
+  .demo-banner {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--barra-h, 0px) + var(--sp-3, 0.75rem));
+    transform: translateX(-50%);
+    z-index: var(--z-toast, 95);
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    max-width: min(92vw, 36rem);
+    padding: var(--sp-2) var(--sp-3);
+    background: var(--surface, #1A191C);
+    color: var(--text, #F2ECE2);
+    border: 1px solid var(--border, #807A84);
+    border-radius: var(--r-pill, 999px);
+    box-shadow: 0 12px 32px rgb(0 0 0 / 0.4);
+    font-size: var(--fs-body-s, 0.875rem);
+  }
+  .demo-banner__texto { margin: 0; line-height: 1.4; }
+  .demo-banner__texto strong { font-weight: 600; color: var(--text, #F2ECE2); }
+  .demo-banner__fechar {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: var(--r-pill, 999px);
+    color: var(--text, #F2ECE2);
+    font: inherit;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .demo-banner__fechar:hover { background: rgb(255 255 255 / 0.08); }
+  .demo-banner__fechar:focus-visible { outline: 2px solid var(--focus, #F0D49A); outline-offset: 2px; }
+  @media (min-width: 1024px) {
+    .demo-banner { bottom: var(--sp-4, 1rem); }
+  }
+</style>

@@ -7,6 +7,8 @@ import Rodape from '@/components/layout/Rodape.astro';
 import FundoVivo from '@/components/layout/FundoVivo.astro';
 import Loader from '@/components/layout/Loader.astro';
 import Formas from '@/components/marca/Formas.astro';
+import ConfigPublicaScript from '@/components/ConfigPublicaScript.astro';
+import BannerDemo from '@/components/BannerDemo.astro';
 import { isCaminhoIndexavel, normalizarCaminho } from '@/data/indexacao';
 
 interface Props {
@@ -70,6 +72,7 @@ const urlDaImagem = new URL(imagemDeCompartilhamento, Astro.site).href;
     <meta name="twitter:description" content={descricaoDeCompartilhamento} />
     <meta name="twitter:image" content={urlDaImagem} />
     <meta name="twitter:image:alt" content={textoAlternativoDaImagem} />
+    <ConfigPublicaScript />
     <slot name="head" />
   </head>
   <body>
@@ -83,6 +86,7 @@ const urlDaImagem = new URL(imagemDeCompartilhamento, Astro.site).href;
     </main>
     <Rodape />
     {isBarraMobileVisivel && <BarraMobile />}
+    <BannerDemo />
     <script>
       import '@/scripts/global';
     </script>

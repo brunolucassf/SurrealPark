@@ -38,6 +38,9 @@ const ATALHOS = [
 <script>
   import { iniciarContato } from '@/scripts/contato/contato';
   import { iniciarFormulariosDeLead } from '@/scripts/contato/leads';
+  import { iniciarValidadoresDeCupom } from '@/scripts/contato/cupom';
   iniciarContato();
   iniciarFormulariosDeLead();
+  iniciarValidadoresDeCupom();
+  document.addEventListener('toggle', () => iniciarValidadoresDeCupom(), true);
 </script>

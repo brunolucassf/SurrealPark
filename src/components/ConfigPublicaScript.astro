@@ -1,0 +1,94 @@
+---
+import { isPainelConfigurado } from '@/lib/painel';
+import { carregarConfigPublica } from '@/lib/config-publica';
+
+let configSerializado = 'null';
+if (isPainelConfigurado) {
+  try {
+    const config = await carregarConfigPublica();
+    configSerializado = JSON.stringify(config);
+  } catch {
+    configSerializado = 'null';
+  }
+}
+---
+
+<script is:inline define:vars={{ configSerializado }}>
+  (function () {
+    var CHAVE = 'surreal:config-publica';
+    var CACHE_EM_MS = 30 * 1000;
+
+    function lerCache() {
+      try {
+        var bruto = window.sessionStorage.getItem(CHAVE);
+        if (!bruto) return null;
+        var valor = JSON.parse(bruto);
+        return valor && typeof valor === 'object' ? valor : null;
+      } catch (e) { return null; }
+    }
+
+    function gravarCache(valor) {
+      try { window.sessionStorage.setItem(CHAVE, JSON.stringify({ valor: valor, em: Date.now() })); } catch (e) { return; }
+    }
+
+    function injetarMetaPixel(id) {
+      if (window.fbq && window.fbq.callMethod) return;
+      var n = window.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+      if (!window._fbq) window._fbq = n;
+      n.push = n; n.loaded = true; n.version = '2.0'; n.queue = [];
+      var t = document.createElement('script'); t.async = true; t.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(t, s);
+      window.fbq('init', id);
+      window.fbq('track', 'PageView');
+    }
+
+    function injetarGTM(id) {
+      if (document.getElementById('surreal-gtm')) return;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ 'gtm.start': Date.now(), event: 'gtm.js' });
+      var f = document.getElementsByTagName('script')[0];
+      var j = document.createElement('script'); j.id = 'surreal-gtm'; j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(id);
+      f.parentNode.insertBefore(j, f);
+      var ns = document.createElement('noscript');
+      var ifr = document.createElement('iframe');
+      ifr.src = 'https://www.googletagmanager.com/ns.html?id=' + encodeURIComponent(id);
+      ifr.height = '0'; ifr.width = '0'; ifr.style.display = 'none'; ifr.style.visibility = 'hidden';
+      ifr.title = 'Google Tag Manager';
+      ns.appendChild(ifr);
+      document.body.insertBefore(ns, document.body.firstChild);
+    }
+
+    function injetarGA4(id) {
+      if (document.getElementById('surreal-ga4')) return;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag('js', Date.now());
+      window.gtag('config', id);
+      var s = document.createElement('script'); s.id = 'surreal-ga4'; s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+      document.head.appendChild(s);
+    }
+
+    function aplicar(config) {
+      if (!config || !config.scripts) return;
+      var s = config.scripts;
+      if (s.modoDemo) return;
+      if (s.metaPixelId) injetarMetaPixel(s.metaPixelId);
+      if (s.gtmContainerId) injetarGTM(s.gtmContainerId);
+      if (s.ga4MeasurementId) injetarGA4(s.ga4MeasurementId);
+    }
+
+    try {
+      var pre = configSerializado && configSerializado !== 'null' ? JSON.parse(configSerializado) : null;
+      if (pre) { aplicar(pre); gravarCache(pre); return; }
+      var cache = lerCache();
+      if (cache && cache.valor && Date.now() - cache.em < CACHE_EM_MS) { aplicar(cache.valor); return; }
+    } catch (e) { return; }
+
+    fetch('/api/publico/v1/config', { credentials: 'omit', headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (json) { if (json) { aplicar(json); gravarCache(json); } })
+      .catch(function () { return; });
+  })();
+</script>

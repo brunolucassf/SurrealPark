@@ -2,6 +2,8 @@
 import { isPainelConfigurado } from '@/lib/painel';
 import { CONTATOS } from '@/data/site';
 import { TIPOS_DE_EVENTO } from './mensagens';
+import { carregarConfigPublica } from '@/lib/config-publica';
+import CupomValidador from '@/components/CupomValidador.astro';
 
 type TipoDeLead = 'mesa' | 'locacao' | 'contato';
 
@@ -16,7 +18,19 @@ interface Props {
 
 const { tipo, id, resumo, introducao, rotuloDaMensagem, origem } = Astro.props;
 const idDoCampo = (nome: string) => `${id}-${nome}`;
+
+let modoDemo = true;
+if (isPainelConfigurado) {
+  try {
+    const config = await carregarConfigPublica();
+    modoDemo = config.scripts.modoDemo;
+  } catch {
+    modoDemo = true;
+  }
+}
+const aceitaCupom = isPainelConfigurado && !modoDemo && (tipo === 'mesa' || tipo === 'contato');
 ---
+
 {isPainelConfigurado && (
   <details class="lead" data-lead-detalhes>
     <summary class="lead__resumo t-label">{resumo}</summary>
@@ -38,6 +52,11 @@ const idDoCampo = (nome: string) => `${id}-${nome}`;
           <label class="t-label" for={idDoCampo('telefone')}>Telefone <span class="lead__opcional">(opcional)</span></label>
           <input id={idDoCampo('telefone')} name="telefone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" data-campo />
           <p class="lead__erro t-body-s" id={idDoCampo('telefone-erro')} data-erro hidden></p>
+        </div>
+        <div class="lead__campo">
+          <label class="t-label" for={idDoCampo('cpf')}>CPF <span class="lead__opcional">(opcional, para validar cupom)</span></label>
+          <input id={idDoCampo('cpf')} name="cpf" type="text" inputmode="numeric" autocomplete="off" maxlength="14" data-cpf data-campo />
+          <p class="lead__erro t-body-s" id={idDoCampo('cpf-erro')} data-erro hidden></p>
         </div>
 
         {tipo === 'mesa' && (
@@ -77,6 +96,12 @@ const idDoCampo = (nome: string) => `${id}-${nome}`;
           </div>
         )}
 
+        {aceitaCupom && (
+          <div class="lead__campo lead__campo--largo">
+            <CupomValidador idPrefixo={id} />
+          </div>
+        )}
+
         <div class="lead__campo lead__campo--largo">
           <label class="t-label" for={idDoCampo('mensagem')}>{rotuloDaMensagem}</label>
           <textarea id={idDoCampo('mensagem')} name="mensagem" rows="4" required minlength="5" maxlength="2000" data-campo></textarea>
@@ -111,7 +136,7 @@ const idDoCampo = (nome: string) => `${id}-${nome}`;
 
     <div class="lead__sucesso" tabindex="-1" data-lead-sucesso hidden>
       <p class="t-h4">Mensagem recebida.</p>
-      <p class="t-body-s">A equipe do Surreal Park responde no e-mail que você informou.</p>
+      <p class="t-body-s">A equipe do Surreal Park responde no e-mail que você informar.</p>
     </div>
   </details>
 )}

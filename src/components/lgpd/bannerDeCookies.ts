@@ -1,10 +1,12 @@
 import { isPainelConfigurado } from '@/lib/painel';
 import { buscarConfiguracaoDeCookies, type CategoriaDeCookieConfigurada, type ConfiguracaoDeCookies } from '@/lib/painel-publico';
 import { SEM_CONSENTIMENTO, anunciarConsentimento, lerConsentimento, salvarDecisao, sincronizarConsentimento, type CategoriasDeCookie } from '@/lib/consentimento';
+import { carregarConfigPublica } from '@/lib/config-publica';
 import './bannerDeCookies.css';
 
 const SELETOR_DE_ABERTURA = '[data-abrir-preferencias-cookies]';
 const LINK_DA_POLITICA = '/privacidade#cookies';
+const ADENDO_DE_DEMO = 'Modo demonstração — cookies de terceiros desativados.';
 
 let configuracao: ConfiguracaoDeCookies | undefined;
 let banner: HTMLElement | null = null;
@@ -72,7 +74,7 @@ async function decidir(escolhas: CategoriasDeCookie, versaoTexto: string): Promi
   await salvarDecisao(escolhas, versaoTexto);
 }
 
-function montarBanner(dados: ConfiguracaoDeCookies): HTMLElement {
+function montarBanner(dados: ConfiguracaoDeCookies, isDemo: boolean): HTMLElement {
   const salvo = lerConsentimento();
   const raiz = criar('section', 'cookies');
   raiz.setAttribute('role', 'dialog');
@@ -85,6 +87,10 @@ function montarBanner(dados: ConfiguracaoDeCookies): HTMLElement {
   titulo.tabIndex = -1;
   const texto = criar('p', 't-body-s cookies__texto', dados.textoBanner);
   texto.id = 'cookies-texto';
+  if (isDemo) {
+    const adendo = criar('p', 't-body-s cookies__texto cookies__texto--demo', ADENDO_DE_DEMO);
+    texto.append(' ', adendo);
+  }
   const politica = criar('a', 'link-texto t-body-s', 'Política de privacidade');
   politica.href = LINK_DA_POLITICA;
 
@@ -113,9 +119,9 @@ function montarBanner(dados: ConfiguracaoDeCookies): HTMLElement {
   return raiz;
 }
 
-function exibir(dados: ConfiguracaoDeCookies, isComFoco: boolean): void {
+function exibir(dados: ConfiguracaoDeCookies, isComFoco: boolean, isDemo: boolean): void {
   if (banner) return;
-  banner = montarBanner(dados);
+  banner = montarBanner(dados, isDemo);
   document.body.append(banner);
   if (isComFoco) banner.querySelector<HTMLElement>('#cookies-titulo')?.focus();
 }
@@ -130,11 +136,20 @@ async function carregarConfiguracao(): Promise<ConfiguracaoDeCookies | null> {
   }
 }
 
+async function carregarIsDemo(): Promise<boolean> {
+  try {
+    const config = await carregarConfigPublica();
+    return Boolean(config.scripts.modoDemo || config.demo);
+  } catch {
+    return false;
+  }
+}
+
 async function reabrirPreferencias(origem: HTMLElement): Promise<void> {
   const dados = await carregarConfiguracao();
   if (!dados) return;
   elementoDeOrigem = origem;
-  exibir(dados, true);
+  exibir(dados, true, await carregarIsDemo());
 }
 
 function ouvirPedidoDeReabertura(): void {
@@ -149,7 +164,7 @@ function ouvirPedidoDeReabertura(): void {
 export async function iniciarBannerDeCookies(): Promise<void> {
   if (!isPainelConfigurado) return;
   ouvirPedidoDeReabertura();
-  const dados = await carregarConfiguracao();
+  const [dados, isDemo] = await Promise.all([carregarConfiguracao(), carregarIsDemo()]);
   if (!dados) return;
   const salvo = lerConsentimento();
   if (salvo && salvo.versaoTexto === dados.versaoTexto) {
@@ -157,5 +172,5 @@ export async function iniciarBannerDeCookies(): Promise<void> {
     if (!salvo.isSincronizado) void sincronizarConsentimento(salvo);
     return;
   }
-  exibir(dados, false);
+  exibir(dados, false, isDemo);
 }

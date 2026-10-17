@@ -121,6 +121,8 @@ function montarLead(formulario: HTMLFormElement, tipo: TipoDeLead): LeadParaEnvi
     nome: lerTexto(formulario, 'nome'),
     email: lerTexto(formulario, 'email'),
     telefone: lerTexto(formulario, 'telefone') || null,
+    cpf: lerTexto(formulario, 'cpf').replace(/\D+/g, '') || null,
+    cupomCodigo: lerTexto(formulario, 'cupomCodigo').toUpperCase() || null,
     mensagem: lerTexto(formulario, 'mensagem'),
     consentimento: { aceito: true, versaoTexto: formulario.dataset.versaoTexto ?? '' },
     marketing: lerMarcacao(formulario, 'marketing'),
