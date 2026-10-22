@@ -10,3 +10,6 @@ dist/
 .deploy/
 # backend do painel vive em repositorio privado (github.com/brunolucassf/surreal-park-painel)
 /painel/
+# docs estrategicos/tecnicos ficam no repo privado (copia em painel/docs/site-*)
+/docs/DECISOES.md
+/docs/DESIGN-SYSTEM.md
