@@ -8,4 +8,5 @@ dist/
 .DS_Store
 /shots/
 .deploy/
-/painel/db/.logs/
+# backend do painel vive em repositorio privado (github.com/brunolucassf/surreal-park-painel)
+/painel/
